@@ -15,3 +15,16 @@ Program::Program(const string & _name, const string & _vertexShaderFilename, con
     attach(fs);
     link();
 }
+
+void Program::attach (Shader * shader) {
+    glAttachShader (id, shader->getId());
+    shaders.push_back (shader);
+}
+
+void Program::link () {
+    glLinkProgram (id);
+    GLint linked;
+    glGetProgramiv (id, GL_LINK_STATUS, &linked);
+    if (!linked)
+        cout << "Shaders not linked" << endl;
+}

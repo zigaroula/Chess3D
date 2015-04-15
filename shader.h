@@ -14,6 +14,8 @@ public:
     ~Shader();
     void loadFromFile(const std::string &);
     void setSource (const std::string & _source) { source = _source; }
+    GLuint getId() { return id; }
+    void compile ();
 private:
     GLuint id;
     std::string name;
