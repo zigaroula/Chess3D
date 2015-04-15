@@ -3,7 +3,7 @@
 #include <OpenGL/gl3.h>
 #define __gl_h_
 #else
-#include <GL/gl.h>
+#include <GL/glew.h>
 #endif
 
 #include <GL/glut.h>
@@ -19,7 +19,9 @@ static GLuint vao;
 
 void init()
 {
-    //glewInit();
+    program = new Program("Programme", "shader.vert", "shader.frag");
+    cout << "coucou" << endl;
+    glewInit();
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glClearColor(0.f, 0.f, 0.f, 1.f);
@@ -113,7 +115,6 @@ void init()
         0.0f, 1.0f, 1.0f
     };
     
-    vao;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
     
@@ -170,4 +171,5 @@ int main(int argc, char **argv)
 /* A mettre dans l'initialisation
 
   program = new Program("Programme", "shader.vert", "shader.frag");
+  program->use();
 */

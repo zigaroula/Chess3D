@@ -20,7 +20,6 @@ void Shader::loadFromFile (const string & _filename) {
     c[1]='\0';
     while (in.get (c[0])) {
         source.append (c);
-        cout << source << endl;
     }
     in.close ();
     setSource (source);
@@ -36,3 +35,9 @@ void Shader::compile () {
         cout << "Error: shader not compiled." << endl;
 }
 
+void Shader::reload () {
+    if (filename != "") {
+        loadFromFile (std::string (filename));
+        compile ();
+    }
+}

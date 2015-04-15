@@ -1,20 +1,18 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-#include <GL/glew.h>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <string>
 #include "shader.h"
 
 class Program {
 public:
     Program(const std::string & , const std::string & , const std::string &);
     ~Program();
-    void attach (Shader *);
-    void link ();
+    void attach(Shader *);
+    void detach(Shader *);
+    void link();
+    void use();
+    void stop();
+    void reload();
 private:
     GLuint id;
     std::string name;
