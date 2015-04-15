@@ -2,9 +2,9 @@
 
 using namespace std;
 
-Program::Program()
+Program::Program() : Program("Programme", "shader2.vert", "shader2.frag")
 {
-    Program("Programme", "shader2.vert", "shader2.frag");
+    
     
 }
 Program::Program(const string & _name, const string & _vertexShaderFilename, const string & _fragmentShaderFilename) {

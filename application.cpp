@@ -2,7 +2,6 @@
 
 Application::Application()
 {
-    
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
@@ -14,8 +13,7 @@ Application::Application()
     
     window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
     
-    printf("OpenGL version supported by this platform (%s): \n",
-           glGetString(GL_VERSION));
+    std::cout << "OpenGL version supported by this platform: " << glGetString(GL_VERSION) << std::endl;
     
     initOpenGL();
     
@@ -24,7 +22,13 @@ Application::Application()
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
+    
     glfwMakeContextCurrent(window);
+    
+#ifndef __APPLE__
+    glewInit();
+#endif
+    
     glfwSwapInterval(1);
     glfwSetKeyCallback(window, key_callback);
     
@@ -36,7 +40,6 @@ Application::Application()
     glfwDestroyWindow(window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
-    
 }
 
 void Application::initOpenGL()
@@ -45,7 +48,7 @@ void Application::initOpenGL()
     glDepthFunc(GL_LESS);
     glClearColor(0.f, 0.f, 0.f, 1.f);
     
-    program = new Program("Programme", "shader2.vert", "shader2.frag");
+    program = new Program();
     
     float vertexPositions[] = {
         -0.5f,  0.5f,  -0.5f,

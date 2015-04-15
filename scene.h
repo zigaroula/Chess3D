@@ -5,7 +5,7 @@
 #include <OpenGL/gl3.h>
 #define __gl_h_
 #else
-#include <GL/gl3.h>
+#include <GL/glew.h>
 #endif
 
 #include <glm/glm.hpp>

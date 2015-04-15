@@ -5,10 +5,10 @@
 #include <OpenGL/gl3.h>
 #define __gl_h_
 #else
-#include <GL/gl.h>
+#include <GL/glew.h>
 #endif
-#include <GLFW/glfw3.h>
 
+#include <GLFW/glfw3.h>
 #include "program.h"
 
 
@@ -16,8 +16,6 @@ class Application
 {
 public:
     Application();
-    GLuint getProgram() const { return program->getId(); }
-
     
 private:
     void display();
@@ -28,7 +26,6 @@ private:
     
     GLuint vao;
     GLFWwindow *window;
-    
     Program *program;
 };
 
