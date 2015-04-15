@@ -29,6 +29,11 @@ Application::Application()
     glewInit();
 #endif
     
+    /* TEST CAMERA
+    camera = new Camera(640, 480);
+    glfwSetMousePos(midWindowX, midWindowY);
+    glfwSetMousePosCallback(window, mousepos_callback);
+    */
     glfwSwapInterval(1);
     glfwSetKeyCallback(window, key_callback);
     
@@ -88,5 +93,46 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
+
+    // CAMERA CONTROL
+    if (action == GLFW_PRESS) {
+        switch(key) {
+        case 'Z':
+            camera->holdingForward = true;
+            break;
+        case 'S':
+            camera->holdingBackward = true;
+            break;
+        case 'Q':
+            camera->holdingLeftStrafe = true;
+            break;
+        case 'D':
+            camera->holdingRightStrafe = true;
+            break;
+        default:
+            break;
+        }
+    } else {
+        switch(key) {
+        case 'Z':
+            camera->holdingForward = false;
+            break;
+        case 'S':
+            camera->holdingBackward = false;
+            break;
+        case 'Q':
+            camera->holdingLeftStrafe = false;
+            break;
+        case 'D':
+            camera->holdingRightStrafe = false;
+            break;
+        default:
+            break;
+        }
+    }
 }
 
+void Application::mousepos_callback(int mouseX, int mouseY) {
+    // CAMERA CONTROL
+    camera->handleMouseMove(mouseX, mouseY);
+}
