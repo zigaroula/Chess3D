@@ -50,109 +50,7 @@ void Application::initOpenGL()
     
     program = new Program();
     
-    float vertexPositions[] = {
-        -0.5f,  0.5f,  -0.5f,
-        0.5f, -0.5f,  -0.5f,
-        -0.5f, -0.5f,  -0.5f,
-        -0.5f, 0.5f, -0.5f,
-        0.5f, 0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        
-        0.5f, 0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, 0.5f,
-        0.5f, 0.5f, -0.5f,
-        0.5f, -0.5f, 0.5f,
-        0.5f, 0.5f, 0.5f,
-        
-        -0.5f, 0.5f, -0.5f,
-        0.5f, 0.5f, -0.5f,
-        -0.5f, 0.5f, 0.5f,
-        0.5f, 0.5f, -0.5f,
-        -0.5f, 0.5f, 0.5f,
-        0.5f, 0.5f, 0.5f,
-        
-        -0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, 0.5f,
-        0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, 0.5f,
-        0.5f, -0.5f, 0.5f,
-        
-        -0.5f,  0.5f,  0.5f,
-        0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f, 0.5f, 0.5f,
-        0.5f, 0.5f, 0.5f,
-        0.5f, -0.5f, 0.5f,
-        
-        -0.5f, 0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, 0.5f,
-        -0.5f, 0.5f, -0.5f,
-        -0.5f, -0.5f, 0.5f,
-        -0.5f, 0.5f, 0.5f
-    };
-    
-    float vertexColors[] = {
-        1.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,
-        
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        
-        0.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 1.0f,
-        
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        
-        1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f,
-        
-        0.0f, 1.0f, 1.0f,
-        0.0f, 1.0f, 1.0f,
-        0.0f, 1.0f, 1.0f,
-        0.0f, 1.0f, 1.0f,
-        0.0f, 1.0f, 1.0f,
-        0.0f, 1.0f, 1.0f
-    };
-    
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-    
-    GLuint vbo_positions;
-    glGenBuffers(1, &vbo_positions);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_positions);
-    glBufferData(GL_ARRAY_BUFFER, 12*9*sizeof(float), vertexPositions, GL_STATIC_DRAW);
-    
-    glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(0);
-    
-    GLuint vbo_colors;
-    glGenBuffers(1, &vbo_colors);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-    glBufferData(GL_ARRAY_BUFFER, 12*9*sizeof(float), vertexColors, GL_STATIC_DRAW);
+    scene.initScene();
     
     glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(1);
@@ -169,8 +67,13 @@ void Application::display()
     program->use();
     
     /* render each VAO*/
-    glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, 12*3);
+    for (int i = 0; i < scene.size(); ++i)
+    {
+        const Vao &vao = scene[i];
+        
+        glBindVertexArray(vao.getId());
+        glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
+    }
     
     glfwSwapBuffers(window);
     glfwPollEvents();

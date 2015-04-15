@@ -13,10 +13,13 @@
 class Vao
 {
 public:
-    GLuint getId() const { return vao; }
+    GLuint getId() const { return id; }
+    GLsizei getVertexCount() const { return vertex_count; }
+    static Vao getCube();
     
 private:
-    GLuint vao;
+    GLuint id;
+    GLsizei vertex_count;
     glm::mat4 model_matrix;
     
 };

@@ -10,6 +10,7 @@
 
 #include <GLFW/glfw3.h>
 #include "program.h"
+#include "scene.h"
 
 
 class Application
@@ -24,9 +25,10 @@ private:
     static void error_callback(int error, const char* description);
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     
-    GLuint vao;
     GLFWwindow *window;
     Program *program;
+    Scene scene;
+    
 };
 
 

@@ -8,16 +8,20 @@
 #include <GL/glew.h>
 #endif
 
+#include "vao.h"
 #include <glm/glm.hpp>
+#include <vector>
 
 class Scene
 {
 public:
     Scene();
-    
+    void initScene();
+    size_t size() const { return vao_list.size(); }
+    const Vao& operator[](size_t index) const { return vao_list[index]; }
     
 private:
-    GLuint shader_program;
+    std::vector<Vao> vao_list;
     glm::mat4 view_matrix, projection_matrix;
     
 };
