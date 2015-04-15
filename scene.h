@@ -30,7 +30,7 @@ private:
     
     static constexpr float zNear = 0.1f;
     static constexpr float zFar = 100.f;
-    static constexpr float fov = 45.f;
+    static constexpr float fov = 0.785f;
     
     
 };

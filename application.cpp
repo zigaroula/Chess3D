@@ -87,7 +87,7 @@ void Application::display()
     program.use();
     
     /* render each VAO*/
-    for (int i = 0; i < scene.size(); ++i)
+    for (unsigned int i = 0; i < scene.size(); ++i)
     {
         const Vao &vao = scene[i];
         
