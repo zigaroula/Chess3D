@@ -2,12 +2,11 @@
 
 using namespace std;
 
-Program::Program() : Program("Programme", "shader2.vert", "shader2.frag")
+void Program::init()
 {
-    
-    
-}
-Program::Program(const string & _name, const string & _vertexShaderFilename, const string & _fragmentShaderFilename) {
+    const string & _name = "Programme";
+    const string & _vertexShaderFilename = "shader2.vert";
+    const string & _fragmentShaderFilename = "shader2.frag";
     
     id = glCreateProgram();
     name = _name;
@@ -24,8 +23,9 @@ Program::Program(const string & _name, const string & _vertexShaderFilename, con
     glBindAttribLocation(id, 1, "color");
     
     link();
-
+    
 }
+
 
 void Program::attach(Shader * shader) {
     glAttachShader (id, shader->getId());
@@ -74,7 +74,4 @@ void Program::reload() {
     link();
 }
 
-Program::~Program()
-{
-    
-}
+

@@ -12,9 +12,7 @@
 
 class Program {
 public:
-    Program();
-    Program(const std::string & , const std::string & , const std::string &);
-    ~Program();
+    void init();
     void attach (Shader *);
     void link ();
     GLuint getId() const { return id; }

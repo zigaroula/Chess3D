@@ -29,7 +29,7 @@ private:
 
     
     static GLFWwindow *window;
-    static Program *program;
+    static Program program;
     static Scene scene;
     static Camera *camera;
     

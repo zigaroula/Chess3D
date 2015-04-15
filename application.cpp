@@ -5,7 +5,7 @@
 
 
 GLFWwindow *Application::window;
-Program *Application::program;
+Program Application::program;
 Scene Application::scene;
 Camera *Application::camera;
 
@@ -65,18 +65,18 @@ void Application::initOpenGL()
     glDepthFunc(GL_LESS);
     glClearColor(0.f, 0.f, 0.f, 1.f);
     
-    program = new Program();
+    program.init();
     
     scene.initScene();
     
-    program->use();
+    program.use();
     
     scene.setPerspective(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-    glUniformMatrix4fv(glGetUniformLocation(program->getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
+    glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
 
     glm::mat4 view_matrix(1.f);
     view_matrix = glm::lookAt(glm::vec3(2.f, 1.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-    glUniformMatrix4fv(glGetUniformLocation(program->getId(), "view_matrix"), 1, GL_FALSE, glm::value_ptr(view_matrix));
+    glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, glm::value_ptr(view_matrix));
     
 }
 
@@ -84,14 +84,14 @@ void Application::display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    program->use();
+    program.use();
     
     /* render each VAO*/
     for (int i = 0; i < scene.size(); ++i)
     {
         const Vao &vao = scene[i];
         
-        glUniformMatrix4fv(glGetUniformLocation(program->getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
@@ -105,8 +105,8 @@ void Application::window_size_callback(GLFWwindow *window, int width, int height
 {
     glViewport(0, 0, width, height);
     scene.setPerspective(width, height);
-    program->use();
-    glUniformMatrix4fv(glGetUniformLocation(program->getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
+    program.use();
+    glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
 }
 
 void Application::error_callback(int error, const char* description)
