@@ -20,7 +20,7 @@ public:
 
     void handleMouseMove(int, int);
     const float toRads(const float &) const;
-    void move(float);
+    void move();
 
     float getPitchSensitivity() { return pitchSensitivity; }
     void setPitchSensitivity(float value) { pitchSensitivity = value; }

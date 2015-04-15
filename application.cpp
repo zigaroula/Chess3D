@@ -39,11 +39,11 @@ void Application::start()
     initOpenGL();
 
 
-    /* TEST CAMERA
-    camera = new Camera(640, 480);
-    glfwSetMousePos(midWindowX, midWindowY);
-    glfwSetMousePosCallback(window, mousepos_callback);
-    */
+    // TEST CAMERA
+    camera = new Camera(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    glfwSetCursorPos(window, midWindowX, midWindowY);
+    glfwSetCursorPosCallback(window, mousepos_callback);
+
     glfwSwapInterval(1);
     glfwSetKeyCallback(window, key_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
@@ -51,6 +51,7 @@ void Application::start()
 
     while (!glfwWindowShouldClose(window))
     {
+        camera->move();
         display();
     }
 
@@ -158,7 +159,7 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
     }
 }
 
-void Application::mousepos_callback(int mouseX, int mouseY) {
+void Application::mousepos_callback(GLFWwindow* window, double mouseX, double mouseY) {
     // CAMERA CONTROL
-    camera->handleMouseMove(mouseX, mouseY);
+    camera->handleMouseMove((int)mouseX, (int)mouseY);
 }

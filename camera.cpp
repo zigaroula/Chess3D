@@ -64,7 +64,7 @@ void Camera::handleMouseMove(int mouseX, int mouseY) {
    // glfwSetMousePos(windowMidX, windowMidY); // a voir
 }
 
-void Camera::move(float) {
+void Camera::move() {
     glm::vec4 movement;
 
     float sinXRot = sin(toRads(rotation[0]));
@@ -103,4 +103,5 @@ void Camera::move(float) {
     movement[2] = movement[2]/norm;
 
     position += movement;
+    //std::cout << position[0] << " " << position[1] << " " << position[2] << std::endl;
 }
