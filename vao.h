@@ -9,12 +9,14 @@
 #endif
 
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class Vao
 {
 public:
     GLuint getId() const { return id; }
     GLsizei getVertexCount() const { return vertex_count; }
+    const GLfloat* getModelMatrixArray() const { return glm::value_ptr(model_matrix); }
     static Vao getCube();
     
 private:

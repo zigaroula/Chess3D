@@ -1,6 +1,13 @@
 #include "application.h"
+#include <glm/gtx/string_cast.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
-Application::Application()
+
+GLFWwindow *Application::window;
+Program *Application::program;
+Scene Application::scene;
+
+void Application::start()
 {
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
@@ -11,7 +18,7 @@ Application::Application()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,  GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
-    window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
+    window = glfwCreateWindow(DEFAULT_WIDTH, DEFAULT_HEIGHT, "Chess3D", NULL, NULL);
     
     std::cout << "OpenGL version supported by this platform: " << glGetString(GL_VERSION) << std::endl;
     
@@ -31,6 +38,8 @@ Application::Application()
     
     glfwSwapInterval(1);
     glfwSetKeyCallback(window, key_callback);
+    glfwSetWindowSizeCallback(window, window_size_callback);
+    
     
     while (!glfwWindowShouldClose(window))
     {
@@ -40,6 +49,7 @@ Application::Application()
     glfwDestroyWindow(window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
+    
 }
 
 void Application::initOpenGL()
@@ -52,12 +62,15 @@ void Application::initOpenGL()
     
     scene.initScene();
     
-    glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(1);
+    program->use();
     
-    glEnableVertexAttribArray(0);
-    glBindVertexArray(0);
+    scene.setPerspective(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    glUniformMatrix4fv(glGetUniformLocation(program->getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
 
+    glm::mat4 view_matrix(1.f);
+    view_matrix = glm::lookAt(glm::vec3(2.f, 1.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
+    glUniformMatrix4fv(glGetUniformLocation(program->getId(), "view_matrix"), 1, GL_FALSE, glm::value_ptr(view_matrix));
+    
 }
 
 void Application::display()
@@ -71,14 +84,24 @@ void Application::display()
     {
         const Vao &vao = scene[i];
         
+        glUniformMatrix4fv(glGetUniformLocation(program->getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
     
+    glBindVertexArray(0);
     glfwSwapBuffers(window);
     glfwPollEvents();
-    
 }
+
+void Application::window_size_callback(GLFWwindow *window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+    scene.setPerspective(width, height);
+    program->use();
+    glUniformMatrix4fv(glGetUniformLocation(program->getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
+}
+
 void Application::error_callback(int error, const char* description)
 {
     fputs(description, stderr);

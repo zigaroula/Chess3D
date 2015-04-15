@@ -5,6 +5,7 @@ Vao Vao::getCube()
     Vao vao;
     
     vao.vertex_count = 6*2*3;
+    vao.model_matrix = glm::mat4(1.0f);
     
     float vertexPositions[] = {
         -0.5f,  0.5f,  -0.5f,
@@ -109,6 +110,11 @@ Vao Vao::getCube()
     glGenBuffers(1, &vbo_colors);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
     glBufferData(GL_ARRAY_BUFFER, 12*9*sizeof(float), vertexColors, GL_STATIC_DRAW);
+    
+    glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(1);
+    
+    glBindVertexArray(0);
     
     return vao;
 }
