@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall
-LDFLAGS=-lGLEW -lglut -framework OpenGL
-SOURCES=main.cpp vao.cpp scene.cpp
+LDFLAGS=-lGLEW -lglut -framework OpenGL -lglfw3
+SOURCES=main.cpp vao.cpp scene.cpp program.cpp shader.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=main
 

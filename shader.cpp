@@ -20,7 +20,6 @@ void Shader::loadFromFile (const string & _filename) {
     c[1]='\0';
     while (in.get (c[0])) {
         source.append (c);
-        cout << source << endl;
     }
     in.close ();
     setSource (source);
@@ -32,7 +31,20 @@ void Shader::compile () {
     glCompileShader (id);
     GLint shaderCompiled;
     glGetShaderiv (id, GL_COMPILE_STATUS, &shaderCompiled);
-    if (!shaderCompiled)
+    if (!shaderCompiled) {
+        
+        GLint maxLength = 0;
+        glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
+        
+        // The maxLength includes the NULL character
+        std::vector<GLchar> errorLog(maxLength);
+        glGetShaderInfoLog(id, maxLength, &maxLength, &errorLog[0]);
+        
+        for (auto c : errorLog)
+            cout << c;
+        cout << endl;
+        
         cout << "Error: shader not compiled." << endl;
+    }
 }
 

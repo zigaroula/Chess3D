@@ -1,7 +1,13 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-#include <GL/glew.h>
+#ifdef __APPLE__
+#include <OpenGL/gl3.h>
+#define __gl_h_
+#else
+#include <GL/gl3.h>
+#endif
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -15,6 +21,8 @@ public:
     ~Program();
     void attach (Shader *);
     void link ();
+    void use() { glUseProgram(id); }
+    GLuint getId() const { return id; }
 private:
     GLuint id;
     std::string name;

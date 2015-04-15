@@ -1,7 +1,13 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <GL/glew.h>
+#ifdef __APPLE__
+#include <OpenGL/gl3.h>
+#define __gl_h_
+#else
+#include <GL/gl3.h>
+#endif
+
 #include <string>
 #include <vector>
 #include <iostream>
