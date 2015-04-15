@@ -30,6 +30,7 @@ void Application::start()
     glfwMakeContextCurrent(window);
     
 #ifndef __APPLE__
+    glewExperimental = GL_TRUE; 
     glewInit();
 #endif
 
