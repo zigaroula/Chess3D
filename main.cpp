@@ -25,7 +25,6 @@ void prepareShaderProgram()
 }
 void init()
 {
-    //glewInit();
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glClearColor(0.f, 0.f, 0.f, 1.f);

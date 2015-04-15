@@ -48,3 +48,9 @@ void Shader::compile () {
     }
 }
 
+void Shader::reload () {
+    if (filename != "") {
+        loadFromFile (std::string (filename));
+        compile ();
+    }
+}

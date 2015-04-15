@@ -22,6 +22,7 @@ public:
     void setSource (const std::string & _source) { source = _source; }
     GLuint getId() { return id; }
     void compile ();
+    void reload();
 private:
     GLuint id;
     std::string name;

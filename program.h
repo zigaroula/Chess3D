@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+
 #include "shader.h"
 
 class Program {
@@ -21,8 +22,12 @@ public:
     ~Program();
     void attach (Shader *);
     void link ();
-    void use() { glUseProgram(id); }
     GLuint getId() const { return id; }
+
+    void detach(Shader *);
+    void use();
+    void stop();
+    void reload();
 private:
     GLuint id;
     std::string name;
