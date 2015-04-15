@@ -7,6 +7,7 @@
 GLFWwindow *Application::window;
 Program *Application::program;
 Scene Application::scene;
+Camera *Application::camera;
 
 void Application::start()
 {
