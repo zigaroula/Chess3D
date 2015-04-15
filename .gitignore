@@ -1,2 +1,4 @@
 *.o
 main
+GLProgram.h
+GLProgram.cpp

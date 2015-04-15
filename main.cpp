@@ -3,14 +3,18 @@
 #include <OpenGL/gl3.h>
 #define __gl_h_
 #else
-#include <GL/gl3.h>
+#include <GL/gl.h>
 #endif
 
 #include <glm/glm.hpp>
 #include <GL/glut.h>
 #include <iostream>
 
+#include "program.h"
+
 using namespace std;
+
+static Program * program;
 
 static GLuint vao;
 
@@ -150,6 +154,11 @@ int main(int argc, char **argv)
     glutInitWindowSize(600, 400);
     glutCreateWindow("Chess3D");
 
+    glewInit();
+
+    if (!GLEW_VERSION_3_2)
+       cout << "OpenGL version 3.3 is not available; please update your drivers!";
+
     init();
     
     glutDisplayFunc(display);
@@ -158,3 +167,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
+/* A mettre dans l'initialisation
+
+  program = new Program("Programme", "shader.vert", "shader.frag");
+*/

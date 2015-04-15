@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall
 LDFLAGS=-lGLEW -lglut
-SOURCES=main.cpp
+SOURCES=main.cpp program.cpp shader.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=main
 
