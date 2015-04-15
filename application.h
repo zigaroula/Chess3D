@@ -11,6 +11,7 @@
 #include <GLFW/glfw3.h>
 #include "program.h"
 #include "scene.h"
+#include "camera.h"
 
 
 class Application
@@ -28,7 +29,7 @@ private:
     GLFWwindow *window;
     Program *program;
     Scene scene;
-    
+    Camera * camera;
 };
 
 
