@@ -3,4 +3,6 @@ main
 GLProgram.h
 GLProgram.cpp
 Chess3D.creator.user
-
+*.cbp
+*.depend
+*.layout

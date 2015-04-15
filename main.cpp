@@ -5,5 +5,6 @@ using namespace std;
 
 int main(void)
 {
+
     Application::start();
 }

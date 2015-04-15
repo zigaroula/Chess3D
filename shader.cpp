@@ -32,18 +32,18 @@ void Shader::compile () {
     GLint shaderCompiled;
     glGetShaderiv (id, GL_COMPILE_STATUS, &shaderCompiled);
     if (!shaderCompiled) {
-        
+
         GLint maxLength = 0;
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
-        
+
         // The maxLength includes the NULL character
         std::vector<GLchar> errorLog(maxLength);
         glGetShaderInfoLog(id, maxLength, &maxLength, &errorLog[0]);
-        
+
         for (auto c : errorLog)
             cout << c;
         cout << endl;
-        
+
         cout << "Error: shader not compiled." << endl;
     }
 }
