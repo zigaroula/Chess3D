@@ -6,6 +6,7 @@
 #include <GL/gl3.h>
 #endif
 
+#include <glm/glm.hpp>
 #include <GL/glut.h>
 #include <iostream>
 
@@ -109,7 +110,6 @@ void init()
         0.0f, 1.0f, 1.0f
     };
     
-    vao;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
     

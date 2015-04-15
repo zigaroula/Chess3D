@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall
 LDFLAGS=-lGLEW -lglut -framework OpenGL
-SOURCES=main.cpp
+SOURCES=main.cpp vao.cpp scene.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=main
 
