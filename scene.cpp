@@ -4,6 +4,10 @@
 
 #include <iostream>
 
+constexpr float Scene::zFar;
+constexpr float Scene::zNear;
+constexpr float Scene::fov;
+
 Scene::Scene()
 {
 
