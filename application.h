@@ -11,6 +11,7 @@
 #include <GLFW/glfw3.h>
 #include "program.h"
 #include "scene.h"
+#include "camera.h"
 
 class Application
 {
@@ -24,14 +25,18 @@ private:
     static void error_callback(int error, const char* description);
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void window_size_callback(GLFWwindow *window, int width, int height);
+    static void mousepos_callback(int mouseX, int mouseY);
+
     
     static GLFWwindow *window;
     static Program *program;
     static Scene scene;
+    static Camera *camera;
     
     static constexpr int DEFAULT_WIDTH = 640;
     static constexpr int DEFAULT_HEIGHT = 480;
     
 };
+
 
 #endif
