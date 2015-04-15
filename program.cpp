@@ -2,6 +2,11 @@
 
 using namespace std;
 
+Program::Program()
+{
+    Program("Programme", "shader2.vert", "shader2.frag");
+    
+}
 Program::Program(const string & _name, const string & _vertexShaderFilename, const string & _fragmentShaderFilename) {
     
     id = glCreateProgram();
@@ -67,4 +72,9 @@ void Program::reload() {
         attach (shaders[i]);
     }
     link();
+}
+
+Program::~Program()
+{
+    
 }

@@ -18,6 +18,7 @@
 
 class Program {
 public:
+    Program();
     Program(const std::string & , const std::string & , const std::string &);
     ~Program();
     void attach (Shader *);
