@@ -3,7 +3,6 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-
 GLFWwindow *Application::window;
 Program Application::program;
 Scene Application::scene;
@@ -22,10 +21,6 @@ void Application::start()
     
     window = glfwCreateWindow(DEFAULT_WIDTH, DEFAULT_HEIGHT, "Chess3D", NULL, NULL);
     
-    std::cout << "OpenGL version supported by this platform: " << glGetString(GL_VERSION) << std::endl;
-    
-    initOpenGL();
-    
     if (!window)
     {
         glfwTerminate();
@@ -37,6 +32,11 @@ void Application::start()
 #ifndef __APPLE__
     glewInit();
 #endif
+
+    std::cout << "OpenGL version supported by this platform: " << glGetString(GL_VERSION) << std::endl;
+    
+    initOpenGL();
+    
     
     /* TEST CAMERA
     camera = new Camera(640, 480);
