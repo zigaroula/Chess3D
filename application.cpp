@@ -7,6 +7,8 @@ GLFWwindow *Application::window;
 Program Application::program;
 Scene Application::scene;
 Camera *Application::camera;
+double Application::lastTime;
+int Application::nbFrames;
 
 void Application::start()
 {
@@ -41,15 +43,28 @@ void Application::start()
     // CAMERA
     camera = new Camera(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
     glfwSetKeyCallback(window, key_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
 
 
+    lastTime = glfwGetTime();
+    nbFrames = 0;
+    
     while (!glfwWindowShouldClose(window))
     {
         camera->move();
         display();
+        
+        /* computing fps */
+        double currentTime = glfwGetTime();
+        nbFrames++;
+        if (currentTime - lastTime >= 1.0)
+        {
+            setTitleFps();
+            nbFrames = 0;
+            lastTime += 1.0;
+        }
     }
 
     glfwDestroyWindow(window);
@@ -164,4 +179,12 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
 void Application::mousepos_callback(GLFWwindow* window, double mouseX, double mouseY) {
     // CAMERA CONTROL, inutile pour l'instant
     camera->handleMouseMove((int)mouseX, (int)mouseY);
+}
+
+void Application::setTitleFps()
+{
+    std::string title = "Chess 3D - FPS: " + std::to_string(nbFrames);
+    glfwSetWindowTitle(window, title.c_str());
+    
+    
 }
