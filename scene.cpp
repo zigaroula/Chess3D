@@ -13,7 +13,7 @@ void Scene::initScene(int width, int height)
 {
     projection_matrix = glm::mat4(0.5f);
     //vao_list.push_back(Vao::getCube());
-    vao_list.push_back(Vao::loadObj("models/sphere.obj", glm::vec3(.1f, 0.f, 0.f)));
+    vao_list.push_back(Vao::loadObj("models/sphere.obj", glm::vec3(0.5f, 0.f, 0.f)));
     
     camera = Camera(width, height);
 }
@@ -36,7 +36,7 @@ void Scene::move(int fps) {
 GLfloat* Scene::getNormalMatrixArray(unsigned int vao_index)
 {
     const glm::mat4 &model_matrix = vao_list[vao_index].getModelMatrix();
-    glm::mat4 normal_matrix(1.0f);
+    //(1.0f);
     
     normal_matrix = glm::transpose(glm::inverse(view_matrix * model_matrix));
     

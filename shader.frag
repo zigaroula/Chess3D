@@ -16,7 +16,7 @@ void main(void)
 {
 
 
-    lightPos = vec3(view_matrix * vec4(lightPos,1));
+    //lightPos = vec3(view_matrix * vec4(lightPos,1));
     vec3 normal = normalize(vertex_normal);
     vec3 lightDir = normalize(lightPos - vertex_position);
 
