@@ -99,8 +99,6 @@ void Application::display()
     {
         const Vao &vao = scene[i];
         
-        
-        //glm::mat4 normal_matrix = glm::transpose(glm::inverse())
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
 
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
