@@ -36,9 +36,9 @@ void Scene::move(int fps) {
 GLfloat* Scene::getNormalMatrixArray(unsigned int vao_index)
 {
     const glm::mat4 &model_matrix = vao_list[vao_index].getModelMatrix();
-    glm::mat4 normal_matrix(1.0f);
+    //(1.0f);
     
-    normal_matrix = glm::inverse(view_matrix * model_matrix);
+    normal_matrix = glm::transpose(glm::inverse(view_matrix * model_matrix));
     
     return glm::value_ptr(normal_matrix);
 }

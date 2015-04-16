@@ -44,7 +44,7 @@ public:
 
 private:
     std::vector<Vao> vao_list;
-    glm::mat4 view_matrix, projection_matrix;
+    glm::mat4 view_matrix, projection_matrix, normal_matrix;
     Camera camera;
 
 };
