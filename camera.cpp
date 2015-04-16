@@ -23,11 +23,15 @@ Camera::~Camera() {
 }
 
 void Camera::initCamera() {
-    position = glm::vec3(2.f, 1.f, 3.f);
+    position = glm::vec3(6.f, 6.f, 6.f);
     direction = glm::vec3(0.0f, 0.0f, 0.0f);
     rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
     speed = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
     movementSpeedFactor = 100.0;
+    glm::vec3 initialPosition = cartesian2Polar(position);
+    angleH = initialPosition[0];
+    angleV = initialPosition[1];
+    distance = initialPosition[2];
 
     pitchSensitivity = 0.2;
     yawSensitivity = 0.2;
@@ -36,6 +40,8 @@ void Camera::initCamera() {
     holdingBackward = false;
     holdingLeftStrafe = false;
     holdingRightStrafe = false;
+    holdingZoomNegative = false;
+    holdingZoomPositive = false;
 }
 
 const float Camera::toRads(const float & _angleInDegrees) const {
@@ -68,23 +74,58 @@ void Camera::handleMouseMove(int mouseX, int mouseY) {
    // glfwSetMousePos(windowMidX, windowMidY); // a voir
 }
 
+glm::vec3 Camera::polar2Cartesian (float phi, float theta, float d) {
+    glm::vec3 tmpPosition;
+    tmpPosition[0] = d*sin (theta) * cos (phi);
+    tmpPosition[1] = d*cos (theta);
+    tmpPosition[2] = d*sin (theta) * sin (phi);
+    return tmpPosition;
+}
+
+glm::vec3 Camera::cartesian2Polar(glm::vec3 initPos) {
+    float x = initPos[0];
+    float y = initPos[1];
+    float z = initPos[2];
+    float phi = atan(y/x);
+    float r = sqrt(x*x + y*y + z*z);
+    float theta = acos(z/r);
+    glm::vec3 tmpPosition = glm::vec3(phi, theta, r);
+    return tmpPosition;
+}
+
 void Camera::move(int fps) {
+//std::cout << angleH << " " << angleV << " " << distance << std::endl;
+    //distance = sqrt((position[0]-direction[0])*(position[0]-direction[0]) + (position[1]-direction[1])*(position[1]-direction[1]) + (position[2]-direction[2])*(position[2]-direction[2]));
     if (holdingForward) {
-        position[0] -= (position[0]-direction[0])/fps;
-        position[1] -= (position[1]-direction[1])/fps;
-        position[2] -= (position[2]-direction[2])/fps;
+        angleV -= toRads(90) / fps;
+        if (angleV < toRads(0.001)) {
+            angleV = toRads(0.001);
+        }
     }
     if (holdingBackward) {
-        position[0] += 0.0001*(position[0]-direction[0]) + 0.001;
-        position[1] += 0.0001*(position[1]-direction[1]) + 0.001;
-        position[2] += 0.0001*(position[2]-direction[2]) + 0.001;
+        angleV += toRads(90) / fps;
+        if (angleV > toRads(179.999)) {
+            angleV = toRads(179.999);
+        }
     }
     if (holdingLeftStrafe) {
-        position[0] -= 0.0001*(position[0]-direction[0]) + 0.001;
+        angleH += toRads(90) / fps;
+        if (angleH > toRads(360)) {
+            angleH = toRads(0);
+        }
     }
-
     if (holdingRightStrafe) {
-        position[0] += 0.0001*(position[0]-direction[0]) + 0.001;
+        angleH -= toRads(90) / fps;
+        if (angleH < toRads(0)) {
+            angleH = toRads(360);
+        }
     }
+    if (holdingZoomNegative) {
+        distance += 100/fps;
+    }
+    if (holdingZoomPositive) {
+        distance -= 100/fps;
+    }
+    position = polar2Cartesian(angleH, angleV, distance);
     //std::cout << position[0] << std::endl;
 }

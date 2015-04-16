@@ -38,6 +38,8 @@ public:
     void setCamBW(bool bw) { camera.holdingBackward = bw; }
     void setCamLS(bool ls) { camera.holdingLeftStrafe = ls; }
     void setCamRS(bool rs) { camera.holdingRightStrafe = rs; }
+    void setCamZP(bool zp) { camera.holdingZoomPositive = zp; }
+    void setCamZN(bool zn) { camera.holdingZoomNegative = zn; }
     void move(int);
 
 private:

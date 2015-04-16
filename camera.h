@@ -14,6 +14,8 @@ public:
     bool holdingBackward;
     bool holdingLeftStrafe;
     bool holdingRightStrafe;
+    bool holdingZoomPositive;
+    bool holdingZoomNegative;
 
     Camera();
     Camera(float, float);
@@ -51,6 +53,9 @@ private:
     float movementSpeedFactor;
     float pitchSensitivity;
     float yawSensitivity;
+    float angleH;
+    float angleV;
+    float distance;
 
     int windowWidth;
     int windowHeight;
@@ -58,6 +63,8 @@ private:
     int windowMidY;
 
     void initCamera();
+    glm::vec3 polar2Cartesian (float, float, float);
+    glm::vec3 cartesian2Polar (glm::vec3);
 };
 
 #endif // CAMERA_H
