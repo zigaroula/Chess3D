@@ -15,12 +15,13 @@ public:
     bool holdingLeftStrafe;
     bool holdingRightStrafe;
 
+    Camera();
     Camera(float, float);
     ~Camera();
 
     void handleMouseMove(int, int);
     const float toRads(const float &) const;
-    void move();
+    void move(int);
 
     float getPitchSensitivity() { return pitchSensitivity; }
     void setPitchSensitivity(float value) { pitchSensitivity = value; }

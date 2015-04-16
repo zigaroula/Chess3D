@@ -2,6 +2,10 @@
 
 const float Camera::TO_RADS = 3.141592654 / 180.0;
 
+Camera::Camera() {
+
+}
+
 Camera::Camera(float _windowWidth, float _windowHeight) {
     initCamera();
 
@@ -23,7 +27,6 @@ void Camera::initCamera() {
     direction = glm::vec3(0.0f, 0.0f, 0.0f);
     rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
     speed = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-
     movementSpeedFactor = 100.0;
 
     pitchSensitivity = 0.2;
@@ -65,22 +68,23 @@ void Camera::handleMouseMove(int mouseX, int mouseY) {
    // glfwSetMousePos(windowMidX, windowMidY); // a voir
 }
 
-void Camera::move() {
+void Camera::move(int fps) {
     if (holdingForward) {
-        position[0] -= 0.0001*fabs(position[0]-direction[0]) + 0.0001;
-        position[1] -= 0.0001*fabs(position[1]-direction[1]) + 0.0001;
-        position[2] -= 0.0001*fabs(position[2]-direction[2]) + 0.0001;
+        position[0] -= (position[0]-direction[0])/fps;
+        position[1] -= (position[1]-direction[1])/fps;
+        position[2] -= (position[2]-direction[2])/fps;
     }
     if (holdingBackward) {
-        position[0] += 0.0001*fabs(position[0]-direction[0]) + 0.0001;
-        position[1] += 0.0001*(position[1]-direction[1]) + 0.0001;
-        position[2] += 0.0001*(position[2]-direction[2]) + 0.0001;
+        position[0] += 0.0001*(position[0]-direction[0]) + 0.001;
+        position[1] += 0.0001*(position[1]-direction[1]) + 0.001;
+        position[2] += 0.0001*(position[2]-direction[2]) + 0.001;
     }
     if (holdingLeftStrafe) {
-        position[0] -= 0.0001*fabs(position[0]-direction[0]) + 0.0001;
+        position[0] -= 0.0001*(position[0]-direction[0]) + 0.001;
     }
 
     if (holdingRightStrafe) {
-        position[0] += 0.0001*fabs(position[0]-direction[0]) + 0.0001;
+        position[0] += 0.0001*(position[0]-direction[0]) + 0.001;
     }
+    //std::cout << position[0] << std::endl;
 }

@@ -6,9 +6,9 @@
 GLFWwindow *Application::window;
 Program Application::program;
 Scene Application::scene;
-Camera *Application::camera;
 double Application::lastTime;
 int Application::nbFrames;
+int Application::nbFramesLastSecond;
 
 void Application::start()
 {
@@ -40,31 +40,30 @@ void Application::start()
 
     initOpenGL();
 
-    // CAMERA
-    camera = new Camera(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-
     glfwSwapInterval(0);
     glfwSetKeyCallback(window, key_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
 
-
     lastTime = glfwGetTime();
     nbFrames = 0;
-    
+    nbFramesLastSecond = 1;
+
     while (!glfwWindowShouldClose(window))
     {
-        camera->move();
+
         display();
-        
+
         /* computing fps */
         double currentTime = glfwGetTime();
         nbFrames++;
         if (currentTime - lastTime >= 1.0)
         {
+            nbFramesLastSecond = nbFrames;
             setTitleFps();
             nbFrames = 0;
             lastTime += 1.0;
         }
+        scene.move(nbFramesLastSecond);
     }
 
     glfwDestroyWindow(window);
@@ -81,7 +80,7 @@ void Application::initOpenGL()
 
     program.init();
 
-    scene.initScene();
+    scene.initScene(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
     program.use();
 
@@ -115,9 +114,8 @@ void Application::display()
     glfwPollEvents();
 
     // CAMERA VIEW
-    glm::mat4 view_matrix(1.f);
-    view_matrix = glm::lookAt(camera->getPosition(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-    glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, glm::value_ptr(view_matrix));
+    scene.setView();
+    glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
 }
 
 void Application::window_size_callback(GLFWwindow *window, int width, int height)
@@ -142,16 +140,16 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
     if (action == GLFW_PRESS) {
         switch(key) {
         case 'W':
-            camera->holdingForward = true;
+            scene.setCamFW(true);
             break;
         case 'S':
-            camera->holdingBackward = true;
+            scene.setCamBW(true);
             break;
         case 'A':
-            camera->holdingLeftStrafe = true;
+            scene.setCamLS(true);
             break;
         case 'D':
-            camera->holdingRightStrafe = true;
+            scene.setCamRS(true);
             break;
         default:
             break;
@@ -159,16 +157,16 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
     } else if (action == GLFW_RELEASE) {
         switch(key) {
         case 'W':
-            camera->holdingForward = false;
+            scene.setCamFW(false);
             break;
         case 'S':
-            camera->holdingBackward = false;
+            scene.setCamBW(false);
             break;
         case 'A':
-            camera->holdingLeftStrafe = false;
+            scene.setCamLS(false);
             break;
         case 'D':
-            camera->holdingRightStrafe = false;
+            scene.setCamRS(false);
             break;
         default:
             break;
@@ -178,13 +176,13 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
 
 void Application::mousepos_callback(GLFWwindow* window, double mouseX, double mouseY) {
     // CAMERA CONTROL, inutile pour l'instant
-    camera->handleMouseMove((int)mouseX, (int)mouseY);
+    scene.getCamera().handleMouseMove((int)mouseX, (int)mouseY);
 }
 
 void Application::setTitleFps()
 {
     std::string title = "Chess 3D - FPS: " + std::to_string(nbFrames);
     glfwSetWindowTitle(window, title.c_str());
-    
-    
+
+
 }
