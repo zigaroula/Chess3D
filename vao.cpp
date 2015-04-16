@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <glm/gtx/string_cast.hpp>
-
+#include <glm/gtc/matrix_transform.hpp>
 
 Vao Vao::loadObj(std::string filename)
 {
@@ -80,11 +80,10 @@ Vao Vao::loadObj(std::string filename)
         std::cout << glm::to_string(vertices_new[i]) << ";" << glm::to_string(normals_new[i]) << std::endl;
     }
     
-   
+    vao.vertex_count = vertices_new.size();
+    vao.model_matrix = glm::mat4(1.f);
+    vao.model_matrix = glm::translate(vao.model_matrix, glm::vec3(1.f, 1.f, 0.f));
 
-    
-    //Set vertex count
-    //set model matrix
     
     return vao;
 }
