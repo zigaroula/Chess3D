@@ -27,7 +27,7 @@ public:
     float getYawSensitivity() { return yawSensitivity; }
     void setYawSensitivity(float value) { yawSensitivity = value; }
 
-    glm::vec4 getPosition() const { return position; }
+    glm::vec3 getPosition() const { return position; }
     float getXPos() const { return position[0]; }
     float getYPos() const { return position[1]; }
     float getZPos() const { return position[2]; }
@@ -37,9 +37,13 @@ public:
     float getYRot() const { return rotation[1]; }
     float getZRot() const { return rotation[2]; }
 
+    glm::vec3 getDirection() const { return direction; }
+    void setDirection(glm::vec3 _direction) { direction = _direction; }
+
 
 private:
-    glm::vec4 position;
+    glm::vec3 position;
+    glm::vec3 direction;
     glm::vec4 rotation;
     glm::vec4 speed;
 

@@ -19,7 +19,8 @@ Camera::~Camera() {
 }
 
 void Camera::initCamera() {
-    position = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    position = glm::vec3(2.f, 1.f, 3.f);
+    direction = glm::vec3(0.0f, 0.0f, 0.0f);
     rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
     speed = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -65,43 +66,21 @@ void Camera::handleMouseMove(int mouseX, int mouseY) {
 }
 
 void Camera::move() {
-    glm::vec4 movement;
-
-    float sinXRot = sin(toRads(rotation[0]));
-    float cosXRot = cos(toRads(rotation[0]));
-
-    float sinYRot = sin(toRads(rotation[1]));
-    float cosYRot = cos(toRads(rotation[1]));
-
-    float pitchLimitFactor = cosXRot;
-
     if (holdingForward) {
-        movement[0] += sinYRot * pitchLimitFactor;
-        movement[1] += -sinXRot;
-        movement[2] += -cosYRot * pitchLimitFactor;
+        position[0] -= 0.0001*fabs(position[0]-direction[0]) + 0.0001;
+        position[1] -= 0.0001*fabs(position[1]-direction[1]) + 0.0001;
+        position[2] -= 0.0001*fabs(position[2]-direction[2]) + 0.0001;
     }
-
     if (holdingBackward) {
-        movement[0] += -sinYRot * pitchLimitFactor;
-        movement[1] += sinXRot;
-        movement[2] += -cosYRot * pitchLimitFactor;
+        position[0] += 0.0001*fabs(position[0]-direction[0]) + 0.0001;
+        position[1] += 0.0001*(position[1]-direction[1]) + 0.0001;
+        position[2] += 0.0001*(position[2]-direction[2]) + 0.0001;
     }
-
     if (holdingLeftStrafe) {
-        movement[0] += -cosYRot;
-        movement[2] += -sinYRot;
+        position[0] -= 0.0001*fabs(position[0]-direction[0]) + 0.0001;
     }
 
     if (holdingRightStrafe) {
-        movement[0] += cosYRot;
-        movement[2] += sinYRot;
+        position[0] += 0.0001*fabs(position[0]-direction[0]) + 0.0001;
     }
-
-    float norm = sqrt(movement[0]*movement[0] + movement[1]*movement[1] + movement[2]*movement[2]);
-    movement[0] = movement[0]/norm;
-    movement[1] = movement[1]/norm;
-    movement[2] = movement[2]/norm;
-
-    position += movement;
-    //std::cout << position[0] << " " << position[1] << " " << position[2] << std::endl;
 }

@@ -38,11 +38,8 @@ void Application::start()
 
     initOpenGL();
 
-
-    // TEST CAMERA
+    // CAMERA
     camera = new Camera(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-    glfwSetCursorPos(window, midWindowX, midWindowY);
-    glfwSetCursorPosCallback(window, mousepos_callback);
 
     glfwSwapInterval(1);
     glfwSetKeyCallback(window, key_callback);
@@ -101,6 +98,11 @@ void Application::display()
     glBindVertexArray(0);
     glfwSwapBuffers(window);
     glfwPollEvents();
+
+    // CAMERA VIEW
+    glm::mat4 view_matrix(1.f);
+    view_matrix = glm::lookAt(camera->getPosition(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
+    glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, glm::value_ptr(view_matrix));
 }
 
 void Application::window_size_callback(GLFWwindow *window, int width, int height)
@@ -124,13 +126,13 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
     // CAMERA CONTROL
     if (action == GLFW_PRESS) {
         switch(key) {
-        case 'Z':
+        case 'W':
             camera->holdingForward = true;
             break;
         case 'S':
             camera->holdingBackward = true;
             break;
-        case 'Q':
+        case 'A':
             camera->holdingLeftStrafe = true;
             break;
         case 'D':
@@ -139,15 +141,15 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
         default:
             break;
         }
-    } else {
+    } else if (action == GLFW_RELEASE) {
         switch(key) {
-        case 'Z':
+        case 'W':
             camera->holdingForward = false;
             break;
         case 'S':
             camera->holdingBackward = false;
             break;
-        case 'Q':
+        case 'A':
             camera->holdingLeftStrafe = false;
             break;
         case 'D':
@@ -160,6 +162,6 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
 }
 
 void Application::mousepos_callback(GLFWwindow* window, double mouseX, double mouseY) {
-    // CAMERA CONTROL
+    // CAMERA CONTROL, inutile pour l'instant
     camera->handleMouseMove((int)mouseX, (int)mouseY);
 }
