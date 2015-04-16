@@ -11,7 +11,7 @@ Scene::Scene() {
 void Scene::initScene(int width, int height)
 {
     projection_matrix = glm::mat4(0.5f);
-    vao_list.push_back(Vao::getCube());
+    //vao_list.push_back(Vao::getCube());
     vao_list.push_back(Vao::loadObj("models/cube2.obj", glm::vec3(1.f, 0.f, 0.f)));
     
     camera = Camera(width, height);

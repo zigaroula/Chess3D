@@ -89,7 +89,7 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
     
     vao.vertex_count = (GLuint)vertices_new.size();
     vao.model_matrix = glm::mat4(1.f);
-    vao.model_matrix = glm::translate(vao.model_matrix, glm::vec3(1.f, 1.f, 0.f));
+    //vao.model_matrix = glm::translate(vao.model_matrix, glm::vec3(1.f, 1.f, 0.f));
     
     glGenVertexArrays(1, &vao.id);
     glBindVertexArray(vao.id);
