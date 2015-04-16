@@ -3,4 +3,11 @@ main
 GLProgram.h
 GLProgram.cpp
 Chess3D.creator.user
-
+Chess3D.creator
+Chess3D.config
+Chess3D.files
+Chess3D.includes
+.gitignore~
+*.cbp
+*.depend
+*.layout
