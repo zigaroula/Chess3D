@@ -20,6 +20,7 @@ public:
     GLuint getId() const { return id; }
     GLsizei getVertexCount() const { return vertex_count; }
     const GLfloat* getModelMatrixArray() const { return glm::value_ptr(model_matrix); }
+    const glm::mat4 getModelMatrix() const { return model_matrix; }
     static Vao getCube();
     static Vao loadObj(std::string, glm::vec3);
 
