@@ -21,7 +21,9 @@ void Program::init()
     attach(fs);
 
     glBindAttribLocation(id, 0, "vertex");
-    glBindAttribLocation(id, 1, "color");
+    glBindAttribLocation(id, 1, "normal");
+    glBindAttribLocation(id, 2, "color");
+
 
     link();
 
