@@ -10,13 +10,6 @@ class Camera {
 public:
     static const float TO_RADS;
 
-    bool holdingForward;
-    bool holdingBackward;
-    bool holdingLeftStrafe;
-    bool holdingRightStrafe;
-    bool holdingZoomPositive;
-    bool holdingZoomNegative;
-
     Camera();
     Camera(float, float);
     ~Camera();
@@ -43,6 +36,19 @@ public:
     glm::vec3 getDirection() const { return direction; }
     void setDirection(glm::vec3 _direction) { direction = _direction; }
 
+    bool getFW() { return holdingForward; }
+    bool getBW() { return holdingBackward; }
+    bool getLS() { return holdingLeftStrafe; }
+    bool getRS() { return holdingRightStrafe; }
+    bool getZP() { return holdingZoomPositive; }
+    bool getZN() { return holdingZoomNegative; }
+
+    void setFW(bool value) { holdingForward = value; }
+    void setBW(bool value) { holdingBackward = value; }
+    void setLS(bool value) { holdingLeftStrafe = value; }
+    void setRS(bool value) { holdingRightStrafe = value; }
+    void setZP(bool value) { holdingZoomPositive = value; }
+    void setZN(bool value) { holdingZoomNegative = value; }
 
 private:
     glm::vec3 position;
@@ -50,9 +56,9 @@ private:
     glm::vec4 rotation;
     glm::vec4 speed;
 
-    float movementSpeedFactor;
-    float pitchSensitivity;
-    float yawSensitivity;
+    float movementSpeedFactor; // inutile
+    float pitchSensitivity; // inutile
+    float yawSensitivity; // inutile
     float angleH;
     float angleV;
     float distance;
@@ -65,6 +71,13 @@ private:
     void initCamera();
     glm::vec3 polar2Cartesian (float, float, float);
     glm::vec3 cartesian2Polar (glm::vec3);
+
+    bool holdingForward;
+    bool holdingBackward;
+    bool holdingLeftStrafe;
+    bool holdingRightStrafe;
+    bool holdingZoomPositive;
+    bool holdingZoomNegative;
 };
 
 #endif // CAMERA_H

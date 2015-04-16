@@ -34,12 +34,12 @@ public:
     GLfloat *getNormalMatrixArray(unsigned int vao_index);
     GLfloat* getViewMatrixArray() { return glm::value_ptr(view_matrix); }
     Camera getCamera() { return camera; }
-    void setCamFW(bool fw) { camera.holdingForward = fw; }
-    void setCamBW(bool bw) { camera.holdingBackward = bw; }
-    void setCamLS(bool ls) { camera.holdingLeftStrafe = ls; }
-    void setCamRS(bool rs) { camera.holdingRightStrafe = rs; }
-    void setCamZP(bool zp) { camera.holdingZoomPositive = zp; }
-    void setCamZN(bool zn) { camera.holdingZoomNegative = zn; }
+    void setCamFW(bool fw) { camera.setFW(fw); }
+    void setCamBW(bool bw) { camera.setBW(bw); }
+    void setCamLS(bool ls) { camera.setLS(ls); }
+    void setCamRS(bool rs) { camera.setRS(rs); }
+    void setCamZP(bool zp) { camera.setZP(zp); }
+    void setCamZN(bool zn) { camera.setZN(zn); }
     void move(int);
 
 private:
