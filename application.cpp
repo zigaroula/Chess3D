@@ -98,6 +98,10 @@ void Application::display()
     for (unsigned int i = 0; i < scene.size(); ++i)
     {
         const Vao &vao = scene[i];
+        
+        
+        //glm::mat4 normal_matrix = glm::transpose(glm::inverse())
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
 
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
         glBindVertexArray(vao.getId());
@@ -111,6 +115,8 @@ void Application::display()
     // CAMERA VIEW
     scene.setView();
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
+    
+
 }
 
 void Application::window_size_callback(GLFWwindow *window, int width, int height)

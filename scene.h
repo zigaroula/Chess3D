@@ -31,6 +31,7 @@ public:
 
     // CAMERA
     void setView();
+    GLfloat *getNormalMatrixArray(unsigned int vao_index);
     GLfloat* getViewMatrixArray() { return glm::value_ptr(view_matrix); }
     Camera getCamera() { return camera; }
     void setCamFW(bool fw) { camera.holdingForward = fw; }

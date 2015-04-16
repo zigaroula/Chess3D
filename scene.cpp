@@ -1,6 +1,7 @@
 #include "scene.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
 
@@ -30,4 +31,14 @@ void Scene::setView() {
 
 void Scene::move(int fps) {
     camera.move(fps);
+}
+
+GLfloat* Scene::getNormalMatrixArray(unsigned int vao_index)
+{
+    const glm::mat4 &model_matrix = vao_list[vao_index].getModelMatrix();
+    glm::mat4 normal_matrix(1.0f);
+    
+    normal_matrix = glm::transpose(glm::inverse(view_matrix * model_matrix));
+    
+    return glm::value_ptr(normal_matrix);
 }
