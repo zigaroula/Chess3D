@@ -13,6 +13,7 @@ void Scene::initScene(int width, int height)
     projection_matrix = glm::mat4(0.5f);
     vao_list.push_back(Vao::getCube());
     camera = Camera(width, height);
+    Vao::loadObj("models/cube2.obj");
 }
 
 void Scene::setPerspective(int width, int height)

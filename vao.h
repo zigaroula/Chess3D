@@ -21,6 +21,7 @@ public:
     GLsizei getVertexCount() const { return vertex_count; }
     const GLfloat* getModelMatrixArray() const { return glm::value_ptr(model_matrix); }
     static Vao getCube();
+    static Vao loadObj(std::string);
 
 private:
     GLuint id;
