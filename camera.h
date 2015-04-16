@@ -15,6 +15,7 @@ public:
     bool holdingLeftStrafe;
     bool holdingRightStrafe;
 
+    Camera();
     Camera(float, float);
     ~Camera();
 
