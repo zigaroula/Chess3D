@@ -17,25 +17,30 @@ class Application
 {
 public:
     static void start();
-    
+
 private:
     static void display();
     static void initOpenGL();
-    
+
     static void error_callback(int error, const char* description);
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void window_size_callback(GLFWwindow *window, int width, int height);
-    static void mousepos_callback(int mouseX, int mouseY);
+    static void mousepos_callback(GLFWwindow* window, double mouseX, double mouseY);
 
-    
+
     static GLFWwindow *window;
     static Program program;
     static Scene scene;
     static Camera *camera;
-    
+
     const static int DEFAULT_WIDTH = 640;
     const static int DEFAULT_HEIGHT = 480;
     
+    // Pour la camera
+    static const int midWindowX = DEFAULT_WIDTH/2;
+    static const int midWindowY = DEFAULT_HEIGHT/2;
+
+
 };
 
 

@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-c -Wall -std=c++11
-LDFLAGS=-lglfw3 -lGLEW -lGL -lGLU -lX11 -lXxf86vm -lXrandr -lXinerama -lXcursor -lpthread -lm 
+LDFLAGS=-L/usr/local/lib -lGLEW -lGLU -lglfw3 -lrt -lXrandr -lXinerama -lXi -lXcursor -lGL -lm -ldl -lXrender -ldrm -lXdamage -lX11-xcb -lxcb-glx -lxcb-dri2 -lxcb-dri3 -lxcb-present -lxcb-sync -lxshmfence -lXxf86vm -lXfixes -lXext -lX11 -lpthread -lxcb -lXau -lXdmcp 
 SOURCES=main.cpp vao.cpp scene.cpp program.cpp shader.cpp application.cpp camera.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=main

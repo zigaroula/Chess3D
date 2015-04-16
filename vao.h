@@ -12,6 +12,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <iostream>
+
 class Vao
 {
 public:
@@ -19,12 +21,12 @@ public:
     GLsizei getVertexCount() const { return vertex_count; }
     const GLfloat* getModelMatrixArray() const { return glm::value_ptr(model_matrix); }
     static Vao getCube();
-    
+
 private:
     GLuint id;
     GLsizei vertex_count;
     glm::mat4 model_matrix;
-    
+
 };
 
 
