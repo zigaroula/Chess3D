@@ -37,7 +37,7 @@ public:
     void setCamBW(bool bw) { camera.holdingBackward = bw; }
     void setCamLS(bool ls) { camera.holdingLeftStrafe = ls; }
     void setCamRS(bool rs) { camera.holdingRightStrafe = rs; }
-    void move();
+    void move(int);
 
 private:
     std::vector<Vao> vao_list;

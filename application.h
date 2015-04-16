@@ -21,7 +21,7 @@ public:
 private:
     static void display();
     static void initOpenGL();
-    
+
     static void setTitleFps();
     static void error_callback(int error, const char* description);
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -31,6 +31,7 @@ private:
 
     static double lastTime;
     static int nbFrames;
+    static int nbFramesLastSecond;
     static GLFWwindow *window;
     static Program program;
     static Scene scene;
@@ -38,7 +39,7 @@ private:
 
     const static int DEFAULT_WIDTH = 640;
     const static int DEFAULT_HEIGHT = 480;
-    
+
     // Pour la camera
     static const int midWindowX = DEFAULT_WIDTH/2;
     static const int midWindowY = DEFAULT_HEIGHT/2;

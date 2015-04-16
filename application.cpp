@@ -8,6 +8,7 @@ Program Application::program;
 Scene Application::scene;
 double Application::lastTime;
 int Application::nbFrames;
+int Application::nbFramesLastSecond;
 
 void Application::start()
 {
@@ -43,13 +44,13 @@ void Application::start()
     glfwSetKeyCallback(window, key_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
 
-
     lastTime = glfwGetTime();
     nbFrames = 0;
+    nbFramesLastSecond = 1;
 
     while (!glfwWindowShouldClose(window))
     {
-        scene.move();
+
         display();
 
         /* computing fps */
@@ -57,10 +58,12 @@ void Application::start()
         nbFrames++;
         if (currentTime - lastTime >= 1.0)
         {
+            nbFramesLastSecond = nbFrames;
             setTitleFps();
             nbFrames = 0;
             lastTime += 1.0;
         }
+        scene.move(nbFramesLastSecond);
     }
 
     glfwDestroyWindow(window);

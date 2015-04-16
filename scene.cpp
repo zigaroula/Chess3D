@@ -27,6 +27,6 @@ void Scene::setView() {
     view_matrix = glm::lookAt(camera.getPosition(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
 }
 
-void Scene::move() {
-    camera.move();
+void Scene::move(int fps) {
+    camera.move(fps);
 }
