@@ -8,6 +8,7 @@ Program Application::program;
 Scene Application::scene;
 double Application::lastTime;
 int Application::nbFrames;
+int Application::nbFramesLastSecond;
 
 void Application::start()
 {
@@ -43,13 +44,13 @@ void Application::start()
     glfwSetKeyCallback(window, key_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
 
-
     lastTime = glfwGetTime();
     nbFrames = 0;
+    nbFramesLastSecond = 1;
 
     while (!glfwWindowShouldClose(window))
     {
-        scene.move();
+
         display();
 
         /* computing fps */
@@ -57,10 +58,12 @@ void Application::start()
         nbFrames++;
         if (currentTime - lastTime >= 1.0)
         {
+            nbFramesLastSecond = nbFrames;
             setTitleFps();
             nbFrames = 0;
             lastTime += 1.0;
         }
+        scene.move(nbFramesLastSecond);
     }
 
     glfwDestroyWindow(window);
@@ -83,11 +86,6 @@ void Application::initOpenGL()
 
     scene.setPerspective(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
-
-    glm::mat4 view_matrix(1.f);
-    view_matrix = glm::lookAt(glm::vec3(2.f, 1.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-    glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, glm::value_ptr(view_matrix));
-
 }
 
 void Application::display()
