@@ -12,7 +12,7 @@ uniform mat4 model_matrix;
 uniform mat4 view_matrix;
 uniform mat4 normal_matrix;
 
-out vec4 color_out;
+out vec3 color_interp;
 
 void main(void)
 {
@@ -20,5 +20,5 @@ void main(void)
     vec4 vertPos4 = view_matrix * model_matrix * vec4(vertex, 1.0);
     vertex_position = vec3(vertPos4);
     vertex_normal = vec3(normal_matrix * vec4(normal, 0.0));
-    color_out = vec4(color, 1.0);
+    color_interp = color;
 }

@@ -17,3 +17,5 @@ shader2.frag
 shader2.vert
 vao.cpp
 vao.h
+game.h
+game.cpp
