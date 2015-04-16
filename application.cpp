@@ -50,8 +50,6 @@ void Application::start()
     while (!glfwWindowShouldClose(window))
     {
         scene.move();
-            std::cout << "coucou constructeur 2A34547 " << scene.getCamera().getPosition()[0]<< std::endl;
-
         display();
 
         /* computing fps */
