@@ -1,46 +1,39 @@
-// ----------------------------------------------
-// Informatique Graphique 3D & Réalité Virtuelle.
-// Travaux Pratiques
-// Shaders
-// Copyright (C) 2015 Tamy Boubekeur
-// All rights reserved.
-// ----------------------------------------------
+#version 400
 
-// Add here all the value you need to describe the light or the material.
-// At first used const values.
-// Then, use uniform variables and set them from the CPU program.
+in vec3 color_interp;
+in vec3 vertex_position;
+in vec3 vertex_normal;
 
-const vec3 lightPos = vec3 (5.0, 5.0, 5.0);
-const vec3 matAlbedo = vec3 (0.6, 0.6, 0.6);
+out vec4 outputColor;
 
-float diffuseRef = 0.5;
-float specRef = 0.7;
-float shininess = 5.0;
+uniform mat4 view_matrix;
 
-varying vec4 P; // fragment-wise position
-varying vec3 N; // fragment-wise normal
+vec3 lightPos = vec3(7.0,7.0,1.0);
+const vec3 diffuseColor = vec3(0.5, 0.5, 0.5);
+const vec3 specColor = vec3(1.0, 1.0, 1.0);
 
-void main (void) {
-    gl_FragColor = vec4 (0.0, 0.0, 0.0, 1.0);
-
-    vec3 p = vec3 (gl_ModelViewMatrix * P);
-    vec3 n = normalize (gl_NormalMatrix * N);
-    vec3 l = normalize (lightPos - p);
-    vec3 v = normalize (-p);
-    vec3 wh = normalize (l+v);
-
-    for (int i = 0; i < 4; i++) {
-        float diffuse = max (dot (l, n), 0.0);
-        vec3 r = reflect (l, n);
+void main(void)
+{
 
 
-        float spec = max(dot(n, wh), 0.0);
-        spec = pow (spec, shininess);
-        spec = max (0.0, spec);
+    lightPos = vec3(view_matrix * vec4(lightPos,1));
+    vec3 normal = normalize(vertex_normal);
+    vec3 lightDir = normalize(lightPos - vertex_position);
 
-        vec4 LightContribution = diffuseRef * diffuse * gl_LightSource[i].diffuse + specRef * spec * gl_LightSource[i].specular;
-        gl_FragColor += vec4 (LightContribution.xyz, 1.0);
+    float lambertian = max(dot(lightDir,normal), 0.0);
+    float specular = 0.0;
+
+    if(lambertian > 0.0) {
+
+        vec3 viewDir = normalize(-vertex_position);
+
+        // this is blinn phong
+        vec3 halfDir = normalize(lightDir + viewDir);
+        float specAngle = max(dot(halfDir, normal), 0.0);
+        specular = pow(specAngle, 16.0);
     }
 
-}
+   	//outputColor = vec4(color_interp, 1.0);
+    outputColor = vec4(color_interp + lambertian * diffuseColor +specular * specColor, 1.0);
 
+}

@@ -6,8 +6,8 @@ void Program::init()
 {
 
     const string & _name = "Programme";
-    const string & _vertexShaderFilename = "shader2.vert";
-    const string & _fragmentShaderFilename = "shader2.frag";
+    const string & _vertexShaderFilename = "shader.vert";
+    const string & _fragmentShaderFilename = "shader.frag";
 
     id = glCreateProgram();
     name = _name;
