@@ -94,8 +94,7 @@ glm::vec3 Camera::cartesian2Polar(glm::vec3 initPos) {
 }
 
 void Camera::move(int fps) {
-//std::cout << angleH << " " << angleV << " " << distance << std::endl;
-    //distance = sqrt((position[0]-direction[0])*(position[0]-direction[0]) + (position[1]-direction[1])*(position[1]-direction[1]) + (position[2]-direction[2])*(position[2]-direction[2]));
+    //std::cout << angleH << " " << angleV << " " << distance << std::endl;
     if (holdingForward) {
         angleV -= toRads(90) / fps;
         if (angleV < toRads(0.001)) {
@@ -121,11 +120,10 @@ void Camera::move(int fps) {
         }
     }
     if (holdingZoomNegative) {
-        distance += 100/fps;
+        distance += (float)5/fps;
     }
     if (holdingZoomPositive) {
-        distance -= 100/fps;
+        distance -= (float)5/fps;
     }
     position = polar2Cartesian(angleH, angleV, distance);
-    //std::cout << position[0] << std::endl;
 }

@@ -46,7 +46,7 @@ void Application::start()
 
     lastTime = glfwGetTime();
     nbFrames = 0;
-    nbFramesLastSecond = 1;
+    nbFramesLastSecond = 7000;
 
     while (!glfwWindowShouldClose(window))
     {
