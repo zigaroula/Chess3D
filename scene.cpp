@@ -4,10 +4,6 @@
 
 #include <iostream>
 
-constexpr float Scene::zFar;
-constexpr float Scene::zNear;
-constexpr float Scene::fov;
-
 Scene::Scene()
 {
 
@@ -22,5 +18,5 @@ void Scene::initScene()
 void Scene::setPerspective(int width, int height)
 {
     projection_matrix = glm::mat4(1.0f);
-    projection_matrix = glm::perspective(fov, (float)width/height, zNear, zFar);
+    projection_matrix = glm::perspective(FOV, (float)width/height, ZNEAR, ZFAR);
 }

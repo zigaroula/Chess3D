@@ -13,6 +13,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 
+#define ZNEAR 0.1f
+#define ZFAR 100.f
+#define FOV 0.785f
+
 class Scene
 {
 public:
@@ -27,10 +31,6 @@ public:
 private:
     std::vector<Vao> vao_list;
     glm::mat4 view_matrix, projection_matrix;
-    
-    static constexpr float zNear = 0.1f;
-    static constexpr float zFar = 100.f;
-    static constexpr float fov = 0.785f;
     
     
 };

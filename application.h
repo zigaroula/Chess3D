@@ -33,8 +33,8 @@ private:
     static Scene scene;
     static Camera *camera;
     
-    static constexpr int DEFAULT_WIDTH = 640;
-    static constexpr int DEFAULT_HEIGHT = 480;
+    const static int DEFAULT_WIDTH = 640;
+    const static int DEFAULT_HEIGHT = 480;
     
 };
 
