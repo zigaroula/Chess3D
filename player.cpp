@@ -28,7 +28,7 @@ void Player::init(int side) {
         bishop2.init(BISHOP, 7, 5);
         knight2.init(KNIGHT, 7, 6);
         rook2.init(ROOK, 7, 7);
-    } else {
+    } else if (side == 2) {
         pawn1.init(PAWN, 1, 0);
         pawn2.init(PAWN, 1, 1);
         pawn3.init(PAWN, 1, 2);
@@ -46,23 +46,24 @@ void Player::init(int side) {
         knight2.init(KNIGHT, 0, 6);
         rook2.init(ROOK, 0, 7);
     }
+
     number = side;
-}
-
-bool Player::check() {
-    if (/*CONDITION*/0) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool Player::checkMate() {
-    if (/*CONDITION*/0) {
-        return true;
-    } else {
-        return false;
-    }
+    pieces.push_back(pawn1);
+    pieces.push_back(pawn2);
+    pieces.push_back(pawn3);
+    pieces.push_back(pawn4);
+    pieces.push_back(pawn5);
+    pieces.push_back(pawn6);
+    pieces.push_back(pawn7);
+    pieces.push_back(pawn8);
+    pieces.push_back(rook1);
+    pieces.push_back(rook2);
+    pieces.push_back(knight1);
+    pieces.push_back(knight2);
+    pieces.push_back(bishop1);
+    pieces.push_back(bishop2);
+    pieces.push_back(queen);
+    pieces.push_back(king);
 }
 
 void Player::loose() {
@@ -71,4 +72,10 @@ void Player::loose() {
 
 void Player::win() {
 
+}
+
+void Player::computeAvailableMovements(std::vector<Piece> own, std::vector<Piece> opp) {
+    for (unsigned int i = 0 ; i < pieces.size() ; i++) {
+        pieces[i].computeAvailableMovements(own, opp);
+    }
 }

@@ -19,11 +19,16 @@ public:
     virtual void loadFromFile();
     ///Sauvegarde la partie en cours
     virtual void saveToFile();
-
+    ///Regarde si un joueur est en échec et renvoie le joueur associé
+    Player check();
+    ///Regarde si un joueur est en échec et mat et renvoie le joueur associé
+    Player checkMate();
+    ///Change le joueur en cours
+    void changeTurn();
 private:
     Board board;
-    Player player1, player2;
-
+    Player player1, player2, none;
+    int turn;
 };
 
 #endif // GAME_H

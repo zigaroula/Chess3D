@@ -11,6 +11,7 @@ class Board
         virtual ~Board();
         void init();
     private:
+        ///Permet de maper un ensemble de 2 int en positions réelles dans l'espace
         std::vector<std::vector<glm::vec3> > squares;
 };
 
