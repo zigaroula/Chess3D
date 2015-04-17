@@ -9,6 +9,10 @@ Scene Application::scene;
 double Application::lastTime;
 int Application::nbFrames;
 int Application::nbFramesLastSecond;
+int Application::window_height;
+int Application::window_width;
+int Application::midWindowX;
+int Application::midWindowY;
 
 void Application::start()
 {
@@ -20,8 +24,15 @@ void Application::start()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,  GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    window = glfwCreateWindow(DEFAULT_WIDTH, DEFAULT_HEIGHT, "Chess3D", NULL, NULL);
+    window_height = mode->height;
+    window_width= mode->width;
+    
+    midWindowX = window_width/2;
+    midWindowY = window_height/2;
+    window = glfwCreateWindow(window_width, window_height, "Chess3D", NULL, NULL);
 
     if (!window)
     {
@@ -80,11 +91,11 @@ void Application::initOpenGL()
 
     program.init();
 
-    scene.initScene(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    scene.initScene(window_width, window_height);
 
     program.use();
 
-    scene.setPerspective(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    scene.setPerspective(window_width, window_height);
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
 }
 

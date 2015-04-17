@@ -37,12 +37,12 @@ private:
     static Scene scene;
     static Camera *camera;
 
-    const static int DEFAULT_WIDTH = 640;
-    const static int DEFAULT_HEIGHT = 480;
+    static int window_width;
+    static int window_height;
 
     // Pour la camera
-    static const int midWindowX = DEFAULT_WIDTH/2;
-    static const int midWindowY = DEFAULT_HEIGHT/2;
+    static int midWindowX;
+    static int midWindowY;
 
 
 };
