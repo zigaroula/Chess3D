@@ -8,7 +8,7 @@ out vec4 outputColor;
 
 uniform mat4 view_matrix;
 
-vec3 lightPos = vec3(7.0,7.0,1.0);
+vec3 lightPos = vec3(100.0,-100.0,0.0);
 const vec3 diffuseColor = vec3(0.5, 0.5, 0.5);
 const vec3 specColor = vec3(1.0, 1.0, 1.0);
 

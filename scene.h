@@ -14,8 +14,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 
-#define ZNEAR 0.1f
-#define ZFAR 100.f
+#define ZNEAR 100.0f
+#define ZFAR 1000.0f
 #define FOV 0.785f
 
 class Scene
