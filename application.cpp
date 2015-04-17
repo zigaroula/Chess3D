@@ -2,16 +2,21 @@
 
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#define TAILLE_SHADOW_MAP 1024
 
 GLFWwindow *Application::window;
 Program Application::program;
+Program Application::programSM;
 Scene Application::scene;
 double Application::lastTime;
 int Application::nbFrames;
 int Application::nbFramesLastSecond;
 
+static bool ombres;
+
 void Application::start()
 {
+    ombres = false;
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
@@ -78,6 +83,7 @@ void Application::initOpenGL()
     glDepthFunc(GL_LESS);
     glClearColor(0.f, 0.f, 0.f, 1.f);
 
+    programSM.initForShadowMap();
     program.init();
 
     scene.initScene(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -91,6 +97,59 @@ void Application::initOpenGL()
 void Application::display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    if(ombres){
+        //###############OMBRE PORTEE PASSE 1###############################"
+
+        programSM.use();
+
+        //Framebuffer tampon de l'image de profondeur depuis la source de lumière
+        GLuint FramebufferName = 0;
+        glGenFramebuffers(1, &FramebufferName);
+        glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+
+        // Depth texture : permet d'échantilloner le tampon plus tard dans le shader
+        GLuint depthTexture;
+        glGenTextures(1, &depthTexture);
+        glBindTexture(GL_TEXTURE_2D, depthTexture);
+        //Creation d'une image vide de taille
+        glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT16, 256, 256, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
+
+        glDrawBuffer(GL_NONE); // On ne dessine pas de tampon, en fait
+
+        // On vérifie que le tampon d'image est OK ... ?
+        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            std::cerr << "Probleme avec le tampon d'image" << std::endl;
+
+        glm::vec3 lightInvDir = scene.getLight(0).getPos();
+
+        // On calcule la matrice Model-Vue-Projection du point de vue de la lumière
+        glm::mat4 depthProjectionMatrix = scene.getProjectionMatrix();
+        glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir, glm::vec3(0,0,0), glm::vec3(0,1,0));
+        for (unsigned int i = 0; i < scene.size(); ++i)
+        {
+            const Vao &vao = scene[i];
+
+            glm::mat4 depthModelMatrix =  vao.getModelMatrix();
+            glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+            // On envoie la matrix au shader lié (MVP_matrix)
+            glUniformMatrix4fv(glGetUniformLocation(programSM.getId(), "MVP_matrix"), 1, GL_FALSE, &depthMVP[0][0]);
+
+            glBindVertexArray(vao.getId());
+
+            glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
+        }
+
+
+
+
+    }
 
     program.use();
 
@@ -113,6 +172,8 @@ void Application::display()
     // CAMERA VIEW
     scene.setView();
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
+
+    program.stop();
 
 
 }
@@ -156,6 +217,9 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
         case 'E':
             scene.setCamZN(true);
             break;
+        case 'I':
+            ombres = true;
+            break;
         default:
             break;
         }
@@ -178,6 +242,9 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
             break;
         case 'E':
             scene.setCamZN(false);
+            break;
+        case 'I':
+            ombres = false;
             break;
         default:
             break;

@@ -33,6 +33,7 @@ private:
     static int nbFrames;
     static int nbFramesLastSecond;
     static GLFWwindow *window;
+    static Program programSM;
     static Program program;
     static Scene scene;
     static Camera *camera;

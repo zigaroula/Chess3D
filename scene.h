@@ -10,6 +10,7 @@
 
 #include "camera.h"
 #include "vao.h"
+#include "light.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
@@ -28,6 +29,7 @@ public:
 
     void setPerspective(int width, int height);
     GLfloat* getProjectionMatrixArray() { return glm::value_ptr(projection_matrix); }
+    glm::mat4 getProjectionMatrix() { return projection_matrix;}
 
     // CAMERA
     void setView();
@@ -42,10 +44,16 @@ public:
     void setCamZN(bool zn) { camera.setZN(zn); }
     void move(int);
 
+    // LUMIERE
+    inline Light getLight(size_t index) const{return light_list[index];}
+    inline void setLight(size_t index, Light light){light_list[index] = light;}
+    inline void addLight( Light light){light_list.push_back(light);}
+
 private:
     std::vector<Vao> vao_list;
     glm::mat4 view_matrix, projection_matrix, normal_matrix;
     Camera camera;
+    std::vector<Light> light_list;
 
 };
 
