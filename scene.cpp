@@ -13,7 +13,7 @@ void Scene::initScene(int width, int height)
 {
     projection_matrix = glm::mat4(0.5f);
     //vao_list.push_back(Vao::getCube());
-    vao_list.push_back(Vao::loadObj("models/sphere.obj", glm::vec3(0.5f, 0.f, 0.f)));
+    vao_list.push_back(Vao::loadObj("models/big.obj", glm::vec3(0.5f, 0.f, 0.f)));
     
     camera = Camera(width, height);
 }
@@ -26,7 +26,7 @@ void Scene::setPerspective(int width, int height)
 
 void Scene::setView() {
     view_matrix = glm::mat4 (1.0f);
-    view_matrix = glm::lookAt(camera.getPosition(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
+    view_matrix = glm::lookAt(camera.getPosition(), glm::vec3(0.f, 0.f, -10.f), glm::vec3(0.f, 1.f, 0.f));
 }
 
 void Scene::move(int fps) {

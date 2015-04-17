@@ -23,7 +23,7 @@ Camera::~Camera() {
 }
 
 void Camera::initCamera() {
-    position = glm::vec3(6.f, 6.f, 6.f);
+    position = glm::vec3(0.f, 20.f, 100.f);
     direction = glm::vec3(0.0f, 0.0f, 0.0f);
     rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
     speed = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -120,10 +120,10 @@ void Camera::move(int fps) {
         }
     }
     if (holdingZoomNegative) {
-        distance += (float)5/fps;
+        distance += (float)200/fps;
     }
     if (holdingZoomPositive) {
-        distance -= (float)5/fps;
+        distance -= (float)200/fps;
     }
     position = polar2Cartesian(angleH, angleV, distance);
 }
