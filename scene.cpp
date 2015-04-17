@@ -107,10 +107,6 @@ void Scene::initScene(int width, int height)
         vao_list.push_back(pion_current);
     }
 
-
-
-    
-
     camera = Camera(width, height);
 }
 

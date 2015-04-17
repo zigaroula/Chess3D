@@ -11,3 +11,4 @@ Chess3D.includes
 *.cbp
 *.depend
 *.layout
+/obj
