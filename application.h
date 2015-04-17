@@ -30,6 +30,8 @@ private:
     static void window_size_callback(GLFWwindow *window, int width, int height);
     static void mousepos_callback(GLFWwindow* window, double mouseX, double mouseY);
 
+    static void saveTexture();
+
     static double lastTime;
     static int nbFrames;
     static int nbFramesLastSecond;

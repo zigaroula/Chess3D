@@ -1,9 +1,11 @@
 #include "application.h"
 
+
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <fstream>
 
 GLFWwindow *Application::window;
 Program Application::program;
@@ -114,14 +116,17 @@ void Application::display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // 1ERE PASSE SHADOW
     program_shadows.use();
     
     glBindFramebuffer(GL_FRAMEBUFFER , scene.getShadowBufferId());
 
+    glClear ( GL_DEPTH_BUFFER_BIT ); /* important */
+    glViewport ( 0 , 0 , 1024 , 1024 );
     glm::vec3 lightPos(100.f, 100.f, 100.f);
     
     // On calcule la matrice Model-Vue-Projection du point de vue de la lumière
-    glm::mat4 depthProjectionMatrix = scene.getProjectionMatrix();
+    glm::mat4 depthProjectionMatrix = glm::ortho<float>(-800,800,-800,800,-800,800);
     glm::mat4 depthViewMatrix = glm::lookAt(lightPos, glm::vec3(0,0,0), glm::vec3(0,1,0));
     
     /* render each VAO*/
@@ -138,14 +143,18 @@ void Application::display()
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
     
-
-
     glBindFramebuffer(GL_FRAMEBUFFER , 0);
-   
-    
-   //*
-    
+
+
+    glBindTexture(GL_TEXTURE_2D, scene.getShadowTexureId());
+    glActiveTexture(GL_TEXTURE2);
+    glUniform1i(glGetUniformLocation(program.getId(), "shadow_text"), 2);
+
+    // 2EME PASSE SHADOW
     program.use();
+
+    glViewport ( 0 , 0 , window_width , window_height );
+
     for (unsigned int i = 0; i < scene.size(); ++i)
     {
         const Vao &vao = scene[i];
@@ -170,9 +179,6 @@ void Application::display()
         
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
         
-        glUniform1i(glGetUniformLocation(program.getId(), "shadow_text"), 0);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, scene.getShadowTexureId());
         
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
@@ -187,6 +193,39 @@ void Application::display()
     scene.setView();
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
 
+
+}
+
+void Application::saveTexture()
+{
+	std::cout << "save texture" << std::endl;
+
+    glBindTexture(GL_TEXTURE_2D, scene.getShadowTexureId());
+
+    GLint textureWidth, textureHeight;
+    int bytes;
+    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &textureWidth);
+    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &textureHeight);
+
+    std::cout << textureWidth << ";" << textureHeight << std::endl;
+
+    GLfloat *data = new GLfloat[textureWidth*textureHeight];
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, GL_FLOAT, data);
+
+    std::ofstream myfile;
+    myfile.open("test.txt");
+    for (int i = 0 ; i < textureHeight; ++i)
+    {
+    	for (int j = 0; j < textureWidth; ++j)
+    	{
+    		int index = i*textureWidth+j;
+    		myfile << data[index] << ",";
+
+    	}
+    	myfile << "\n";
+    }
+
+    myfile.close();
 
 }
 
@@ -229,6 +268,9 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
         case 'E':
             scene.setCamZN(true);
             break;
+        case 'T':
+        	saveTexture();
+        	break;
         default:
             break;
         }
