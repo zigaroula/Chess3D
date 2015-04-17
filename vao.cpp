@@ -5,9 +5,13 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+
+
 Vao Vao::loadObj(std::string filename, glm::vec3 color)
 {
     Vao vao;
+    
+    vao.ambient_color = color;
     
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> normals;
@@ -82,20 +86,13 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
         }
     }
     
-    std::vector<glm::vec3> vertices_new, normals_new, colors;
+    std::vector<glm::vec3> vertices_new, normals_new;
     for (unsigned int i = 0; i < vertex_indices.size(); ++i)
     {
         vertices_new.push_back(vertices[vertex_indices[i]]);
         normals_new.push_back(normals[normal_indices[i]]);
         
         //std::cout << glm::to_string(vertices_new[i]) << ";" << glm::to_string(normals_new[i]) << std::endl;
-    }
-    
-    if (color != glm::vec3(-1.f, -1.f, -1.f))
-    {
-        std::cout << filename << ",couleur fixe"<< std::endl;
-        for (unsigned int i = 0; i < vertices_new.size(); ++i)
-            colors.push_back(color);
     }
     
     vao.vertex_count = (GLuint)vertices_new.size();
@@ -119,12 +116,6 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
     glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(1);
     
-    GLuint vbo_colors;
-    glGenBuffers(1, &vbo_colors);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-    glBufferData(GL_ARRAY_BUFFER, vao.vertex_count * sizeof(glm::vec3), &colors[0], GL_STATIC_DRAW);
-    glVertexAttribPointer((GLuint)2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(2);
     
     glBindVertexArray(0);
     

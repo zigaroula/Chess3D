@@ -7,6 +7,7 @@ in vec3 vertex_normal;
 out vec4 outputColor;
 
 uniform mat4 view_matrix;
+uniform vec3 ambient_color;
 
 vec3 lightPos = vec3(100.0,100.0,100.0);
 const vec3 diffuseColor = vec3(0.0, 0.0, 1.0);
@@ -29,6 +30,6 @@ void main(void)
         specular = pow(specAngle, 16.0);
     }
 
-    outputColor = vec4(color_interp + lambertian * diffuseColor +specular * specColor, 1.0);
+    outputColor = vec4(ambient_color + lambertian * diffuseColor +specular * specColor, 1.0);
 
 }
