@@ -24,8 +24,6 @@ public:
     static Vao getCube();
     static Vao loadObj(std::string, glm::vec3);
 
-    void setModelMatrix(glm::mat4 modelMatrix) { model_matrix = modelMatrix; }
-
 private:
     GLuint id;
     GLsizei vertex_count;

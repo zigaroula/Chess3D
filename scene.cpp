@@ -15,7 +15,6 @@ void Scene::initScene(int width, int height)
     //vao_list.push_back(Vao::getCube());
     vao_list.push_back(Vao::loadObj("models/big.obj", glm::vec3(0.5f, 0.f, 0.f)));
     vao_list.push_back(Vao::loadObj("models/plane.obj", glm::vec3(0.5f, 0.5f, 0.5f)));
-    vao_list.push_back(Vao::loadObj("models/dame.obj", glm::vec3(0.5f, 0.f, 0.f)));
     camera = Camera(width, height);
 }
 
