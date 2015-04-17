@@ -1,18 +1,17 @@
 #include "game.h"
 
-Game::Game()
-{
-}
-
-void Game::initClassicGame(){
+Game::Game() {
 
 }
 
-
-void Game::loadFromFile(){
+void Game::initClassicGame() {
 
 }
 
-void Game::saveToFile(){
+void Game::loadFromFile() {
+
+}
+
+void Game::saveToFile() {
 
 }
