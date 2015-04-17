@@ -15,12 +15,40 @@ void Scene::initScene(int width, int height)
 {
     projection_matrix = glm::mat4(0.5f);
     //vao_list.push_back(Vao::getCube());
-    vao_list.push_back(Vao::loadObj("models/sphere2.obj", glm::vec3(0.5f, 0.f, 0.f)));
+    vao_list.push_back(Vao::loadObj("models/cavalier.obj", glm::vec3(0.5f, 0.f, 0.f)));
     
     camera = Camera(width, height);
     //Ajout de la lumiere par défaut à la scène
     addLight(Light());
 
+    initShadow();
+    
+
+}
+
+void Scene::initShadow()
+{
+    int SHADOWSIZE = 512;
+    
+    glGenTextures(1, &shadow_texture);
+    glBindTexture(GL_TEXTURE_2D , shadow_texture);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S , GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T , GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER , GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D , 0, GL_DEPTH_COMPONENT,  SHADOWSIZE , SHADOWSIZE , 0, GL_DEPTH_COMPONENT , GL_FLOAT , NULL);
+    
+    glTexParameteri(GL_TEXTURE_2D , GL_TEXTURE_COMPARE_MODE , GL_COMPARE_REF_TO_TEXTURE);
+    glBindTexture(GL_TEXTURE_2D , 0);
+    
+    glGenFramebuffers(1, &shadow_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER , shadow_buffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER , GL_DEPTH_ATTACHMENT , GL_TEXTURE_2D , shadow_texture, 0);
+    glDrawBuffer(GL_NONE);
+    
+    glBindFramebuffer(GL_FRAMEBUFFER , 0);
+    
+    
+    
 }
 
 void Scene::setPerspective(int width, int height)

@@ -92,6 +92,8 @@ void Application::initOpenGL()
 
     scene.setPerspective(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
+    
+    
 }
 
 void Application::display()
@@ -103,25 +105,10 @@ void Application::display()
 
         programSM.use();
 
-        //Framebuffer tampon de l'image de profondeur depuis la source de lumière
-        GLuint FramebufferName = 0;
-        glGenFramebuffers(1, &FramebufferName);
-        glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 
-        // Depth texture : permet d'échantilloner le tampon plus tard dans le shader
-        GLuint depthTexture;
-        glGenTextures(1, &depthTexture);
-        glBindTexture(GL_TEXTURE_2D, depthTexture);
-        //Creation d'une image vide de taille
-        glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT16, 256, 256, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glBindFramebuffer(GL_FRAMEBUFFER, scene.getShadowBufferId());
 
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
 
-        glDrawBuffer(GL_NONE); // On ne dessine pas de tampon, en fait
 
         // On vérifie que le tampon d'image est OK ... ?
         if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -145,6 +132,8 @@ void Application::display()
 
             glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
         }
+        
+        //glDrawBuffer(depthTexture);
 
 
 
@@ -154,6 +143,8 @@ void Application::display()
     program.use();
 
     /* render each VAO*/
+    
+    
     for (unsigned int i = 0; i < scene.size(); ++i)
     {
         const Vao &vao = scene[i];
@@ -173,7 +164,6 @@ void Application::display()
     scene.setView();
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
 
-    program.stop();
 
 
 }
