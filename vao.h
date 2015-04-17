@@ -17,17 +17,27 @@
 class Vao
 {
 public:
-    GLuint getId() const { return id; }
+    Vao() { }
+    Vao(const Vao& vao, const glm::vec3& color) { id = vao.id; model_matrix = vao.model_matrix; vertex_count = vao.vertex_count; ambient_color = color; }
+    GLuint getId() const { return id; };
     GLsizei getVertexCount() const { return vertex_count; }
+    
     const GLfloat* getModelMatrixArray() const { return glm::value_ptr(model_matrix); }
+    const GLfloat* getAmbientColorArray() const { return glm::value_ptr(ambient_color); }
+
     const glm::mat4 getModelMatrix() const { return model_matrix; }
     static Vao getCube();
     static Vao loadObj(std::string, glm::vec3);
+    
+    void translate(const glm::vec3& vector);
+    void rotate(float angle, const glm::vec3 &vector);
+    void scale(const glm::vec3 &vector);
 
 private:
     GLuint id;
     GLsizei vertex_count;
     glm::mat4 model_matrix;
+    glm::vec3 ambient_color;
 
 };
 

@@ -5,9 +5,13 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+
+
 Vao Vao::loadObj(std::string filename, glm::vec3 color)
 {
     Vao vao;
+    
+    vao.ambient_color = color;
 
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> normals;
@@ -69,8 +73,9 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
                         index = token.find("/");
                         size_t index2 = token.find("/", index + 1);
                         std::string a = token.substr(0, index);
-                        std::string b = token.substr(index + 1, index2 - index );
-                        std::string c = token.substr(index2 + 1, token.size() - index2 );
+                        std::string b = token.substr(index + 1, index2 - index - 1);
+                        std::string c = token.substr(index2 + 1, token.size() - index2 + 1);
+                        
 
                         vertex_indices.push_back(std::stoi(a) - 1);
                         normal_indices.push_back(std::stoi(c) - 1);
@@ -81,21 +86,15 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
             }
         }
     }
+    
+    std::vector<glm::vec3> vertices_new, normals_new;
 
-    std::vector<glm::vec3> vertices_new, normals_new, colors;
     for (unsigned int i = 0; i < vertex_indices.size(); ++i)
     {
         vertices_new.push_back(vertices[vertex_indices[i]]);
         normals_new.push_back(normals[normal_indices[i]]);
 
         //std::cout << glm::to_string(vertices_new[i]) << ";" << glm::to_string(normals_new[i]) << std::endl;
-    }
-
-    if (color != glm::vec3(-1.f, -1.f, -1.f))
-    {
-        std::cout << filename << ",couleur fixe"<< std::endl;
-        for (unsigned int i = 0; i < vertices_new.size(); ++i)
-            colors.push_back(color);
     }
 
     vao.vertex_count = (GLuint)vertices_new.size();
@@ -119,16 +118,24 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
     glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(1);
 
-    GLuint vbo_colors;
-    glGenBuffers(1, &vbo_colors);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-    glBufferData(GL_ARRAY_BUFFER, vao.vertex_count * sizeof(glm::vec3), &colors[0], GL_STATIC_DRAW);
-    glVertexAttribPointer((GLuint)2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(2);
-
     glBindVertexArray(0);
 
     return vao;
+}
+
+void Vao::translate(const glm::vec3 &vector)
+{
+    model_matrix = glm::translate(model_matrix, vector);
+}
+
+void Vao::rotate(float angle, const glm::vec3 &vector)
+{
+    model_matrix = glm::rotate(model_matrix, angle, vector);
+}
+
+void Vao::scale(const glm::vec3 &vector)
+{
+    model_matrix = glm::scale(model_matrix, vector);
 }
 
 Vao Vao::getCube()
