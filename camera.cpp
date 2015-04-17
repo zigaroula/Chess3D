@@ -124,6 +124,9 @@ void Camera::move(int fps) {
     }
     if (holdingZoomPositive) {
         distance -= (float)200/fps;
+        if (distance <0.001) {
+            distance += (float)200/fps;
+        }
     }
     position = polar2Cartesian(angleH, angleV, distance);
 }

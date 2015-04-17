@@ -8,7 +8,7 @@
 #include <GL/glew.h>
 #endif
 
-#define GLM_FORCE_RADIANS 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -28,6 +28,7 @@ public:
     void rotate(float angle, const glm::vec3 &vector);
     void scale(const glm::vec3 &vector);
 
+    void setModelMatrix(glm::mat4 modelMatrix) { model_matrix = modelMatrix; }
 
 private:
     GLuint id;
