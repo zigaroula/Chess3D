@@ -13,7 +13,33 @@ void Scene::initScene(int width, int height)
 {
     projection_matrix = glm::mat4(0.5f);
     //vao_list.push_back(Vao::getCube());
+    
+    vao_list.push_back(Vao::loadObj("models/tour.obj", glm::vec3(0.5f, 0.f, 0.f)));
+    vao_list.push_back(Vao::loadObj("models/cavalier.obj", glm::vec3(0.5f, 0.f, 0.f)));
+    vao_list.push_back(Vao::loadObj("models/fou.obj", glm::vec3(0.5f, 0.f, 0.f)));
+    vao_list.push_back(Vao::loadObj("models/roi.obj", glm::vec3(0.5f, 0.f, 0.f)));
     vao_list.push_back(Vao::loadObj("models/dame.obj", glm::vec3(0.5f, 0.f, 0.f)));
+    vao_list.push_back(Vao::loadObj("models/fou.obj", glm::vec3(0.5f, 0.f, 0.f)));
+    vao_list.push_back(Vao::loadObj("models/cavalier.obj", glm::vec3(0.5f, 0.f, 0.f)));
+    vao_list.push_back(Vao::loadObj("models/tour.obj", glm::vec3(0.5f, 0.f, 0.f)));
+
+
+
+    float shift = -80;
+    
+    vao_list[0].translate(glm::vec3(4*shift, 0.f, 0.f));
+    vao_list[1].translate(glm::vec3(3*shift, 0.f, 0.f));
+    vao_list[2].translate(glm::vec3(2*shift, 0.f, 0.f));
+    vao_list[3].translate(glm::vec3(1*shift, 0.f, 0.f));
+    vao_list[5].translate(glm::vec3(-1*shift, 0.f, 0.f));
+    vao_list[6].translate(glm::vec3(-2*shift, 0.f, 0.f));
+    vao_list[7].translate(glm::vec3(-3*shift, 0.f, 0.f));
+
+
+
+
+
+
     
     camera = Camera(width, height);
 }

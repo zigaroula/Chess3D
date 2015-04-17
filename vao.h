@@ -23,6 +23,10 @@ public:
     const glm::mat4 getModelMatrix() const { return model_matrix; }
     static Vao getCube();
     static Vao loadObj(std::string, glm::vec3);
+    
+    void translate(const glm::vec3& vector);
+    void rotate(float angle, const glm::vec3 &vector);
+    void scale(const glm::vec3 &vector);
 
 
 private:

@@ -69,8 +69,8 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
                         index = token.find("/");
                         size_t index2 = token.find("/", index + 1);
                         std::string a = token.substr(0, index);
-                        std::string b = token.substr(index + 1, index2 - index);
-                        std::string c = token.substr(index2 + 1, token.size() - index2);
+                        std::string b = token.substr(index + 1, index2 - index - 1);
+                        std::string c = token.substr(index2 + 1, token.size() - index2 + 1);
                         
                         vertex_indices.push_back(std::stoi(a) - 1);
                         normal_indices.push_back(std::stoi(c) - 1);
@@ -129,6 +129,21 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
     glBindVertexArray(0);
     
     return vao;
+}
+
+void Vao::translate(const glm::vec3 &vector)
+{
+    model_matrix = glm::translate(model_matrix, vector);
+}
+
+void Vao::rotate(float angle, const glm::vec3 &vector)
+{
+    model_matrix = glm::rotate(model_matrix, angle, vector);
+}
+
+void Vao::scale(const glm::vec3 &vector)
+{
+    model_matrix = glm::scale(model_matrix, vector);
 }
 
 Vao Vao::getCube()
