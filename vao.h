@@ -8,7 +8,7 @@
 #include <GL/glew.h>
 #endif
 
-#define GLM_FORCE_RADIANS 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -24,6 +24,7 @@ public:
     static Vao getCube();
     static Vao loadObj(std::string, glm::vec3);
 
+    void setModelMatrix(glm::mat4 modelMatrix) { model_matrix = modelMatrix; }
 
 private:
     GLuint id;
