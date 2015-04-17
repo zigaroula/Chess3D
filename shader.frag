@@ -1,13 +1,15 @@
 #version 400
 
-in vec3 color_interp;
 in vec3 vertex_position;
 in vec3 vertex_normal;
+
+in vec4 shadow_coord;
 
 out vec4 outputColor;
 
 uniform mat4 view_matrix;
 uniform vec3 ambient_color;
+uniform sampler2D shadow_text;
 
 vec3 lightPos = vec3(100.0,100.0,100.0);
 const vec3 diffuseColor = vec3(0.0, 0.0, 1.0);
@@ -30,6 +32,12 @@ void main(void)
         specular = pow(specAngle, 16.0);
     }
 
-    outputColor = vec4(ambient_color + lambertian * diffuseColor +specular * specColor, 1.0);
+    float visibility = 1.0; 
+    if ( texture(shadow_text, shadow_coord.xy).z  <  shadow_coord.z){ 
+        visibility = 0.5; 
+    }
+
+
+    outputColor = vec4(ambient_color + visibility*lambertian * diffuseColor + visibility*specular * specColor, 1.0);
 
 }

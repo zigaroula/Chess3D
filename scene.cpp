@@ -10,8 +10,39 @@ Scene::Scene() {
 
 }
 
+void Scene::initShadow()
+{
+    int SHADOWSIZE = 512;
+    
+    glGenTextures(1, &shadow_texture);
+    glBindTexture(GL_TEXTURE_2D , shadow_texture);
+    
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S , GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T , GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER , GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER , GL_NEAREST);
+
+    glTexImage2D(GL_TEXTURE_2D , 0, GL_DEPTH_COMPONENT,  SHADOWSIZE , SHADOWSIZE , 0, GL_DEPTH_COMPONENT , GL_FLOAT , 0);
+    glBindTexture(GL_TEXTURE_2D , 0);
+    
+    glGenFramebuffers(1, &shadow_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER , shadow_buffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER , GL_DEPTH_ATTACHMENT , GL_TEXTURE_2D , shadow_texture, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+
+    GLenum FBOstatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if(FBOstatus != GL_FRAMEBUFFER_COMPLETE)
+        printf("GL_FRAMEBUFFER_COMPLETE_EXT failed, CANNOT use FBO\n");
+    
+    glBindFramebuffer(GL_FRAMEBUFFER , 0);
+    
+}
+
 void Scene::initScene(int width, int height)
 {
+    initShadow();
+    
     projection_matrix = glm::mat4(1.0f);
     
     glm::vec3 color1(0.5f, 0.f, 0.f);

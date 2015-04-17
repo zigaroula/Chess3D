@@ -2,9 +2,12 @@
 
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 GLFWwindow *Application::window;
 Program Application::program;
+Program Application::program_shadows;
 Scene Application::scene;
 double Application::lastTime;
 int Application::nbFrames;
@@ -90,6 +93,7 @@ void Application::initOpenGL()
     glClearColor(0.f, 0.f, 0.f, 1.f);
 
     program.init();
+    program_shadows.initForShadowMap();
 
     scene.initScene(window_width, window_height);
 
@@ -103,22 +107,71 @@ void Application::display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    program.use();
+    program_shadows.use();
+    
+    glBindFramebuffer(GL_FRAMEBUFFER , scene.getShadowBufferId());
 
+    glm::vec3 lightPos(100.f, 100.f, 100.f);
+    
+    // On calcule la matrice Model-Vue-Projection du point de vue de la lumière
+    glm::mat4 depthProjectionMatrix = scene.getProjectionMatrix();
+    glm::mat4 depthViewMatrix = glm::lookAt(lightPos, glm::vec3(0,0,0), glm::vec3(0,1,0));
+    
     /* render each VAO*/
     for (unsigned int i = 0; i < scene.size(); ++i)
     {
         const Vao &vao = scene[i];
 
-        glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());
-        
-        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
+        glm::mat4 depthModelMatrix =  vao.getModelMatrix();
+        glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+        // On envoie la matrix au shader lié (MVP_matrix)
+        glUniformMatrix4fv(glGetUniformLocation(program_shadows.getId(), "MVP_matrix"), 1, GL_FALSE, &depthMVP[0][0]);
 
-        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
+    
 
+
+    glBindFramebuffer(GL_FRAMEBUFFER , 0);
+   
+    
+   //*
+    
+    program.use();
+    for (unsigned int i = 0; i < scene.size(); ++i)
+    {
+        const Vao &vao = scene[i];
+        
+        glm::mat4 depthModelMatrix =  vao.getModelMatrix();
+        glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+        
+        glm::mat4 biasMatrix(
+                             0.5, 0.0, 0.0, 0.0,
+                             0.0, 0.5, 0.0, 0.0,
+                             0.0, 0.0, 0.5, 0.0,
+                             0.5, 0.5, 0.5, 1.0 
+                             ); 
+        glm::mat4 depthBiasMVP = biasMatrix*depthMVP;
+        
+        
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "bias_matrix"), 1, GL_FALSE, glm::value_ptr(depthBiasMVP));
+
+        glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());
+        
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
+        
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
+        
+        glUniform1i(glGetUniformLocation(program.getId(), "shadow_text"), 0);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, scene.getShadowTexureId());
+        
+        glBindVertexArray(vao.getId());
+        glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
+    }
+    
+    //*/
     glBindVertexArray(0);
     glfwSwapBuffers(window);
     glfwPollEvents();

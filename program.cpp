@@ -29,6 +29,31 @@ void Program::init()
 
 }
 
+void Program::initForShadowMap()
+{
+    
+    const string & _name = "ProgrammeShadowMap";
+    const string & _vertexShaderFilename = "shader_SM.vert";
+    const string & _fragmentShaderFilename = "shader_SM.frag";
+    
+    id = glCreateProgram();
+    name = _name;
+    Shader * vs = new Shader(_name + " Vertex Shader", GL_VERTEX_SHADER);
+    Shader * fs = new Shader(_name + " Fragment Shader",GL_FRAGMENT_SHADER);
+    vs->loadFromFile(_vertexShaderFilename);
+    vs->compile();
+    attach(vs);
+    fs->loadFromFile(_fragmentShaderFilename);
+    fs->compile();
+    attach(fs);
+    
+    glBindAttribLocation(id, 0, "vertex");
+    
+    
+    link();
+    
+}
+
 
 void Program::attach(Shader * shader) {
     glAttachShader (id, shader->getId());

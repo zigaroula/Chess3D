@@ -28,6 +28,9 @@ public:
 
     void setPerspective(int width, int height);
     GLfloat* getProjectionMatrixArray() { return glm::value_ptr(projection_matrix); }
+    GLuint getShadowBufferId() { return shadow_buffer; }
+    GLuint getShadowTexureId() { return shadow_texture; }
+    const glm::mat4& getProjectionMatrix() const { return projection_matrix; }
 
     // CAMERA
     void setView();
@@ -43,9 +46,11 @@ public:
     void move(int);
 
 private:
+    void initShadow();
     std::vector<Vao> vao_list;
     glm::mat4 view_matrix, projection_matrix, normal_matrix;
     Camera camera;
+    GLuint shadow_texture, shadow_buffer;
 
 };
 

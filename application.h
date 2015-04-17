@@ -34,6 +34,7 @@ private:
     static int nbFramesLastSecond;
     static GLFWwindow *window;
     static Program program;
+    static Program program_shadows;
     static Scene scene;
     static Camera *camera;
 
