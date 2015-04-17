@@ -6,6 +6,7 @@
 GLFWwindow *Application::window;
 Program Application::program;
 Scene Application::scene;
+Game Application::game;
 double Application::lastTime;
 int Application::nbFrames;
 int Application::nbFramesLastSecond;
@@ -59,6 +60,8 @@ void Application::start()
     nbFrames = 0;
     nbFramesLastSecond = 7000;
 
+    initGame();
+
     while (!glfwWindowShouldClose(window))
     {
 
@@ -97,6 +100,10 @@ void Application::initOpenGL()
 
     scene.setPerspective(window_width, window_height);
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
+}
+
+void Application::initGame() {
+    game.initClassicGame();
 }
 
 void Application::display()

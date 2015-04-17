@@ -9,6 +9,7 @@ class Board
     public:
         Board();
         virtual ~Board();
+        void init();
     private:
         std::vector<std::vector<glm::vec3> > squares;
 };

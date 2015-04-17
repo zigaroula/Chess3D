@@ -12,6 +12,7 @@
 #include "program.h"
 #include "scene.h"
 #include "camera.h"
+#include "game.h"
 
 class Application
 {
@@ -21,13 +22,13 @@ public:
 private:
     static void display();
     static void initOpenGL();
+    static void initGame();
 
     static void setTitleFps();
     static void error_callback(int error, const char* description);
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void window_size_callback(GLFWwindow *window, int width, int height);
     static void mousepos_callback(GLFWwindow* window, double mouseX, double mouseY);
-
 
     static double lastTime;
     static int nbFrames;
@@ -36,6 +37,7 @@ private:
     static Program program;
     static Scene scene;
     static Camera *camera;
+    static Game game;
 
     static int window_width;
     static int window_height;
@@ -43,8 +45,6 @@ private:
     // Pour la camera
     static int midWindowX;
     static int midWindowY;
-
-
 };
 
 
