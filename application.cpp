@@ -9,6 +9,7 @@ GLFWwindow *Application::window;
 Program Application::program;
 Program Application::program_shadows;
 Scene Application::scene;
+Game Application::game;
 double Application::lastTime;
 int Application::nbFrames;
 int Application::nbFramesLastSecond;
@@ -62,6 +63,8 @@ void Application::start()
     nbFrames = 0;
     nbFramesLastSecond = 7000;
 
+    initGame();
+
     while (!glfwWindowShouldClose(window))
     {
 
@@ -101,6 +104,10 @@ void Application::initOpenGL()
 
     scene.setPerspective(window_width, window_height);
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
+}
+
+void Application::initGame() {
+    game.initClassicGame();
 }
 
 void Application::display()
@@ -158,7 +165,7 @@ void Application::display()
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "bias_matrix"), 1, GL_FALSE, glm::value_ptr(depthBiasMVP));
 
         glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());
-        
+
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
         
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
