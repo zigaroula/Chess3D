@@ -64,7 +64,18 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
                         normal_indices.push_back(std::stoi(b) - 1);
                     }
                     else
-                        std::cout << "attention:fichier obj avec text" << std::endl;
+                    {
+                        /* corriger */
+                        index = token.find("/");
+                        size_t index2 = token.find("/", index + 1);
+                        std::string a = token.substr(0, index);
+                        std::string b = token.substr(index + 1, index2 - index);
+                        std::string c = token.substr(index2 + 1, token.size() - index2);
+                        
+                        vertex_indices.push_back(std::stoi(a) - 1);
+                        normal_indices.push_back(std::stoi(c) - 1);
+                        
+                    }
                 }
         
             }
