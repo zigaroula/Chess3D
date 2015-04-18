@@ -10,6 +10,7 @@
 GLFWwindow *Application::window;
 Program Application::program;
 Program Application::program_shadows;
+Program Application::program_selection;
 Scene Application::scene;
 Game Application::game;
 double Application::lastTime;
@@ -62,6 +63,8 @@ void Application::start()
 
     glfwSwapInterval(0);
     glfwSetKeyCallback(window, key_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetCursorPosCallback(window, mousepos_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
 
     lastTime = glfwGetTime();
@@ -102,6 +105,7 @@ void Application::initOpenGL()
 
     program.init();
     program_shadows.initForShadowMap();
+    program_selection.initForSelection();
 
     scene.initScene(window_width, window_height);
 
@@ -150,7 +154,6 @@ void Application::display()
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER , 0);
-
 
     // 2EME PASSE SHADOW
     program.use();
@@ -305,13 +308,68 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
 
 void Application::mousepos_callback(GLFWwindow* window, double mouseX, double mouseY) {
     // CAMERA CONTROL, inutile pour l'instant
-    scene.getCamera().handleMouseMove((int)mouseX, (int)mouseY);
+    //scene.getCamera().handleMouseMove((int)mouseX, (int)mouseY);
+}
+
+void Application::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    double x, y;
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        glfwGetCursorPos(window, &x, &y);
+        processSelection(x, y);
+        //std::cout << "clic à x=" << x << " y=" << y << std::endl;
+    }
 }
 
 void Application::setTitleFps()
 {
     std::string title = "Chess 3D - FPS: " + std::to_string(nbFrames);
     glfwSetWindowTitle(window, title.c_str());
+}
 
+void Application::processSelection(int xx, int yy) {
 
+    unsigned char res[4];
+    GLint viewport[4];
+
+    renderSelection();
+
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    glReadPixels(xx, viewport[3] - yy, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
+
+    std::cout << "Clicked on item n°" << res[0] << std::endl;
+}
+
+void Application::renderSelection(void) {
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //set matrices to identity
+    //...
+    // set camera as in the regular rendering function
+    scene.setView();
+
+    // use the selection shader
+    program_selection.use();
+
+    for (unsigned int i = 0; i < scene.size(); ++i)
+    {
+        const Vao &vao = scene[i];
+
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
+
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
+
+        glProgramUniform1i(program_selection.getId(), glGetUniformLocation(program_selection.getId(), "code"), i);
+
+        glBindVertexArray(vao.getId());
+        glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
+    }
+
+    //don't swap buffers
+    //glutSwapBuffers();
+
+    // restore clear color if needed
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 }

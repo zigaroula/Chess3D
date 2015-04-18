@@ -29,6 +29,7 @@ private:
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void window_size_callback(GLFWwindow *window, int width, int height);
     static void mousepos_callback(GLFWwindow* window, double mouseX, double mouseY);
+    static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
     static void saveTexture();
 
@@ -38,6 +39,7 @@ private:
     static GLFWwindow *window;
     static Program program;
     static Program program_shadows;
+    static Program program_selection;
     static Scene scene;
     static Camera *camera;
     static Game game;
@@ -47,6 +49,10 @@ private:
 
     // Pour la camera
     static int midWindowX, midWindowY;
+
+    // Selection
+    static void processSelection(int, int);
+    static void renderSelection();
 };
 
 
