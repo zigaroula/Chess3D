@@ -27,6 +27,8 @@ public:
     const glm::mat4& getModelMatrix() const { return model_matrix; }
     
     static Vao getCube();
+    ///Créer le cube englobant la scène sur lequel sera peint le "ciel"
+    static Vao getSkyBoxCube();
     static Vao loadObj(std::string, glm::vec3);
     
     void translate(const glm::vec3& vector);

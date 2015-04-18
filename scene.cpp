@@ -187,3 +187,7 @@ GLfloat* Scene::getNormalMatrixArray(unsigned int vao_index)
 
     return glm::value_ptr(normal_matrix);
 }
+
+void Scene::initSkyBox(){
+
+}

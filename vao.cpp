@@ -138,6 +138,72 @@ void Vao::scale(const glm::vec3 &vector)
     model_matrix = glm::scale(model_matrix, vector);
 }
 
+Vao Vao::getSkyBoxCube(){
+    float points[] = {
+        -100.0f,  100.0f, -100.0f,
+        -100.0f, -100.0f, -100.0f,
+        100.0f, -100.0f, -100.0f,
+        100.0f, -100.0f, -100.0f,
+        100.0f,  100.0f, -100.0f,
+        -100.0f,  100.0f, -100.0f,
+
+        -100.0f, -100.0f,  100.0f,
+        -100.0f, -100.0f, -100.0f,
+        -100.0f,  100.0f, -100.0f,
+        -100.0f,  100.0f, -100.0f,
+        -100.0f,  100.0f,  100.0f,
+        -100.0f, -100.0f,  100.0f,
+
+        100.0f, -100.0f, -100.0f,
+        100.0f, -100.0f,  100.0f,
+        100.0f,  100.0f,  100.0f,
+        100.0f,  100.0f,  100.0f,
+        100.0f,  100.0f, -100.0f,
+        100.0f, -100.0f, -100.0f,
+
+        -100.0f, -100.0f,  100.0f,
+        -100.0f,  100.0f,  100.0f,
+        100.0f,  100.0f,  100.0f,
+        100.0f,  100.0f,  100.0f,
+        100.0f, -100.0f,  100.0f,
+        -100.0f, -100.0f,  100.0f,
+
+        -100.0f,  100.0f, -100.0f,
+        100.0f,  100.0f, -100.0f,
+        100.0f,  100.0f,  100.0f,
+        100.0f,  100.0f,  100.0f,
+        -100.0f,  100.0f,  100.0f,
+        -100.0f,  100.0f, -100.0f,
+
+        -100.0f, -100.0f, -100.0f,
+        -100.0f, -100.0f,  100.0f,
+        100.0f, -100.0f, -100.0f,
+        100.0f, -100.0f, -100.0f,
+        -100.0f, -100.0f,  100.0f,
+        100.0f, -100.0f,  100.0f
+    };
+    GLuint vbo;
+    glGenBuffers (1, &vbo);
+    glBindBuffer (GL_ARRAY_BUFFER, vbo);
+    glBufferData (GL_ARRAY_BUFFER, 3 * 36 * sizeof (float), &points, GL_STATIC_DRAW);
+
+    GLuint vaoID;
+    Vao vao;
+    vao.id = vaoID;
+    vao.vertex_count = 6*2*3;
+    vao.model_matrix = glm::mat4(1.0f);
+    vao.ambient_color = glm::vec3(0.0f,0.0f,1.0f);
+
+    glGenVertexArrays (1, &vaoID);
+    glBindVertexArray (vaoID);
+    glEnableVertexAttribArray (0);
+    glBindBuffer (GL_ARRAY_BUFFER, vbo);
+    glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
+
+    return vao;
+}
+
 Vao Vao::getCube()
 {
     Vao vao;
