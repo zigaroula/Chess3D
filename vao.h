@@ -24,8 +24,8 @@ public:
     
     const GLfloat* getModelMatrixArray() const { return glm::value_ptr(model_matrix); }
     const GLfloat* getAmbientColorArray() const { return glm::value_ptr(ambient_color); }
-
-    const glm::mat4 getModelMatrix() const { return model_matrix; }
+    const glm::mat4& getModelMatrix() const { return model_matrix; }
+    
     static Vao getCube();
     static Vao loadObj(std::string, glm::vec3);
     

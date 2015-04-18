@@ -21,16 +21,19 @@
 class Scene
 {
 public:
-    Scene();
     void initScene(int, int);
     size_t size() const { return vao_list.size(); }
     const Vao& operator[](size_t index) const { return vao_list[index]; }
 
     void setPerspective(int width, int height);
     GLfloat* getProjectionMatrixArray() { return glm::value_ptr(projection_matrix); }
+    const glm::mat4& getProjectionMatrix() const { return projection_matrix; }
+    const glm::mat4& getShadowProjectionMatrix() const { return shadow_projection_matrix; }
+    const glm::mat4& getBiasMatrix() const { return bias_matrix; }
+
     GLuint getShadowBufferId() { return shadow_buffer; }
     GLuint getShadowTexureId() { return shadow_texture; }
-    const glm::mat4& getProjectionMatrix() const { return projection_matrix; }
+    int getShadowSize() const { return shadow_size; }
 
     // CAMERA
     void setView();
@@ -44,13 +47,16 @@ public:
     void setCamZP(bool zp) { camera.setZP(zp); }
     void setCamZN(bool zn) { camera.setZN(zn); }
     void move(int);
-
+    
 private:
     void initShadow();
+    void initModels();
     std::vector<Vao> vao_list;
     glm::mat4 view_matrix, projection_matrix, normal_matrix;
     Camera camera;
     GLuint shadow_texture, shadow_buffer;
+    glm::mat4 shadow_projection_matrix, bias_matrix;
+    int shadow_size;
 
 };
 
