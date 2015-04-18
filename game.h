@@ -6,6 +6,7 @@
  * \brief Classe qui implémente les règles du jeu d'échec
  */
 
+#include <iostream>
 #include "board.h"
 #include "player.h"
 
@@ -25,7 +26,8 @@ public:
     Player checkMate();
     ///Change le joueur en cours
     void changeTurn();
-
+    ///Calcule les mouvements disponibles pour toutes les pièces
+    void computeAvailableMovements();
 
     ///DEBUGGING
     void testDebug();

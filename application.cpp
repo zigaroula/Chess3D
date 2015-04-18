@@ -22,6 +22,8 @@ int Application::midWindowY;
 
 void Application::start()
 {
+    initGame();
+
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
@@ -65,7 +67,7 @@ void Application::start()
     nbFrames = 0;
     nbFramesLastSecond = 100;
 
-    initGame();
+
 
     while (!glfwWindowShouldClose(window))
     {

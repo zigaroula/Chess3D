@@ -7,6 +7,7 @@ Piece::Piece() {
 void Piece::init(int _posX, int _posY) {
     posX = _posX;
     posY = _posY;
+    std::cout << posX << " " << posY << std::endl;
 }
 
 Piece::~Piece() {
@@ -27,6 +28,14 @@ void Piece::moveTo(int targetX, int targetY) {
     posY = targetY;
 }
 
-void Piece::computeAvailableMovements(std::vector<Piece> own, std::vector<Piece> opp) {
+std::vector<int> Piece::getPosition() {
+    std::vector<int> position;
+    position.resize(2);
+    position[0] = posX;
+    position[1] = posY;
+    return position;
+}
 
+void Piece::computeAvailableMovements(std::vector<Piece*> own, std::vector<Piece*> opp) {
+std::cout << "coucou" << std::endl;
 }

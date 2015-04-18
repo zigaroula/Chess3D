@@ -6,7 +6,7 @@
 class Pawn : public Piece
 {
     public:
-        virtual void computeAvailableMovements(std::vector<Piece>, std::vector<Piece>);
+        virtual void computeAvailableMovements(std::vector<Piece*>, std::vector<Piece*>);
 };
 
 #endif // PAWN_H
