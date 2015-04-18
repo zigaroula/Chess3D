@@ -152,8 +152,19 @@ void Application::display()
 
     // 2EME PASSE SHADOW
     program.use();
+    
+    int framebufferWidth, framebufferHeight;
+    
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    glViewport(0, 0, width, height);
+    
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &framebufferWidth);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &framebufferHeight);
 
-    glViewport ( 0 , 0 , window_width , window_height );
+    //std::cout << window_width << std::endl;
+    //glViewport ( 0 , 0 , window_width , window_height);
+    
 
     for (unsigned int i = 0; i < scene.size(); ++i)
     {

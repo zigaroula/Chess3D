@@ -37,7 +37,11 @@ void main(void)
         visibility = 0.0; 
     }*/
 
-	float shadow = textureProj ( shadow_text , shadow_coord );
+    float bias = 0.005;
+    vec4 shadow_coord2 = shadow_coord;
+    shadow_coord2.z *= 0.98;
+
+	float shadow = textureProj ( shadow_text , shadow_coord2);
 	//outputColor = texture(shadow_text, shadow_coord.xy);
     outputColor = shadow * vec4(ambient_color + visibility*lambertian * diffuseColor + visibility*specular * specColor, 1.0);
 
