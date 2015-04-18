@@ -4,8 +4,7 @@ Piece::Piece() {
 
 }
 
-void Piece::init(int _type, int _posX, int _posY) {
-    type = _type;
+void Piece::init(int _posX, int _posY) {
     posX = _posX;
     posY = _posY;
 }
@@ -28,100 +27,14 @@ void Piece::moveTo(int targetX, int targetY) {
     posY = targetY;
 }
 
-void Piece::computeAvailableMovements(std::vector<Piece> own, std::vector<Piece> opp) {
-    availableMovements = std::vector<std::vector<int> >();
-    switch(type) {
-        case PAWN:
-            computePawn(own, opp);
-            break;
-        case ROOK:
-            computeRook(own, opp);
-            break;
-        case KNIGHT:
-            computeKnight(own, opp);
-            break;
-        case BISHOP:
-            computeBishop(own, opp);
-            break;
-        case QUEEN:
-            computeQueen(own, opp);
-            break;
-        case KING:
-            computeKing(own, opp);
-            break;
-
-    }
+std::vector<int> Piece::getPosition() {
+    std::vector<int> position;
+    position.resize(2);
+    position[0] = posX;
+    position[1] = posY;
+    return position;
 }
 
-void Piece::computePawn(std::vector<Piece> own, std::vector<Piece> opp) {
-
-}
-
-void Piece::computeRook(std::vector<Piece> own, std::vector<Piece> opp) {
-
-}
-
-void Piece::computeKnight(std::vector<Piece> own, std::vector<Piece> opp) {
-
-}
-
-void Piece::computeBishop(std::vector<Piece> own, std::vector<Piece> opp) {
-    int x = posX+1;
-    int y = posY+1;
-    while(x<8 && y<8) {
-        for (unsigned int i = 0 ; i < own.size() ; i++) {
-            //Si on rencontre une piece amie, on exclus la case et toutes les suivantes
-        }
-        for (unsigned int j = 0 ; j < opp.size() ; j++) {
-            //Si on rencontre une piece ennemie, on inclus la case et on exclus les suivantes
-        }
-        x++;
-        y++;
-    }
-    x = posX-1;
-    y = posY+1;
-    while(x>0 && y<8) {
-        for (unsigned int i = 0 ; i < own.size() ; i++) {
-
-        }
-        for (unsigned int j = 0 ; j < opp.size() ; j++) {
-
-        }
-        x--;
-        y++;
-    }
-    x = posX+1;
-    y = posY-1;
-    while(x<8 && y>0) {
-        for (unsigned int i = 0 ; i < own.size() ; i++) {
-
-        }
-        for (unsigned int j = 0 ; j < opp.size() ; j++) {
-
-        }
-        x++;
-        y--;
-    }
-    x = posX-1;
-    y = posY-1;
-    while(x>0 && y>0) {
-        for (unsigned int i = 0 ; i < own.size() ; i++) {
-
-        }
-        for (unsigned int j = 0 ; j < opp.size() ; j++) {
-
-        }
-        x--;
-        y--;
-    }
-    //On inclus la position actuelle (permet de rendre échec et mat plus facile à implémenter). Changement possible
-    availableMovements.push_back(std::vector<int>(posX,posY));
-}
-
-void Piece::computeQueen(std::vector<Piece> own, std::vector<Piece> opp) {
-
-}
-
-void Piece::computeKing(std::vector<Piece> own, std::vector<Piece> opp) {
+void Piece::computeAvailableMovements(std::vector<Piece*> own, std::vector<Piece*> opp) {
 
 }
