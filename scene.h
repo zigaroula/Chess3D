@@ -51,6 +51,7 @@ public:
 private:
     void initShadow();
     void initModels();
+    void initSkyBox();
     std::vector<Vao> vao_list;
     glm::mat4 view_matrix, projection_matrix, normal_matrix;
     Camera camera;
