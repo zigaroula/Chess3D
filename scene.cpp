@@ -152,6 +152,7 @@ void Scene::initModels()
     vao_list.push_back(fou12);
     vao_list.push_back(fou21);
     vao_list.push_back(fou22);
+
     
     pion = Vao::loadObj("models/pion.obj", color1);
 
