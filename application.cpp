@@ -142,7 +142,7 @@ void Application::renderShadow()
     // On calcule la matrice Model-Vue-Projection du point de vue de la lumière
     const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
     glm::mat4 depthViewMatrix = glm::lookAt(lightPos, glm::vec3(0,0,0), glm::vec3(0,1,0));
-    
+
     /* render each VAO*/
     for (unsigned int i = 0; i < scene.size(); ++i)
     {
@@ -170,6 +170,8 @@ void Application::renderScene()
     
     // CAMERA VIEW
     scene.setView();
+
+
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
     
     glActiveTexture(GL_TEXTURE2);
