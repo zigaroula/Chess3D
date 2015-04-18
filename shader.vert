@@ -9,16 +9,17 @@ out vec3 frag_normal;
 out vec4 shadow_coord;
 out vec2 texture_coord;
 
-uniform mat4 projection_matrix;
-uniform mat4 model_matrix;
-uniform mat4 view_matrix;
 uniform mat4 normal_matrix;
 uniform mat4 bias_matrix;
 
+uniform mat4 view_model;
+uniform mat4 proj_view_model;
+
 void main(void)
 {
-    gl_Position = projection_matrix * view_matrix * model_matrix * vec4(vertex, 1.0);
-    vec4 vertPos4 = view_matrix * model_matrix * vec4(vertex, 1.0);
+    gl_Position = proj_view_model * vec4(vertex, 1.0);
+    vec4 vertPos4 = view_model * vec4(vertex, 1.0);
+
     frag_position = vec3(vertPos4);
     frag_normal = vec3(normal_matrix * vec4(normal, 0.0));
 

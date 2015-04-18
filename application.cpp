@@ -115,6 +115,23 @@ void Application::initOpenGL()
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
     
     glfwGetFramebufferSize(window, &framebuffer_width, &framebuffer_height);
+    
+    for (unsigned int i = 0; i < scene.getLightCount(); ++i)
+    {
+        const Light& light = scene.getLight(i);
+        std::cout << glm::to_string(light.getPos()) << std::endl;
+    
+        std::string pos = "lights[" + std::to_string(i) + "].position";
+        std::string dcolor = "lights[" + std::to_string(i) + "].diffuse_color";
+        std::string scolor = "lights[" + std::to_string(i) + "].specular_color";
+
+        
+        glUniform3fv(glGetUniformLocation(program.getId(), pos.c_str()), 1, &light.getPos()[0]);
+        glUniform3fv(glGetUniformLocation(program.getId(), dcolor.c_str()), 1, &light.getDiffuseColor()[0]);
+        glUniform3fv(glGetUniformLocation(program.getId(), scolor.c_str()), 1, &light.getSpecColor()[0]);
+
+
+    }
 
 }
 
@@ -124,17 +141,27 @@ void Application::initGame() {
 
 void Application::display()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    renderShadow();
+    //renderScene();
+    renderSelection();
+
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+}
+
+void Application::renderShadow()
+{
     // 1ERE PASSE SHADOW
     program_shadows.use();
-
+    
     glBindFramebuffer(GL_FRAMEBUFFER , scene.getShadowBufferId());
-
+    
     glClear(GL_DEPTH_BUFFER_BIT); /* important */
     glViewport(0, 0, scene.getShadowSize(), scene.getShadowSize());
-    glm::vec3 lightPos(100.f, 100.f, 100.f);
-
+    
+    const glm::vec3& lightPos = scene.getLight(0).getPos();
+    
     // On calcule la matrice Model-Vue-Projection du point de vue de la lumière
     const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
     glm::mat4 depthViewMatrix = glm::lookAt(lightPos, glm::vec3(0,0,0), glm::vec3(0,1,0));
@@ -143,30 +170,44 @@ void Application::display()
     for (unsigned int i = 0; i < scene.size(); ++i)
     {
         const Vao &vao = scene[i];
-
+        
         const glm::mat4& model_matrix =  vao.getModelMatrix();
         glm::mat4 depthMVP = shadow_proj_matrix * depthViewMatrix * model_matrix;
         // On envoie la matrix au shader lié (MVP_matrix)
         glUniformMatrix4fv(glGetUniformLocation(program_shadows.getId(), "MVP_matrix"), 1, GL_FALSE, &depthMVP[0][0]);
-
+        
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
-
+    
     glBindFramebuffer(GL_FRAMEBUFFER , 0);
+    
+}
+
+void Application::renderScene()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // 2EME PASSE SHADOW
     program.use();
-    
-    // CAMERA VIEW
+
     scene.setView();
+
+    const glm::mat4& view_matrix = scene.getViewMatrix();
+    const glm::mat4& projection_matrix = scene.getProjectionMatrix();
+    
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
     
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, scene.getShadowTexureId());
     glUniform1i(glGetUniformLocation(program.getId(), "shadow_text"), 2);
-
+    
     glViewport(0, 0, framebuffer_width, framebuffer_height);
+    
+    const glm::vec3& lightPos = scene.getLight(0).getPos();
+
+    const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
+    glm::mat4 depthViewMatrix = glm::lookAt(lightPos, glm::vec3(0,0,0), glm::vec3(0,1,0));
     
     for (unsigned int i = 0; i < scene.size(); ++i)
     {
@@ -176,7 +217,15 @@ void Application::display()
         glm::mat4 depthMVP = shadow_proj_matrix * depthViewMatrix * model_matrix;
         glm::mat4 depthBiasMVP = scene.getBiasMatrix() * depthMVP;
         
+        glm::mat4 view_model_matrix = view_matrix * model_matrix;
+        glm::mat4 proj_view_model_matrix = projection_matrix * view_model_matrix;
+
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "proj_view_model"), 1, GL_FALSE, glm::value_ptr(proj_view_model_matrix));
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_model"), 1, GL_FALSE, glm::value_ptr(view_model_matrix));
         glUniform1i(glGetUniformLocation(program.getId(), "texture_enabled"), vao.isTextureEnabled());
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "bias_matrix"), 1, GL_FALSE, glm::value_ptr(depthBiasMVP));
+        glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
 
         if (vao.isTextureEnabled())
         {
@@ -184,23 +233,12 @@ void Application::display()
             glBindTexture(GL_TEXTURE_2D, vao.getTextureId());
             glUniform1i(glGetUniformLocation(program.getId(), "object_texture"), 3);
         }
-
-        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "bias_matrix"), 1, GL_FALSE, glm::value_ptr(depthBiasMVP));
-
-        glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());
-
-        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
-
-        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
-
-
+        
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
-
+    
     glBindVertexArray(0);
-    glfwSwapBuffers(window);
-    glfwPollEvents();
 }
 
 void Application::saveTexture()
@@ -237,7 +275,8 @@ void Application::saveTexture()
 
 void Application::window_size_callback(GLFWwindow *window, int width, int height)
 {
-    glViewport(0, 0, width, height);
+    glfwGetFramebufferSize(window, &framebuffer_width, &framebuffer_height);
+
     scene.setPerspective(width, height);
     program.use();
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
@@ -335,14 +374,13 @@ void Application::processSelection(int xx, int yy) {
     renderSelection();
 
     glGetIntegerv(GL_VIEWPORT, viewport);
-    glReadPixels(xx, viewport[3] - yy, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
+    glReadPixels(xx, yy, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
 
-    std::cout << "Clicked on item n°" << res[0] << std::endl;
+    std::cout << "Clicked on item n°" << (int)res[0] << std::endl;
 }
 
 void Application::renderSelection(void) {
-
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //set matrices to identity
@@ -353,23 +391,29 @@ void Application::renderSelection(void) {
     // use the selection shader
     program_selection.use();
 
+    const glm::mat4& view_matrix = scene.getViewMatrix();
+    const glm::mat4& projection_matrix = scene.getProjectionMatrix();
+
+    glViewport(0, 0, framebuffer_width, framebuffer_height);
+
+
     for (unsigned int i = 0; i < scene.size(); ++i)
     {
         const Vao &vao = scene[i];
 
-        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
+        const glm::mat4& model_matrix =  vao.getModelMatrix();
+        glm::mat4 view_model_matrix = view_matrix * model_matrix;
+        glm::mat4 proj_view_model_matrix = projection_matrix * view_model_matrix;
 
-        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "proj_view_model"), 1, GL_FALSE, glm::value_ptr(proj_view_model_matrix));
 
-        glProgramUniform1i(program_selection.getId(), glGetUniformLocation(program_selection.getId(), "code"), i);
+        //glUniform1i(glGetUniformLocation(program_selection.getId(), "code"), i);
 
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
+    glBindVertexArray(0);
 
     //don't swap buffers
     //glutSwapBuffers();
-
-    // restore clear color if needed
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 }

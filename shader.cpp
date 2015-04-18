@@ -44,7 +44,7 @@ void Shader::compile () {
             cout << c;
         cout << endl;
 
-        cout << "Error: shader not compiled." << endl;
+        cout << "Error: shader not compiled." << name << endl;
     }
 }
 

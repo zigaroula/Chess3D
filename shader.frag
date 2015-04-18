@@ -1,5 +1,12 @@
 #version 400
 
+struct Light
+{
+    vec3 position;
+    vec3 diffuse_color;
+    vec3 specular_color;
+};
+
 in vec3 frag_position;
 in vec3 frag_normal;
 in vec4 shadow_coord;
@@ -14,12 +21,14 @@ uniform sampler2DShadow shadow_text;
 uniform sampler2D object_texture;
 uniform bool texture_enabled;
 
-vec3 lightPos = vec3(100.0,100.0,100.0);
-const vec3 diffuseColor = vec3(0.0, 0.0, 1.0);
-const vec3 specColor = vec3(1.0, 1.0, 1.0);
+uniform Light lights[1];
 
 void main(void)
 {
+    vec3 lightPos = lights[0].position;
+    vec3 diffuseColor = lights[0].diffuse_color;
+    vec3 specColor = lights[0].specular_color;
+
     lightPos = vec3(view_matrix * vec4(lightPos,1));
     vec3 normal = normalize(frag_normal);
     vec3 lightDir = normalize(lightPos - frag_position);

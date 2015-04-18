@@ -10,9 +10,11 @@
 
 #include "camera.h"
 #include "vao.h"
+#include "light.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
+
 
 #define ZNEAR 10.0f
 #define ZFAR 10000.0f
@@ -25,6 +27,9 @@ public:
     size_t size() const { return vao_list.size(); }
     const Vao& operator[](size_t index) const { return vao_list[index]; }
 
+    const Light& getLight(int index) const { return lights[index]; }
+    size_t getLightCount() const { return lights.size(); }
+    
     void setPerspective(int width, int height);
     GLfloat* getProjectionMatrixArray() { return glm::value_ptr(projection_matrix); }
     const glm::mat4& getProjectionMatrix() const { return projection_matrix; }
@@ -35,10 +40,15 @@ public:
     GLuint getShadowTexureId() { return shadow_texture; }
     int getShadowSize() const { return shadow_size; }
 
+    const Vao& getSkyBox(){ return skyBoxCube;}
+
     // CAMERA
     void setView();
     GLfloat *getNormalMatrixArray(unsigned int vao_index);
     GLfloat* getViewMatrixArray() { return glm::value_ptr(view_matrix); }
+    
+    const glm::mat4& getViewMatrix() const { return view_matrix; }
+    
     Camera getCamera() { return camera; }
     void setCamFW(bool fw) { camera.setFW(fw); }
     void setCamBW(bool bw) { camera.setBW(bw); }
@@ -51,13 +61,21 @@ public:
 private:
     void initShadow();
     void initModels();
+    void initLights();
+    //Creation de la SkyBox
+    ///Créer le cube sous la forme d'un vba
     void initSkyBox();
+    void createCubeMap(const char* front,const char* back, const char* top,const char* bottom,const char* left,const char* right, GLuint* tex_cube);
+    ///Charge les faces de la SkyBox
+    bool load_cube_map_side(GLuint texture, GLenum side_target, const char* file_name);
     std::vector<Vao> vao_list;
+    Vao skyBoxCube;
     glm::mat4 view_matrix, projection_matrix, normal_matrix;
     Camera camera;
     GLuint shadow_texture, shadow_buffer;
     glm::mat4 shadow_projection_matrix, bias_matrix;
     int shadow_size;
+    std::vector<Light> lights;
 
 };
 

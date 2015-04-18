@@ -1,10 +1,10 @@
 #version 400
 
-uniform mat4 m_pvm;
+uniform mat4 proj_view_model;
 
-in vec4 position;
+in vec3 vertex;
 
 void main()
 {
-    gl_Position = m_pvm * position ;
+    gl_Position = proj_view_model * vec4(vertex, 1.0);
 }
