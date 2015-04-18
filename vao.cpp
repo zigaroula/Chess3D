@@ -1,4 +1,5 @@
 #include "vao.h"
+#include "tga.h"
 #include <vector>
 #include <fstream>
 #include <sstream>
@@ -119,10 +120,10 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
     vao.vertex_count = (GLuint)vertices_new.size();
     vao.model_matrix = glm::mat4(1.f);
 
-    std::cout << filename << std::endl;
+    /*std::cout << filename << std::endl;
     std::cout << texture_indices.size() << ";" << textures.size() << std::endl;
     std::cout << normal_indices.size() << ";" << normals.size() << std::endl;
-    std::cout << "texture enabled" << (vao.texture_enabled?"yes:":"no") << std::endl;
+    std::cout << "texture enabled" << (vao.texture_enabled?"yes:":"no") << std::endl;*/
     
     glGenVertexArrays(1, &vao.id);
     glBindVertexArray(vao.id);
@@ -143,7 +144,25 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
     
     if (vao.texture_enabled)
     {
-        glGenTextures(GL_TEXTURE_2D, &vao.texture_id);
+        glGenTextures(1, &vao.texture_id);
+        glBindTexture(GL_TEXTURE_2D, vao.texture_id);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        
+        std::string text_filename = "textures/Untitled-1.tga";
+        Tga tga = Tga::LoadTGAFile(text_filename.c_str());
+        
+        float pixels[] = {
+            0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+             0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+             0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+             0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+        };
+        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 4, 0, GL_RGB, GL_FLOAT, pixels);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tga.imageWidth, tga.imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, tga.imageData);
+
         
         GLuint vbo_textures;
         glGenBuffers(1, &vbo_textures);

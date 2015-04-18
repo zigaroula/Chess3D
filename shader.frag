@@ -25,32 +25,29 @@ void main(void)
     vec3 lightDir = normalize(lightPos - vertex_position);
 
     float lambertian = max(dot(lightDir,normal), 0.0);
-    float specular = 0.0;
+    vec3 diffuse = lambertian * diffuseColor;
+
+    vec3 specular = vec3(0.0);
 
     if(lambertian > 0.0) {
 
         vec3 viewDir = normalize(-vertex_position);
         vec3 halfDir = normalize(lightDir + viewDir);
         float specAngle = max(dot(halfDir, normal), 0.0);
-        specular = pow(specAngle, 16.0);
+        specular = pow(specAngle, 16.0) * specColor;
     }
 
-    float visibility = 1.0; 
-    
-   /* if ( texture(shadow_text, shadow_coord.xy).z  <  shadow_coord.z){ 
-        visibility = 0.0; 
-    }*/
-
-    float bias = 0.005;
+    float bias = 0.98;
     vec4 shadow_coord2 = shadow_coord;
-    shadow_coord2.z *= 0.98;
+    shadow_coord2.z *= bias;
 
+    vec3 texture_color = vec3(1.0);
     if (texture_enabled) {
-        //outputColor = vec4(0.0);
-        //return;
+        texture_color = vec3(texture(object_texture, texture_coord));
     }
+
+
 	float shadow = textureProj ( shadow_text , shadow_coord2);
-	//outputColor = texture(shadow_text, shadow_coord.xy);
-    outputColor = shadow * vec4(ambient_color + visibility*lambertian * diffuseColor + visibility*specular * specColor, 1.0);
+    outputColor = shadow * vec4(ambient_color + texture_color * diffuse + specular, 1.0);
 
 }
