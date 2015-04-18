@@ -250,7 +250,8 @@ void Application::saveTexture()
 
 void Application::window_size_callback(GLFWwindow *window, int width, int height)
 {
-    glViewport(0, 0, width, height);
+    glfwGetFramebufferSize(window, &framebuffer_width, &framebuffer_height);
+
     scene.setPerspective(width, height);
     program.use();
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
