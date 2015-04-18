@@ -23,6 +23,8 @@ int Application::framebuffer_width, Application::framebuffer_height;
 
 void Application::start()
 {
+    initGame();
+
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
@@ -64,9 +66,9 @@ void Application::start()
 
     lastTime = glfwGetTime();
     nbFrames = 0;
-    nbFramesLastSecond = 7000;
+    nbFramesLastSecond = 100;
 
-    initGame();
+
 
     while (!glfwWindowShouldClose(window))
     {
@@ -122,17 +124,17 @@ void Application::display()
 
     // 1ERE PASSE SHADOW
     program_shadows.use();
-    
+
     glBindFramebuffer(GL_FRAMEBUFFER , scene.getShadowBufferId());
 
     glClear(GL_DEPTH_BUFFER_BIT); /* important */
     glViewport(0, 0, scene.getShadowSize(), scene.getShadowSize());
     glm::vec3 lightPos(100.f, 100.f, 100.f);
-    
+
     // On calcule la matrice Model-Vue-Projection du point de vue de la lumière
     const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
     glm::mat4 depthViewMatrix = glm::lookAt(lightPos, glm::vec3(0,0,0), glm::vec3(0,1,0));
-    
+
     /* render each VAO*/
     for (unsigned int i = 0; i < scene.size(); ++i)
     {
@@ -146,7 +148,7 @@ void Application::display()
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
-    
+
     glBindFramebuffer(GL_FRAMEBUFFER , 0);
 
 
@@ -157,8 +159,8 @@ void Application::display()
     scene.setView();
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
     
-    glBindTexture(GL_TEXTURE_2D, scene.getShadowTexureId());
     glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, scene.getShadowTexureId());
     glUniform1i(glGetUniformLocation(program.getId(), "shadow_text"), 2);
 
     glViewport(0, 0, framebuffer_width, framebuffer_height);
@@ -171,20 +173,28 @@ void Application::display()
         glm::mat4 depthMVP = shadow_proj_matrix * depthViewMatrix * model_matrix;
         glm::mat4 depthBiasMVP = scene.getBiasMatrix() * depthMVP;
         
-        
+        glUniform1i(glGetUniformLocation(program.getId(), "texture_enabled"), vao.isTextureEnabled());
+
+        if (vao.isTextureEnabled())
+        {
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_2D, vao.getTextureId());
+            glUniform1i(glGetUniformLocation(program.getId(), "object_texture"), 3);
+        }
+
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "bias_matrix"), 1, GL_FALSE, glm::value_ptr(depthBiasMVP));
 
         glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());
 
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
-        
+
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
-        
-        
+
+
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
-    
+
     glBindVertexArray(0);
     glfwSwapBuffers(window);
     glfwPollEvents();

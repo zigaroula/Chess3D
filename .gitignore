@@ -12,3 +12,8 @@ Chess3D.includes
 *.depend
 *.layout
 /obj
+chess3D.creator.user
+chess3D.config
+chess3D.creator
+chess3D.files
+chess3D.includes
