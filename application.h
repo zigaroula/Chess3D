@@ -42,12 +42,11 @@ private:
     static Camera *camera;
     static Game game;
 
-    static int window_width;
-    static int window_height;
+    static int window_width, window_height;
+    static int framebuffer_width, framebuffer_height;
 
     // Pour la camera
-    static int midWindowX;
-    static int midWindowY;
+    static int midWindowX, midWindowY;
 };
 
 

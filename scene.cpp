@@ -6,18 +6,24 @@
 
 #include <iostream>
 
-Scene::Scene() {
-
+void Scene::initScene(int width, int height)
+{
+    initShadow();
+    initModels();
+    
+    projection_matrix = glm::mat4(1.0f);
+    
+    camera = Camera(width, height);
 }
 
 void Scene::initShadow()
 {
-    int SHADOWSIZE = 1024;
+    shadow_size = 1024;
     
     // shadow map
     glGenTextures(1, &shadow_texture);
     glBindTexture(GL_TEXTURE_2D , shadow_texture);
-    glTexImage2D(GL_TEXTURE_2D , 0, GL_DEPTH_COMPONENT,  SHADOWSIZE,SHADOWSIZE, 0, GL_DEPTH_COMPONENT , GL_FLOAT , NULL);
+    glTexImage2D(GL_TEXTURE_2D , 0, GL_DEPTH_COMPONENT,  shadow_size, shadow_size, 0, GL_DEPTH_COMPONENT , GL_FLOAT , NULL);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER , GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER , GL_NEAREST);
@@ -43,13 +49,19 @@ void Scene::initShadow()
     
     glBindFramebuffer(GL_FRAMEBUFFER , 0);
     
+    int box_size = 800.f;
+    shadow_projection_matrix = glm::ortho<float>(-box_size, box_size, -box_size, box_size,  -box_size, box_size);
+    
+    bias_matrix = glm::mat4(
+                         0.5, 0.0, 0.0, 0.0,
+                         0.0, 0.5, 0.0, 0.0,
+                         0.0, 0.0, 0.5, 0.0,
+                         0.5, 0.5, 0.5, 1.0);
+    
 }
 
-void Scene::initScene(int width, int height)
+void Scene::initModels()
 {
-    initShadow();
-    
-    projection_matrix = glm::mat4(1.0f);
     
     glm::vec3 color1(0.5f, 0.f, 0.f);
     glm::vec3 color2(0.0f, 0.5f, 0.f);
@@ -65,10 +77,10 @@ void Scene::initScene(int width, int height)
     
     glm::mat4 rotation_180(1.f);
     rotation_180 = glm::rotate(rotation_180, (float)M_PI, glm::vec3(0.f, 1.f, 0.f));
-
+    
     Vao roi1, roi2, dame1, dame2, tour11, tour12, tour21, tour22, cavalier11, cavalier12, cavalier21, cavalier22, fou11, fou12, fou21, fou22;
     
-    Vao pion = Vao::loadObj("models/pion.obj", color1);
+    Vao pion;
     
     roi1 = Vao::loadObj("models/roi.obj", color1);
     roi1.translate(glm::vec3(-1*x_shift, 0.f, 0.f));
@@ -78,7 +90,7 @@ void Scene::initScene(int width, int height)
     dame1.translate(glm::vec3(0.f, dame_y_translate, 0.f));
     dame2 = Vao(dame1, color2);
     
-    pion = Vao::loadObj("models/pion.obj", color1);
+    
     tour11 = Vao::loadObj("models/tour.obj", color1);
     tour12 = Vao(tour11, color1);
     tour11.translate(glm::vec3(-4*x_shift, tour_y_translate, 0.f));
@@ -130,6 +142,8 @@ void Scene::initScene(int width, int height)
     vao_list.push_back(fou21);
     vao_list.push_back(fou22);
     
+    pion = Vao::loadObj("models/pion.obj", color1);
+
     for (int i = 0; i < 8; ++i)
     {
         int shift = i - 4;
@@ -144,12 +158,11 @@ void Scene::initScene(int width, int height)
         vao_list.push_back(pion_current);
     }
     
-    Vao plateau = Vao::loadObj("models/plane.obj", glm::vec3(0.f, 0.f, 0.5f));
+    Vao plateau = Vao::loadObj("models/plane.obj", glm::vec3(0.f, 0.f, 0.f), "textures/board.tga");
     plateau.translate(glm::vec3(0.f, -100.f, 0.f));
     
     vao_list.push_back(plateau);
-
-    camera = Camera(width, height);
+    
 }
 
 void Scene::setPerspective(int width, int height)
@@ -160,7 +173,7 @@ void Scene::setPerspective(int width, int height)
 
 void Scene::setView() {
     view_matrix = glm::mat4 (1.0f);
-    view_matrix = glm::lookAt(camera.getPosition(), glm::vec3(0.f, 0.f, -10.f), glm::vec3(0.f, 1.f, 0.f));
+    view_matrix = glm::lookAt(camera.getPosition(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
 }
 
 void Scene::move(int fps) {
@@ -175,4 +188,8 @@ GLfloat* Scene::getNormalMatrixArray(unsigned int vao_index)
     normal_matrix = glm::transpose(glm::inverse(view_matrix * model_matrix));
 
     return glm::value_ptr(normal_matrix);
+}
+
+void Scene::initSkyBox(){
+
 }
