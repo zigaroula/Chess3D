@@ -10,6 +10,7 @@
 
 #include "camera.h"
 #include "vao.h"
+#include "light.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
@@ -26,6 +27,9 @@ public:
     size_t size() const { return vao_list.size(); }
     const Vao& operator[](size_t index) const { return vao_list[index]; }
 
+    const Light& getLight(int index) const { return lights[index]; }
+    size_t getLightCount() const { return lights.size(); }
+    
     void setPerspective(int width, int height);
     GLfloat* getProjectionMatrixArray() { return glm::value_ptr(projection_matrix); }
     const glm::mat4& getProjectionMatrix() const { return projection_matrix; }
@@ -57,6 +61,7 @@ public:
 private:
     void initShadow();
     void initModels();
+    void initLights();
     //Creation de la SkyBox
     ///Créer le cube sous la forme d'un vba
     void initSkyBox();
@@ -70,6 +75,7 @@ private:
     GLuint shadow_texture, shadow_buffer;
     glm::mat4 shadow_projection_matrix, bias_matrix;
     int shadow_size;
+    std::vector<Light> lights;
 
 };
 

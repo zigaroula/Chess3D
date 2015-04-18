@@ -111,6 +111,23 @@ void Application::initOpenGL()
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
     
     glfwGetFramebufferSize(window, &framebuffer_width, &framebuffer_height);
+    
+    for (unsigned int i = 0; i < scene.getLightCount(); ++i)
+    {
+        const Light& light = scene.getLight(i);
+        std::cout << glm::to_string(light.getPos()) << std::endl;
+    
+        std::string pos = "lights[" + std::to_string(i) + "].position";
+        std::string dcolor = "lights[" + std::to_string(i) + "].diffuse_color";
+        std::string scolor = "lights[" + std::to_string(i) + "].specular_color";
+
+        
+        glUniform3fv(glGetUniformLocation(program.getId(), pos.c_str()), 1, &light.getPos()[0]);
+        glUniform3fv(glGetUniformLocation(program.getId(), dcolor.c_str()), 1, &light.getDiffuseColor()[0]);
+        glUniform3fv(glGetUniformLocation(program.getId(), scolor.c_str()), 1, &light.getSpecColor()[0]);
+
+
+    }
 
 }
 
@@ -137,7 +154,8 @@ void Application::renderShadow()
     
     glClear(GL_DEPTH_BUFFER_BIT); /* important */
     glViewport(0, 0, scene.getShadowSize(), scene.getShadowSize());
-    glm::vec3 lightPos(100.f, 100.f, 100.f);
+    
+    const glm::vec3& lightPos = scene.getLight(0).getPos();
     
     // On calcule la matrice Model-Vue-Projection du point de vue de la lumière
     const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
@@ -181,7 +199,8 @@ void Application::renderScene()
     
     glViewport(0, 0, framebuffer_width, framebuffer_height);
     
-    glm::vec3 lightPos(100.f, 100.f, 100.f);
+    const glm::vec3& lightPos = scene.getLight(0).getPos();
+
     const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
     glm::mat4 depthViewMatrix = glm::lookAt(lightPos, glm::vec3(0,0,0), glm::vec3(0,1,0));
     
