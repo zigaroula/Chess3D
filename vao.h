@@ -29,7 +29,10 @@ public:
     static Vao getCube();
     ///Créer le cube englobant la scène sur lequel sera peint le "ciel"
     static Vao getSkyBoxCube();
+    
     static Vao loadObj(std::string, glm::vec3);
+    static Vao loadObj(std::string, glm::vec3, std::string);
+
     
     void translate(const glm::vec3& vector);
     void rotate(float angle, const glm::vec3 &vector);

@@ -158,7 +158,7 @@ void Scene::initModels()
         vao_list.push_back(pion_current);
     }
     
-    Vao plateau = Vao::loadObj("models/plane.obj", glm::vec3(0.f, 0.f, 0.5f));
+    Vao plateau = Vao::loadObj("models/plane.obj", glm::vec3(0.f, 0.f, 0.5f), "textures/Untitled-1.tga");
     plateau.translate(glm::vec3(0.f, -100.f, 0.f));
     
     vao_list.push_back(plateau);

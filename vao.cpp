@@ -8,6 +8,11 @@
 
 Vao Vao::loadObj(std::string filename, glm::vec3 color)
 {
+    return Vao::loadObj(filename, color, "");
+}
+
+Vao Vao::loadObj(std::string filename, glm::vec3 color, std::string texture_filename)
+{
     Vao vao;
     
     vao.ambient_color = color;
@@ -101,10 +106,8 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
     std::vector<glm::vec3> vertices_new, normals_new;
     std::vector<glm::vec2> textures_new;
     
-    vao.texture_enabled = textures.size() > 0 && texture_indices.size() > 0;
+    vao.texture_enabled = textures.size() > 0 && texture_indices.size() > 0 && texture_filename.size() > 0;
     
-    if (filename != "models/plane.obj")
-        vao.texture_enabled = false;
 
     for (unsigned int i = 0; i < vertex_indices.size(); ++i)
     {
@@ -151,16 +154,8 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         
-        std::string text_filename = "textures/Untitled-1.tga";
-        Tga tga = Tga::LoadTGAFile(text_filename.c_str());
-        
-        float pixels[] = {
-            0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-             0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-             0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-             0.0f, 0.0f, 0.0f,   1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-        };
-        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 4, 0, GL_RGB, GL_FLOAT, pixels);
+    
+        Tga tga = Tga::LoadTGAFile(texture_filename.c_str());
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tga.imageWidth, tga.imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, tga.imageData);
 
         
