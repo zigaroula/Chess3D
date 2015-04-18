@@ -36,6 +36,8 @@ public:
     GLuint getShadowTexureId() { return shadow_texture; }
     int getShadowSize() const { return shadow_size; }
 
+    const Vao& getSkyBox(){ return skyBoxCube;}
+
     // CAMERA
     void setView();
     GLfloat *getNormalMatrixArray(unsigned int vao_index);
