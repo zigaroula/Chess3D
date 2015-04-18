@@ -9,6 +9,22 @@ Player::~Player() {
 }
 
 void Player::init(int side) {
+    pawn1 = new Pawn(side);
+    pawn2 = new Pawn(side);
+    pawn3 = new Pawn(side);
+    pawn4 = new Pawn(side);
+    pawn5 = new Pawn(side);
+    pawn6 = new Pawn(side);
+    pawn7 = new Pawn(side);
+    pawn8 = new Pawn(side);
+    rook1 = new Rook();
+    rook2 = new Rook();
+    knight1 = new Knight();
+    knight2 = new Knight();
+    bishop1 = new Bishop();
+    bishop2 = new Bishop();
+    queen = new Queen();
+    king = new King();
     if (side == 1) {
         pawn1->init(6, 0);
         pawn2->init(6, 1);
@@ -78,16 +94,16 @@ void Player::computeAvailableMovements(std::vector<Piece*> own, std::vector<Piec
 }
 
 void Player::initDebug(int side) {
-    rook1 = new Rook();
-    pawn1 = new Pawn();
+    king = new King();
+    queen = new Queen();
     if (side == 1) {
-        rook1->init(4,4);
-        pawn1->init(2,4);
+        king->init(2,2);
+        queen->init(2,3);
     } else if (side == 2) {
-        rook1->init(4,1);
-        pawn1->init(5,1);
+        king->init(2,1);
+        queen->init(1,1);
     }
     number = side;
-    pieces.push_back(pawn1);
-    pieces.push_back(rook1);
+    pieces.push_back(king);
+    pieces.push_back(queen);
 }

@@ -6,21 +6,12 @@ Game::Game() {
 
 void Game::initClassicGame() {
     none.init(0);
-    player1.initDebug(1);
-    player2.initDebug(2);
+    player1.init(1);
+    player2.init(2);
     turn = 1;
-    std::cout << "POSITION DES PIECES P1" << std::endl;
-    for (unsigned int i = 0 ; i < player1.getPieces().size() ; i++) {
-        std::cout << player1.getPieces()[i]->getPosition()[0] << " " << player1.getPieces()[i]->getPosition()[1] << std::endl;
-    }
-    std::cout << "POSITION DES PIECES P2" << std::endl;
-    for (unsigned int i = 0 ; i < player2.getPieces().size() ; i++) {
-        std::cout << player2.getPieces()[i]->getPosition()[0] << " " << player2.getPieces()[i]->getPosition()[1] << std::endl;
-    }
-    std::cout << "CALCUL MOUVEMENTS FOU P1" << std::endl;
     computeAvailableMovements();
 
-    testDebug();
+    //testDebug();
 }
 
 void Game::loadFromFile() {
@@ -99,11 +90,12 @@ void Game::changeTurn() {
 
 void Game::computeAvailableMovements() {
     player1.computeAvailableMovements(player1.getPieces(), player2.getPieces());
+    player2.computeAvailableMovements(player1.getPieces(), player2.getPieces());
 }
 
 void Game::testDebug() {
     std::vector<Piece*> pieces = player1.getPieces();
-    std::vector<std::vector<int> > debugMovements = pieces[1]->getAvailableMovements();
+    std::vector<std::vector<int> > debugMovements = pieces[0]->getAvailableMovements();
     std::cout << std::endl << "AVAILABLE MOVEMENTS" << std::endl;
     for (unsigned int i = 0 ; i < debugMovements.size() ; i++) {
         std::cout << debugMovements[i][0] << " " << debugMovements[i][1] << std::endl;
