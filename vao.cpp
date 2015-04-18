@@ -5,19 +5,17 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-
-
 Vao Vao::loadObj(std::string filename, glm::vec3 color)
 {
     Vao vao;
     
     vao.ambient_color = color;
 
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> normals;
+    std::vector<glm::vec3> vertices, normals;
+    std::vector<glm::vec2> textures;
 
-    std::vector<unsigned int> vertex_indices;
-    std::vector<unsigned int> normal_indices;
+    std::vector<unsigned int> vertex_indices, normal_indices, texture_indices;
+
     std::ifstream inputfile(filename);
     std::string str;
 
@@ -51,6 +49,17 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
 
                 normals.push_back(glm::vec3(vec[0], vec[1], vec[2]));
             }
+            else if (str[0] == 'v' && str[1] == 't')
+            {
+                getline(iss, token, ' ');
+                
+                for (int i = 0; i < 2; ++i) {
+                    getline(iss, token, ' ');
+                    vec[i] = std::stof(token);
+                }
+                
+                textures.push_back(glm::vec2(vec[0], vec[1]));
+            }
             else if (str[0] == 'f' && str[1] == ' ')
             {
                 getline(iss, token, ' ');
@@ -78,6 +87,7 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
                         
 
                         vertex_indices.push_back(std::stoi(a) - 1);
+                        texture_indices.push_back(std::stoi(b) - 1);
                         normal_indices.push_back(std::stoi(c) - 1);
 
                     }
@@ -86,21 +96,34 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
             }
         }
     }
-    
+
     std::vector<glm::vec3> vertices_new, normals_new;
+    std::vector<glm::vec2> textures_new;
+    
+    vao.texture_enabled = textures.size() > 0 && texture_indices.size() > 0;
+    
+    if (filename != "models/plane.obj")
+        vao.texture_enabled = false;
 
     for (unsigned int i = 0; i < vertex_indices.size(); ++i)
     {
         vertices_new.push_back(vertices[vertex_indices[i]]);
         normals_new.push_back(normals[normal_indices[i]]);
+        
+        if (vao.texture_enabled)
+            textures_new.push_back(textures[texture_indices[i]]);
 
         //std::cout << glm::to_string(vertices_new[i]) << ";" << glm::to_string(normals_new[i]) << std::endl;
     }
 
     vao.vertex_count = (GLuint)vertices_new.size();
     vao.model_matrix = glm::mat4(1.f);
-    //vao.model_matrix = glm::translate(vao.model_matrix, glm::vec3(1.f, 1.f, 0.f));
 
+    std::cout << filename << std::endl;
+    std::cout << texture_indices.size() << ";" << textures.size() << std::endl;
+    std::cout << normal_indices.size() << ";" << normals.size() << std::endl;
+    std::cout << "texture enabled" << (vao.texture_enabled?"yes:":"no") << std::endl;
+    
     glGenVertexArrays(1, &vao.id);
     glBindVertexArray(vao.id);
 
@@ -117,6 +140,17 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
     glBufferData(GL_ARRAY_BUFFER, vao.vertex_count * sizeof(glm::vec3), &normals_new[0], GL_STATIC_DRAW);
     glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(1);
+    
+    if (vao.texture_enabled)
+    {
+        GLuint vbo_textures;
+        glGenBuffers(1, &vbo_textures);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_textures);
+        glBufferData(GL_ARRAY_BUFFER, vao.vertex_count * sizeof(glm::vec2), &textures_new[0], GL_STATIC_DRAW);
+        glVertexAttribPointer((GLuint)2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(2);
+        
+    }
 
     glBindVertexArray(0);
 

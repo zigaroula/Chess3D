@@ -157,8 +157,8 @@ void Application::display()
     scene.setView();
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
     
-    glBindTexture(GL_TEXTURE_2D, scene.getShadowTexureId());
     glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, scene.getShadowTexureId());
     glUniform1i(glGetUniformLocation(program.getId(), "shadow_text"), 2);
 
     glViewport(0, 0, framebuffer_width, framebuffer_height);
@@ -171,7 +171,15 @@ void Application::display()
         glm::mat4 depthMVP = shadow_proj_matrix * depthViewMatrix * model_matrix;
         glm::mat4 depthBiasMVP = scene.getBiasMatrix() * depthMVP;
         
-        
+        glUniform1i(glGetUniformLocation(program.getId(), "texture_enabled"), vao.isTextureEnabled());
+
+        if (vao.isTextureEnabled())
+        {
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_2D, vao.getTextureId());
+            glUniform1i(glGetUniformLocation(program.getId(), "object_texture"), 3);
+        }
+
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "bias_matrix"), 1, GL_FALSE, glm::value_ptr(depthBiasMVP));
 
         glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());

@@ -80,7 +80,7 @@ void Scene::initModels()
     
     Vao roi1, roi2, dame1, dame2, tour11, tour12, tour21, tour22, cavalier11, cavalier12, cavalier21, cavalier22, fou11, fou12, fou21, fou22;
     
-    Vao pion = Vao::loadObj("models/pion.obj", color1);
+    Vao pion;
     
     roi1 = Vao::loadObj("models/roi.obj", color1);
     roi1.translate(glm::vec3(-1*x_shift, 0.f, 0.f));
@@ -90,7 +90,7 @@ void Scene::initModels()
     dame1.translate(glm::vec3(0.f, dame_y_translate, 0.f));
     dame2 = Vao(dame1, color2);
     
-    pion = Vao::loadObj("models/pion.obj", color1);
+    
     tour11 = Vao::loadObj("models/tour.obj", color1);
     tour12 = Vao(tour11, color1);
     tour11.translate(glm::vec3(-4*x_shift, tour_y_translate, 0.f));
@@ -142,6 +142,8 @@ void Scene::initModels()
     vao_list.push_back(fou21);
     vao_list.push_back(fou22);
     
+    pion = Vao::loadObj("models/pion.obj", color1);
+
     for (int i = 0; i < 8; ++i)
     {
         int shift = i - 4;

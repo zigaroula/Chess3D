@@ -22,11 +22,9 @@ void Program::init()
 
     glBindAttribLocation(id, 0, "vertex");
     glBindAttribLocation(id, 1, "normal");
-    glBindAttribLocation(id, 2, "color");
-
+    glBindAttribLocation(id, 2, "texture");
 
     link();
-
 }
 
 void Program::initForShadowMap()

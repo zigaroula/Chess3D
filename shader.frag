@@ -3,12 +3,16 @@
 in vec3 vertex_position;
 in vec3 vertex_normal;
 in vec4 shadow_coord;
+in vec2 texture_coord;
 
 out vec4 outputColor;
 
 uniform mat4 view_matrix;
 uniform vec3 ambient_color;
 uniform sampler2DShadow shadow_text;
+
+uniform sampler2D object_texture;
+uniform bool texture_enabled;
 
 vec3 lightPos = vec3(100.0,100.0,100.0);
 const vec3 diffuseColor = vec3(0.0, 0.0, 1.0);
@@ -41,6 +45,10 @@ void main(void)
     vec4 shadow_coord2 = shadow_coord;
     shadow_coord2.z *= 0.98;
 
+    if (texture_enabled) {
+        //outputColor = vec4(0.0);
+        //return;
+    }
 	float shadow = textureProj ( shadow_text , shadow_coord2);
 	//outputColor = texture(shadow_text, shadow_coord.xy);
     outputColor = shadow * vec4(ambient_color + visibility*lambertian * diffuseColor + visibility*specular * specColor, 1.0);
