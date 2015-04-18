@@ -143,8 +143,7 @@ void Application::display()
 {
 
     renderShadow();
-    //renderScene();
-    renderSelection();
+    renderScene();
 
     glfwSwapBuffers(window);
     glfwPollEvents();
@@ -374,7 +373,7 @@ void Application::processSelection(int xx, int yy) {
     renderSelection();
 
     glGetIntegerv(GL_VIEWPORT, viewport);
-    glReadPixels(xx, yy, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
+    glReadPixels(xx, viewport[3]-yy, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
 
     std::cout << "Clicked on item n°" << (int)res[0] << std::endl;
 }
@@ -405,9 +404,9 @@ void Application::renderSelection(void) {
         glm::mat4 view_model_matrix = view_matrix * model_matrix;
         glm::mat4 proj_view_model_matrix = projection_matrix * view_model_matrix;
 
-        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "proj_view_model"), 1, GL_FALSE, glm::value_ptr(proj_view_model_matrix));
+        glUniformMatrix4fv(glGetUniformLocation(program_selection.getId(), "proj_view_model"), 1, GL_FALSE, glm::value_ptr(proj_view_model_matrix));
 
-        //glUniform1i(glGetUniformLocation(program_selection.getId(), "code"), i);
+        glUniform1i(glGetUniformLocation(program_selection.getId(), "code"), i);
 
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
