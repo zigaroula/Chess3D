@@ -41,6 +41,9 @@ private:
     static Scene scene;
     static Camera *camera;
     static Game game;
+    
+    static void renderShadow();
+    static void renderScene();
 
     static int window_width, window_height;
     static int framebuffer_width, framebuffer_height;
