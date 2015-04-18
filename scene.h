@@ -14,6 +14,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 
+
 #define ZNEAR 10.0f
 #define ZFAR 10000.0f
 #define FOV 0.785f
@@ -51,8 +52,14 @@ public:
 private:
     void initShadow();
     void initModels();
+    //Creation de la SkyBox
+    ///Créer le cube sous la forme d'un vba
     void initSkyBox();
+    void createCubeMap(const char* front,const char* back, const char* top,const char* bottom,const char* left,const char* right, GLuint* tex_cube);
+    ///Charge les faces de la SkyBox
+    bool load_cube_map_side(GLuint texture, GLenum side_target, const char* file_name);
     std::vector<Vao> vao_list;
+    Vao skyBoxCube;
     glm::mat4 view_matrix, projection_matrix, normal_matrix;
     Camera camera;
     GLuint shadow_texture, shadow_buffer;

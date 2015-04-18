@@ -35,5 +35,6 @@ shader.h
 shader.vert
 shader_SM.frag
 shader_SM.vert
+stb_image.h
 vao.cpp
 vao.h
