@@ -143,6 +143,8 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
     
     if (vao.texture_enabled)
     {
+        glGenTextures(GL_TEXTURE_2D, &vao.texture_id);
+        
         GLuint vbo_textures;
         glGenBuffers(1, &vbo_textures);
         glBindBuffer(GL_ARRAY_BUFFER, vbo_textures);
