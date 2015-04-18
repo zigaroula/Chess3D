@@ -167,11 +167,12 @@ void Application::renderScene()
 
     // 2EME PASSE SHADOW
     program.use();
-    
-    // CAMERA VIEW
+
     scene.setView();
 
-
+    const glm::mat4& view_matrix = scene.getViewMatrix();
+    const glm::mat4& projection_matrix = scene.getProjectionMatrix();
+    
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
     
     glActiveTexture(GL_TEXTURE2);
@@ -192,8 +193,16 @@ void Application::renderScene()
         glm::mat4 depthMVP = shadow_proj_matrix * depthViewMatrix * model_matrix;
         glm::mat4 depthBiasMVP = scene.getBiasMatrix() * depthMVP;
         
+        glm::mat4 view_model_matrix = view_matrix * model_matrix;
+        glm::mat4 proj_view_model_matrix = projection_matrix * view_model_matrix;
+
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "proj_view_model"), 1, GL_FALSE, glm::value_ptr(proj_view_model_matrix));
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_model"), 1, GL_FALSE, glm::value_ptr(view_model_matrix));
         glUniform1i(glGetUniformLocation(program.getId(), "texture_enabled"), vao.isTextureEnabled());
-        
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "bias_matrix"), 1, GL_FALSE, glm::value_ptr(depthBiasMVP));
+        glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());
+        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
+
         if (vao.isTextureEnabled())
         {
             glActiveTexture(GL_TEXTURE3);
@@ -201,21 +210,11 @@ void Application::renderScene()
             glUniform1i(glGetUniformLocation(program.getId(), "object_texture"), 3);
         }
         
-        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "bias_matrix"), 1, GL_FALSE, glm::value_ptr(depthBiasMVP));
-        
-        glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());
-        
-        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
-        
-        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "model_matrix"), 1, GL_FALSE, vao.getModelMatrixArray());
-        
-        
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
     
     glBindVertexArray(0);
-    
 }
 
 void Application::saveTexture()

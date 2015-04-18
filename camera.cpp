@@ -23,7 +23,7 @@ Camera::~Camera() {
 }
 
 void Camera::initCamera() {
-    position = glm::vec3(0.f, 200.f, 0.f);
+    position = glm::vec3(700.f, 300.f, 200.f);
     direction = glm::vec3(0.0f, 0.0f, 0.0f);
     rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
     speed = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
