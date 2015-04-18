@@ -6,9 +6,11 @@ Game::Game() {
 
 void Game::initClassicGame() {
     none.init(0);
-    player1.init(1);
-    player2.init(2);
+    player1.initDebug(1);
+    player2.initDebug(2);
     turn = 1;
+    std::cout << "coucou";
+    testDebug();
 }
 
 void Game::loadFromFile() {
@@ -83,4 +85,11 @@ void Game::changeTurn() {
     }
     player1.computeAvailableMovements(player1.getPieces(), player2.getPieces());
     player2.computeAvailableMovements(player2.getPieces(), player1.getPieces());
+}
+
+void Game::testDebug() {
+    std::vector<std::vector<int> > debugMovements = player1.getPieces()[1].getAvailableMovements();
+    for (unsigned int i = 0 ; i < debugMovements.size() ; i++) {
+        std::cout << debugMovements[i][0] << " " << debugMovements[i][0] << std::endl;
+    }
 }

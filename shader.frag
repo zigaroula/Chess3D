@@ -31,10 +31,10 @@ void main(void)
         specular = pow(specAngle, 16.0);
     }
 
-    float visibility = 1.0; 
-    
-   /* if ( texture(shadow_text, shadow_coord.xy).z  <  shadow_coord.z){ 
-        visibility = 0.0; 
+    float visibility = 1.0;
+
+   /* if ( texture(shadow_text, shadow_coord.xy).z  <  shadow_coord.z){
+        visibility = 0.0;
     }*/
 
 	float shadow = textureProj ( shadow_text , shadow_coord );

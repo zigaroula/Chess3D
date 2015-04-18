@@ -25,6 +25,10 @@ public:
     Player checkMate();
     ///Change le joueur en cours
     void changeTurn();
+
+
+    ///DEBUGGING
+    void testDebug();
 private:
     Board board;
     Player player1, player2, none;
