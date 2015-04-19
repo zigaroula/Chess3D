@@ -14,6 +14,7 @@ class Program {
 public:
     void init();
     void initForShadowMap();
+    void initForSelection();
     void attach (Shader *);
     void link ();
     GLuint getId() const { return id; }

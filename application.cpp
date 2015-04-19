@@ -10,6 +10,7 @@
 GLFWwindow *Application::window;
 Program Application::program;
 Program Application::program_shadows;
+Program Application::program_selection;
 Scene Application::scene;
 Game Application::game;
 double Application::lastTime;
@@ -64,6 +65,8 @@ void Application::start()
 
     glfwSwapInterval(0);
     glfwSetKeyCallback(window, key_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetCursorPosCallback(window, mousepos_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
 
     lastTime = glfwGetTime();
@@ -104,6 +107,7 @@ void Application::initOpenGL()
 
     program.init();
     program_shadows.initForShadowMap();
+    program_selection.initForSelection();
 
     scene.initScene(window_width, window_height);
 
@@ -113,6 +117,23 @@ void Application::initOpenGL()
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
     
     glfwGetFramebufferSize(window, &framebuffer_width, &framebuffer_height);
+    
+    for (unsigned int i = 0; i < scene.getLightCount(); ++i)
+    {
+        const Light& light = scene.getLight(i);
+        std::cout << glm::to_string(light.getPos()) << std::endl;
+    
+        std::string pos = "lights[" + std::to_string(i) + "].position";
+        std::string dcolor = "lights[" + std::to_string(i) + "].diffuse_color";
+        std::string scolor = "lights[" + std::to_string(i) + "].specular_color";
+
+        
+        glUniform3fv(glGetUniformLocation(program.getId(), pos.c_str()), 1, &light.getPos()[0]);
+        glUniform3fv(glGetUniformLocation(program.getId(), dcolor.c_str()), 1, &light.getDiffuseColor()[0]);
+        glUniform3fv(glGetUniformLocation(program.getId(), scolor.c_str()), 1, &light.getSpecColor()[0]);
+
+
+    }
 
 }
 
@@ -139,7 +160,8 @@ void Application::renderShadow()
     
     glClear(GL_DEPTH_BUFFER_BIT); /* important */
     glViewport(0, 0, scene.getShadowSize(), scene.getShadowSize());
-    glm::vec3 lightPos(100.f, 100.f, 100.f);
+    
+    const glm::vec3& lightPos = scene.getLight(0).getPos();
     
     // On calcule la matrice Model-Vue-Projection du point de vue de la lumière
     const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
@@ -183,7 +205,8 @@ void Application::renderScene()
     
     glViewport(0, 0, framebuffer_width, framebuffer_height);
     
-    glm::vec3 lightPos(100.f, 100.f, 100.f);
+    const glm::vec3& lightPos = scene.getLight(0).getPos();
+
     const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
     glm::mat4 depthViewMatrix = glm::lookAt(lightPos, glm::vec3(0,0,0), glm::vec3(0,1,0));
     
@@ -325,13 +348,73 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
 
 void Application::mousepos_callback(GLFWwindow* window, double mouseX, double mouseY) {
     // CAMERA CONTROL, inutile pour l'instant
-    scene.getCamera().handleMouseMove((int)mouseX, (int)mouseY);
+    //scene.getCamera().handleMouseMove((int)mouseX, (int)mouseY);
+}
+
+void Application::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    double x, y;
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        glfwGetCursorPos(window, &x, &y);
+        processSelection(x, y);
+        //std::cout << "clic à x=" << x << " y=" << y << std::endl;
+    }
 }
 
 void Application::setTitleFps()
 {
     std::string title = "Chess 3D - FPS: " + std::to_string(nbFrames);
     glfwSetWindowTitle(window, title.c_str());
+}
+
+void Application::processSelection(int xx, int yy) {
+
+    unsigned char res[4];
+    GLint viewport[4];
+
+    renderSelection();
+
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    glReadPixels(xx, viewport[3]-yy, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
+
+    std::cout << "Clicked on item n°" << (int)res[0] << std::endl;
+}
+
+void Application::renderSelection(void) {
+    //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //set matrices to identity
+    //...
+    // set camera as in the regular rendering function
+    scene.setView();
+
+    // use the selection shader
+    program_selection.use();
+
+    const glm::mat4& view_matrix = scene.getViewMatrix();
+    const glm::mat4& projection_matrix = scene.getProjectionMatrix();
+
+    glViewport(0, 0, framebuffer_width, framebuffer_height);
 
 
+    for (unsigned int i = 0; i < scene.size(); ++i)
+    {
+        const Vao &vao = scene[i];
+
+        const glm::mat4& model_matrix =  vao.getModelMatrix();
+        glm::mat4 view_model_matrix = view_matrix * model_matrix;
+        glm::mat4 proj_view_model_matrix = projection_matrix * view_model_matrix;
+
+        glUniformMatrix4fv(glGetUniformLocation(program_selection.getId(), "proj_view_model"), 1, GL_FALSE, glm::value_ptr(proj_view_model_matrix));
+
+        glUniform1i(glGetUniformLocation(program_selection.getId(), "code"), i);
+
+        glBindVertexArray(vao.getId());
+        glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
+    }
+    glBindVertexArray(0);
+
+    //don't swap buffers
+    //glutSwapBuffers();
 }

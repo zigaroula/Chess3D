@@ -15,13 +15,22 @@ void Scene::initScene(int width, int height)
     initShadow();
     initSkyBox();
     initModels();
+
+    initLights();
+    
+
     projection_matrix = glm::mat4(1.0f);
     camera = Camera(width, height);
 }
 
+void Scene::initLights()
+{
+    lights.push_back(Light(glm::vec3(400.f, 400.f, 400.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(1.0f, 1.0f, 1.0f)));
+}
+
 void Scene::initShadow()
 {
-    shadow_size = 1024;
+    shadow_size = 2048;
     
     // shadow map
     glGenTextures(1, &shadow_texture);
@@ -52,7 +61,7 @@ void Scene::initShadow()
     
     glBindFramebuffer(GL_FRAMEBUFFER , 0);
     
-    int box_size = 800.f;
+    int box_size = 1500.f;
     shadow_projection_matrix = glm::ortho<float>(-box_size, box_size, -box_size, box_size,  -box_size, box_size);
     
     bias_matrix = glm::mat4(
