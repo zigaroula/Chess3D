@@ -242,6 +242,59 @@ void Application::renderScene()
     glBindVertexArray(0);
 }
 
+void Application::renderSelection(void) {
+    //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    //set matrices to identity
+    //...
+    // set camera as in the regular rendering function
+    scene.setView();
+    
+    // use the selection shader
+    program_selection.use();
+    
+    const glm::mat4& view_matrix = scene.getViewMatrix();
+    const glm::mat4& projection_matrix = scene.getProjectionMatrix();
+    
+    glViewport(0, 0, framebuffer_width, framebuffer_height);
+    
+    
+    for (unsigned int i = 0; i < scene.size(); ++i)
+    {
+        const Vao &vao = scene[i];
+        
+        const glm::mat4& model_matrix =  vao.getModelMatrix();
+        glm::mat4 view_model_matrix = view_matrix * model_matrix;
+        glm::mat4 proj_view_model_matrix = projection_matrix * view_model_matrix;
+        
+        glUniformMatrix4fv(glGetUniformLocation(program_selection.getId(), "proj_view_model"), 1, GL_FALSE, glm::value_ptr(proj_view_model_matrix));
+        
+        glUniform1i(glGetUniformLocation(program_selection.getId(), "code"), i);
+        
+        glBindVertexArray(vao.getId());
+        glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
+    }
+    glBindVertexArray(0);
+}
+
+void Application::processSelection(int xx, int yy) {
+    
+    unsigned char res[4];
+    GLint viewport[4];
+    
+    renderSelection();
+    
+    float x_scale, y_scale;
+    x_scale = (float) framebuffer_width / window_width;
+    y_scale = (float) framebuffer_height / window_height;
+    
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    glReadPixels(xx*x_scale, viewport[3]-yy*y_scale, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
+    
+    std::cout << "Clicked on item n°" << (int)res[0] << std::endl;
+}
+
 void Application::saveTexture()
 {
 	std::cout << "save texture" << std::endl;
@@ -278,8 +331,10 @@ void Application::window_size_callback(GLFWwindow *window, int width, int height
 {
     glfwGetFramebufferSize(window, &framebuffer_width, &framebuffer_height);
 
+    window_width = width;
+    window_height = height;
+    
     scene.setPerspective(width, height);
-    program.use();
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "projection_matrix"), 1, GL_FALSE, scene.getProjectionMatrixArray());
 }
 
@@ -365,56 +420,4 @@ void Application::setTitleFps()
 {
     std::string title = "Chess 3D - FPS: " + std::to_string(nbFrames);
     glfwSetWindowTitle(window, title.c_str());
-}
-
-void Application::processSelection(int xx, int yy) {
-
-    unsigned char res[4];
-    GLint viewport[4];
-
-    renderSelection();
-
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    glReadPixels(xx, viewport[3]-yy, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
-
-    std::cout << "Clicked on item n°" << (int)res[0] << std::endl;
-}
-
-void Application::renderSelection(void) {
-    //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    //set matrices to identity
-    //...
-    // set camera as in the regular rendering function
-    scene.setView();
-
-    // use the selection shader
-    program_selection.use();
-
-    const glm::mat4& view_matrix = scene.getViewMatrix();
-    const glm::mat4& projection_matrix = scene.getProjectionMatrix();
-
-    glViewport(0, 0, framebuffer_width, framebuffer_height);
-
-
-    for (unsigned int i = 0; i < scene.size(); ++i)
-    {
-        const Vao &vao = scene[i];
-
-        const glm::mat4& model_matrix =  vao.getModelMatrix();
-        glm::mat4 view_model_matrix = view_matrix * model_matrix;
-        glm::mat4 proj_view_model_matrix = projection_matrix * view_model_matrix;
-
-        glUniformMatrix4fv(glGetUniformLocation(program_selection.getId(), "proj_view_model"), 1, GL_FALSE, glm::value_ptr(proj_view_model_matrix));
-
-        glUniform1i(glGetUniformLocation(program_selection.getId(), "code"), i);
-
-        glBindVertexArray(vao.getId());
-        glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
-    }
-    glBindVertexArray(0);
-
-    //don't swap buffers
-    //glutSwapBuffers();
 }
