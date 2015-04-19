@@ -272,6 +272,8 @@ void Application::renderSelection(void) {
         
         glUniform1i(glGetUniformLocation(program_selection.getId(), "code"), i);
         
+        glUniform1i(glGetUniformLocation(program_selection.getId(), "texture_enabled"), vao.isTextureEnabled());
+       
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
