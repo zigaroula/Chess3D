@@ -8,6 +8,7 @@
 
 Vao Vao::loadObj(std::string filename, glm::vec3 color)
 {
+
     return Vao::loadObj(filename, color, "");
 }
 
@@ -23,10 +24,12 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color, std::string texture_file
     std::vector<unsigned int> vertex_indices, normal_indices, texture_indices;
 
     std::ifstream inputfile(filename);
+
     std::string str;
 
     while (std::getline(inputfile, str))
     {
+
         if (str.size() > 2)
         {
             std::istringstream iss(str);
@@ -107,7 +110,7 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color, std::string texture_file
     std::vector<glm::vec2> textures_new;
     
     vao.texture_enabled = textures.size() > 0 && texture_indices.size() > 0 && texture_filename.size() > 0;
-    
+
 
     for (unsigned int i = 0; i < vertex_indices.size(); ++i)
     {
@@ -127,7 +130,7 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color, std::string texture_file
     std::cout << texture_indices.size() << ";" << textures.size() << std::endl;
     std::cout << normal_indices.size() << ";" << normals.size() << std::endl;
     std::cout << "texture enabled" << (vao.texture_enabled?"yes:":"no") << std::endl;*/
-    
+
     glGenVertexArrays(1, &vao.id);
     glBindVertexArray(vao.id);
 

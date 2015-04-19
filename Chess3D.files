@@ -32,10 +32,8 @@ king.cpp
 king.h
 knight.cpp
 knight.h
-main
 main.cpp
 Makefile
-Makefile.mac
 pawn.cpp
 pawn.h
 piece.cpp

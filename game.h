@@ -9,13 +9,14 @@
 #include <iostream>
 #include "board.h"
 #include "player.h"
+#include "scene.h"
 
 class Game
 {
 public:
     Game();
     ///Créer une nouvelle partie normale
-    virtual void initClassicGame();
+    virtual void initClassicGame(Scene * _scene);
     ///Recharge une partie précédente
     virtual void loadFromFile();
     ///Sauvegarde la partie en cours

@@ -7,15 +7,15 @@
 #include <iostream>
 #include "stb_image.h"
 
+static const glm::vec3 color1(0.5f, 0.f, 0.f);
+static const glm::vec3 color2(0.0f, 0.5f, 0.f);
 
 void Scene::initScene(int width, int height)
 {
     initShadow();
     initSkyBox();
     initModels();
-    
     projection_matrix = glm::mat4(1.0f);
-    
     camera = Camera(width, height);
 }
 
@@ -66,8 +66,6 @@ void Scene::initShadow()
 void Scene::initModels()
 {
     
-    glm::vec3 color1(0.5f, 0.f, 0.f);
-    glm::vec3 color2(0.0f, 0.5f, 0.f);
     float x_shift = 76.f;
     
     float z_offset1 = 265.f;
@@ -281,4 +279,18 @@ bool Scene::load_cube_map_side (
   );
   free (image_data);
   return true;
+}
+
+int Scene::addVaoPiece(std::string model, int team, glm::vec3 pos){
+
+    Vao piece ;
+    if(team==1) {
+        piece = Vao::loadObj(model, color1);
+    }else{
+        piece = Vao::loadObj(model, color2);
+    }
+    piece.translate(pos);
+    vao_list.push_back(piece);
+    return (vao_list.size()-1);
+
 }

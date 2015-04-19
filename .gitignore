@@ -17,3 +17,4 @@ chess3D.config
 chess3D.creator
 chess3D.files
 chess3D.includes
+*.autosave

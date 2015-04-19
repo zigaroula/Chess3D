@@ -23,7 +23,7 @@ int Application::framebuffer_width, Application::framebuffer_height;
 
 void Application::start()
 {
-    initGame();
+
 
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
@@ -59,6 +59,8 @@ void Application::start()
     std::cout << "OpenGL version supported by this platform: " << glGetString(GL_VERSION) << std::endl;
 
     initOpenGL();
+
+    initGame();
 
     glfwSwapInterval(0);
     glfwSetKeyCallback(window, key_callback);
@@ -115,7 +117,7 @@ void Application::initOpenGL()
 }
 
 void Application::initGame() {
-    game.initClassicGame();
+    game.initClassicGame(&scene);
 }
 
 void Application::display()
