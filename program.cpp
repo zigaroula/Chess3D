@@ -46,8 +46,7 @@ void Program::initForShadowMap()
     attach(fs);
     
     glBindAttribLocation(id, 0, "vertex");
-    
-    
+
     link();
     
 }
@@ -71,6 +70,8 @@ void Program::initForSelection()
     attach(fs);
 
     glBindAttribLocation(id, 0, "vertex");
+    glBindAttribLocation(id, 2, "texture");
+
 
 
     link();
