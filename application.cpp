@@ -73,8 +73,8 @@ void Application::start()
     nbFrames = 0;
     nbFramesLastSecond = 100;
 
-    Vao &vao = scene[26];
-    vao.requestMovement(glm::vec3(0.0));
+    //Vao &vao = scene[26];
+    //vao.requestMovement(glm::vec3(0.0));
 
     while (!glfwWindowShouldClose(window))
     {
@@ -220,6 +220,14 @@ void Application::renderScene()
             vao.updateMovement();
                 
         }
+        
+        
+        if (scene.selected() && scene.getSelected() == i)
+        {
+            glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, scene.getSelectectionColor());
+        }
+        else
+            glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());
 
         
         
@@ -233,7 +241,7 @@ void Application::renderScene()
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_model"), 1, GL_FALSE, glm::value_ptr(view_model_matrix));
         glUniform1i(glGetUniformLocation(program.getId(), "texture_enabled"), vao.isTextureEnabled());
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "bias_matrix"), 1, GL_FALSE, glm::value_ptr(depthBiasMVP));
-        glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());
+        
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
 
         if (vao.isTextureEnabled())
@@ -251,15 +259,10 @@ void Application::renderScene()
 }
 
 void Application::renderSelection(void) {
-    //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    //set matrices to identity
-    //...
-    // set camera as in the regular rendering function
     scene.setView();
     
-    // use the selection shader
     program_selection.use();
     
     const glm::mat4& view_matrix = scene.getViewMatrix();
@@ -285,6 +288,7 @@ void Application::renderSelection(void) {
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
+    
     glBindVertexArray(0);
 }
 
@@ -301,6 +305,11 @@ void Application::processSelection(int xx, int yy) {
     
     glGetIntegerv(GL_VIEWPORT, viewport);
     glReadPixels(xx*x_scale, viewport[3]-yy*y_scale, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
+    
+    int selected = (int) res[0];
+    
+    if (selected < 100)
+        scene.selectModel(selected);
     
     std::cout << "Clicked on item n°" << (int)res[0] << std::endl;
 }

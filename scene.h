@@ -64,10 +64,17 @@ public:
     void setCamZN(bool zn) { camera.setZN(zn); }
     void move(int);
     
+    void selectModel(int index);
+    void unselected();
+    inline int getSelected() const { return selected_model; }
+    inline bool selected() const { return vao_selected; }
+    inline GLfloat* getSelectectionColor() { return glm::value_ptr(selection_color); }
+    
 private:
     void initShadow();
     void initModels();
     void initLights();
+    
     //Creation de la SkyBox
     ///Créer le cube sous la forme d'un vba
     void initSkyBox();
@@ -82,6 +89,11 @@ private:
     glm::mat4 shadow_projection_matrix, bias_matrix;
     int shadow_size;
     std::vector<Light> lights;
+    
+    int selected_model;
+    glm::vec3 selection_color;
+    bool vao_selected = false;
+    
 
 };
 

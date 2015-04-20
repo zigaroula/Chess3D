@@ -10,6 +10,15 @@
 static const glm::vec3 color1(0.5f, 0.f, 0.f);
 static const glm::vec3 color2(0.0f, 0.5f, 0.f);
 
+void Scene::selectModel(int index) {
+    selected_model = index;
+    vao_selected = true;
+}
+
+void Scene::unselected() {
+    vao_selected = false;
+}
+
 void Scene::initScene(int width, int height)
 {
     initShadow();
@@ -18,6 +27,7 @@ void Scene::initScene(int width, int height)
 
     initLights();
     
+    selection_color = glm::vec3(1.0, 1.0, 0.0);
 
     projection_matrix = glm::mat4(1.0f);
     camera = Camera(width, height);
