@@ -318,16 +318,17 @@ void Application::processSelection(int xx, int yy) {
 }
 
 void Application::renderSkybox() {
-    //glDepthMask (GL_FALSE);
+    glDepthMask (GL_FALSE);
     program_skybox.use();
     scene.setView();
     glUniformMatrix4fv(glGetUniformLocation(program_skybox.getId(), "V"), 1, GL_FALSE, scene.getViewMatrixArray());
     glUniformMatrix4fv(glGetUniformLocation(program_skybox.getId(), "P"), 1, GL_FALSE, scene.getProjectionMatrixArray());
     glActiveTexture (GL_TEXTURE2);
-    glBindTexture (GL_TEXTURE_CUBE_MAP, *scene.getTexCube());
+    glBindTexture (GL_TEXTURE_CUBE_MAP, scene.getTexCube());
+    //std::cout << scene.getTexCube() << std::endl;
     glBindVertexArray (scene.getSkyBox().getId());
     glDrawArrays (GL_TRIANGLES, 0, 36);
-    //glDepthMask (GL_TRUE);
+    glDepthMask (GL_TRUE);
 }
 
 void Application::saveTexture()

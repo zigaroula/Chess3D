@@ -23,6 +23,7 @@ class Piece
         ///Calcule l'ensemble des mouvements d'une pièce
         virtual void computeAvailableMovements(std::vector<Piece*>, std::vector<Piece*>);
 
+
     protected:
         int posX;
         int posY;

@@ -5,11 +5,14 @@ Game::Game() {
 }
 
 void Game::initClassicGame(Scene * _scene) {
-    none.init(0);
-    player1.init(1);
-    player2.init(2);
 
-    board.initClassic(_scene);
+
+    std::vector<std::vector<Piece *> > pieces;
+    pieces = board.initClassic(_scene);
+
+    none.init(0);
+    player1.init(1, pieces[0]);
+    player2.init(2, pieces[1]);
 
     turn = 1;
     computeAvailableMovements();
