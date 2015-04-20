@@ -62,7 +62,7 @@ void Application::start()
 
     initOpenGL();
 
-    //initGame();
+    initGame();
 
     glfwSwapInterval(0);
     glfwSetKeyCallback(window, key_callback);
