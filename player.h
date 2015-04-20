@@ -24,19 +24,14 @@ class Player
         ///Calcule les mouvements disponibles pour toutes les pièces du joueur
         void computeAvailableMovements(std::vector<Piece*>, std::vector<Piece*>);
 
-        ///DEBUGGING
-        void initDebug(int);
+
 
     private:
         ///Numéro du joueur
         int number;
         ///Liste des pièces du joueur
         std::vector<Piece*> pieces;
-        Pawn *pawn1, *pawn2, *pawn3, *pawn4, *pawn5, *pawn6, *pawn7, *pawn8;
-        Rook *rook1, *rook2;
-        Knight *knight1, *knight2;
-        Bishop *bishop1, *bishop2;
-        Queen *queen;
+        ///une référence directe vers le roi
         King *king;
 };
 

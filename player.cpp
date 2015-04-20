@@ -18,6 +18,14 @@ void Player::init(int side,  std::vector<Piece *> const & _pieces) {
     number = side;
     pieces = _pieces;
 
+    for(unsigned int i =0; i < pieces.size() ; i++){
+
+        if(pieces[i]->isKing() ) {
+            king = (King *) pieces[i];
+            break;
+        }
+    }
+
 
 }
 
@@ -35,20 +43,7 @@ void Player::computeAvailableMovements(std::vector<Piece*> own, std::vector<Piec
     }
 }
 
-void Player::initDebug(int side) {
-    king = new King();
-    queen = new Queen();
-    if (side == 1) {
-        king->init(2,2);
-        queen->init(2,3);
-    } else if (side == 2) {
-        king->init(2,1);
-        queen->init(1,1);
-    }
-    number = side;
-    pieces.push_back(king);
-    pieces.push_back(queen);
-}
+
 
 Piece * Player::getPieceByVao(int VaoId){
     for(unsigned int i =0; i < pieces.size() ;i++){
