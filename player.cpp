@@ -19,6 +19,8 @@ void Player::init(int side,  std::vector<Piece *> const & _pieces) {
     pieces = _pieces;
     
     for (unsigned int i = 0; i < pieces.size() ; i++){
+
+        std::cerr << pieces[i]->toString() << std::endl;
         if (typeid(*pieces[i]) == typeid(King())){
 
         }

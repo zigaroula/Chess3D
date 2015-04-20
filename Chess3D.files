@@ -56,6 +56,8 @@ shader.h
 shader.vert
 shader_SM.frag
 shader_SM.vert
+skybox_shader.frag
+skybox_shader.vert
 stb_image.c
 stb_image.h
 tga.cpp

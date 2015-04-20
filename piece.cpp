@@ -38,3 +38,9 @@ std::vector<int> Piece::getPosition() {
 void Piece::computeAvailableMovements(std::vector<Piece*> own, std::vector<Piece*> opp) {
 
 }
+
+std::string Piece::toString() const{
+    std::string s = "Pièce en " ;
+    s = posX + " et " + posY ;
+    return s;
+}
