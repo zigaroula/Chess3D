@@ -30,7 +30,7 @@ void Scene::initLights()
 
 void Scene::initShadow()
 {
-    shadow_size = 2048;
+    shadow_size = 4096;
     
     // shadow map
     glGenTextures(1, &shadow_texture);
