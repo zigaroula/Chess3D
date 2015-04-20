@@ -18,13 +18,14 @@ class Piece
         ///Déplace la pièce
         void moveTo(int, int);
         virtual std::string getModelPath() const{ return "";}
-        std::vector<std::vector<int> > getAvailableMovements() { return availableMovements; }
+        const std::vector<std::vector<int> > & getAvailableMovements() const { return availableMovements; }
         std::vector<int> getPosition();
         ///Calcule l'ensemble des mouvements d'une pièce
         virtual void computeAvailableMovements(std::vector<Piece*>, std::vector<Piece*>);
         virtual std::string toString() const;
         virtual bool isKing() const {return false;}
-
+    
+ 
 
     protected:
         int posX;

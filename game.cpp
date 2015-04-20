@@ -11,6 +11,21 @@ void Game::tryMovement(int vaoId, int caseX, int caseY)
     if (current_piece != nullptr)
     {
         std::cout << current_piece->getPosition()[0] << ";" << current_piece->getPosition()[1] << std::endl;
+        
+        if (current_piece->canMoveTo(caseX, caseY))
+        {
+            std::cout  << "--> Mouvement valide" << std::endl;
+            board.movePieceTo(current_piece->getVaoID(), caseX, caseY);
+        }
+        else
+        {
+            std::cout  << "--> Mouvement non valide" << std::endl;
+            const std::vector<std::vector<int>> &mvts = current_piece->getAvailableMovements();
+            
+            std::cout << "Mouvements possibles:" << std::endl;
+            for (auto a : mvts)
+                std::cout << a[0] << ";" << a[1] << std::endl;
+        }
     }
     
 

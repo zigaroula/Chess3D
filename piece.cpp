@@ -15,7 +15,8 @@ Piece::~Piece() {
 
 bool Piece::canMoveTo(int targetX, int targetY) {
     for (unsigned int i = 0 ; i < availableMovements.size() ; i++) {
-        if (availableMovements[i] == std::vector<int>(targetX, targetY)) {
+        
+        if (availableMovements[i][0] == targetX && availableMovements[i][1] == targetY) {
             return true;
         }
     }

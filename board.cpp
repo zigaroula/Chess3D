@@ -144,7 +144,7 @@ void Board::movePieceTo(int vao, int i, int j){
     if (piece == nullptr) throw std::string("La piece demandée n'existe pas");
 
     piece->moveTo(i,j);
-    scene->slideVAOTo(vao,getPosAt(i,j));
+    scene->slideVAOTo(vao - 1,getPosAt(i,j));
 
 
 }
