@@ -252,6 +252,8 @@ std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector
                 piece = Vao(vao_list[it->second], color2);
             }
         }
+        
+        std::cout << model[i] << glm::to_string(pos[i]) << std::endl;
         piece.translate(pos[i]);
         vao_list.push_back(piece);
         indices.push_back((int) vao_list.size());
