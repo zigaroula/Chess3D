@@ -71,7 +71,6 @@ void Scene::initShadow()
     
     glBindFramebuffer(GL_FRAMEBUFFER , 0);
     
-    int box_size = 600.f;
     shadow_projection_matrix = glm::perspective<float>(1.4f, 1.f, 20.f, 10000.f);
     
     bias_matrix = glm::mat4(
@@ -219,14 +218,13 @@ void Scene::initSkyBox(){
 
     std::string path = "textures/" + textName + "_";
 
-    GLuint texture;
     createCubeMap((path +"front.jpg").c_str(),
                   (path +"back.jpg").c_str(),
                   (path +"top.jpg").c_str(),
                   (path +"bottom.jpg").c_str(),
                   (path +"left.jpg").c_str(),
                   (path +"right.jpg").c_str(),
-                  &texture
+                  &texCube
                 );
 
 
@@ -241,8 +239,9 @@ void Scene::createCubeMap (
   GLuint* _tex_cube
 ) {
   // generate a cube-map texture to hold all the sides
-  glActiveTexture (GL_TEXTURE0);
+  //glActiveTexture (GL_TEXTURE0);
   glGenTextures (1, _tex_cube);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, *_tex_cube);
 
   // load each image and copy into a side of the cube-map texture
   assert (load_cube_map_side (*_tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, front));
@@ -259,7 +258,7 @@ void Scene::createCubeMap (
   glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-  texCube = _tex_cube;
+  //std::cout << *_tex_cube;
 }
 
 bool Scene::load_cube_map_side (

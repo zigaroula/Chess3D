@@ -48,7 +48,7 @@ public:
     int getShadowSize() const { return shadow_size; }
 
     const Vao& getSkyBox(){ return skyBoxCube;}
-    const GLuint* getTexCube() { return texCube; }
+    const GLuint getTexCube() { return texCube; }
 
 
     // CAMERA
@@ -98,7 +98,7 @@ private:
     
 
     Vao skyBoxCube;
-    GLuint* texCube;
+    GLuint texCube;
 };
 
 
