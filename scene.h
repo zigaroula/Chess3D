@@ -28,6 +28,9 @@ public:
     Vao& operator[](size_t index) { return vao_list[index]; }
     ///Créer un vao, l'ajoute à la liste des vao et retourne son index dans la liste
     int addVaoPiece(std::string model, int team, glm::vec3 pos);
+    ///Créer un vao en reprenant le modèle précédent
+    int copyLastVaoPiece(int team, glm::vec3 pos);
+    void slideVAOTo();
 
     const Light& getLight(int index) const { return lights[index]; }
     size_t getLightCount() const { return lights.size(); }

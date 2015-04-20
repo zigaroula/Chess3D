@@ -254,6 +254,7 @@ void Scene::createCubeMap (
   glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
+
 bool Scene::load_cube_map_side (
   GLuint texture, GLenum side_target, const char* file_name
 ) {
@@ -301,5 +302,21 @@ int Scene::addVaoPiece(std::string model, int team, glm::vec3 pos){
     piece.translate(pos);
     vao_list.push_back(piece);
     return (vao_list.size()-1);
+
+}
+int Scene::copyLastVaoPiece(int team, glm::vec3 pos){
+
+    Vao piece ;
+    if(team==1) {
+        piece = Vao(vao_list.back(), color1);
+    }else{
+        piece = Vao(vao_list.back(), color2);
+    }
+    piece.translate(pos);
+    vao_list.push_back(piece);
+    return (vao_list.size()-1);
+}
+
+void Scene::slideVAOTo(int vao, glm::vec3 newPos){
 
 }
