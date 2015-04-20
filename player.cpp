@@ -107,3 +107,13 @@ void Player::initDebug(int side) {
     pieces.push_back(king);
     pieces.push_back(queen);
 }
+
+Piece * Player::getPieceByVao(int VaoId){
+    for(unsigned int i =0; i < pieces.size() ;i++){
+        if(pieces[i]->getVaoID() == VaoId){
+            return pieces[i];
+        }
+    }
+
+    return nullptr;
+}

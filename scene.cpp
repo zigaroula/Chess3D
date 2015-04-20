@@ -3,7 +3,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <cmath>
-
+#include <map>
 #include <iostream>
 #include "stb_image.h"
 
@@ -303,17 +303,27 @@ int Scene::addVaoPiece(std::string model, int team, glm::vec3 pos){
     return (vao_list.size()-1);
 
 }
-int Scene::copyLastVaoPiece(int team, glm::vec3 pos){
+std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos){
 
-    Vao piece ;
-    if(team==1) {
-        piece = Vao(vao_list.back(), color1);
-    }else{
-        piece = Vao(vao_list.back(), color2);
-    }
-    piece.translate(pos);
-    vao_list.push_back(piece);
-    return (vao_list.size()-1);
+//    std::map<std::string, int> modeles = std::map<std::string>(model.size());
+//    std::vector<int> indices;
+
+//    for (int i = 0 ; i < pieces.size() ; i++){
+//        Vao piece;
+//        if(std::find(modeles.begin(), modeles.end(), model[i])==vector.end() ){
+//            if(team[i]==1) {
+//                piece = Vao::loadObj(model[i],color1, pos[i]);
+//            }else{
+//                piece = Vao::loadObj(model[i],color1, pos[i]);
+//            }
+//            piece.translate(pos[i]);
+//        }else{
+//            piece = Vao(vao_list[], pos[i]);
+//        }
+//        vao_list.push_back(piece);
+//        indices.push_back(vao_list.size()-1);
+
+//    }
 }
 
 void Scene::slideVAOTo(int vao, glm::vec3 newPos){

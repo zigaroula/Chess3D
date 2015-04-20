@@ -15,6 +15,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include <string>
+#include "piece.h"
 
 #define ZNEAR 10.0f
 #define ZFAR 10000.0f
@@ -28,9 +29,11 @@ public:
     const Vao& operator[](size_t index) const { return vao_list[index]; }
     ///Créer un vao, l'ajoute à la liste des vao et retourne son index dans la liste
     int addVaoPiece(std::string model, int team, glm::vec3 pos);
-    ///Créer un vao en reprenant le modèle précédent
-    int copyLastVaoPiece(int team, glm::vec3 pos);
-    void slideVAOTo();
+    ///Créer une liste de vao sans avoir à recharger plusieurs fois le meme modèle
+    std::vector<int> addVaoPieces(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos);
+
+
+    void slideVAOTo(int vao, glm::vec3 newPos);
 
     const Light& getLight(int index) const { return lights[index]; }
     size_t getLightCount() const { return lights.size(); }

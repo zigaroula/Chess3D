@@ -4,21 +4,30 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include "scene.h"
+#include "piece.h"
+#include "pawn.h"
+#include "rook.h"
+#include "knight.h"
+#include "bishop.h"
+#include "queen.h"
+#include "king.h"
 
 class Board
 {
 public:
     Board();
     virtual ~Board();
-    void initClassic(Scene * _scene);
-
+    std::vector<std::vector <Piece *>> initClassic(Scene * _scene);
+    ///retourne la position d'une case dans l'espace
     inline glm::vec3 getPosAt(int i, int j){return squares[i][j];}
     ///calcule et stocke la position dans squares
     void computeAllSquares();
 
+
 private:
     //##DEBUG :
     void placerPion(int i, int j);
+    std::vector<Piece *> initPiece(int side);
     Scene * scene;
     ///retourne la position réelle d'une case sur le plateau
     glm::vec3 computeRealPosition(int i, int j);

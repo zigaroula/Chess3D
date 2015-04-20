@@ -18,6 +18,7 @@ class Player
         void loose();
         void win();
         std::vector<Piece*> getPieces() const { return pieces; }
+        Piece * getPieceByVao(int VaoId);
         Piece* getKing() const { return king; }
         ///Calcule les mouvements disponibles pour toutes les pièces du joueur
         void computeAvailableMovements(std::vector<Piece*>, std::vector<Piece*>);
