@@ -11,6 +11,7 @@ GLFWwindow *Application::window;
 Program Application::program;
 Program Application::program_shadows;
 Program Application::program_selection;
+Program Application::program_skybox;
 Scene Application::scene;
 Game Application::game;
 double Application::lastTime;
@@ -108,6 +109,7 @@ void Application::initOpenGL()
     program.init();
     program_shadows.initForShadowMap();
     program_selection.initForSelection();
+    program_skybox.initForSkybox();
 
     scene.initScene(window_width, window_height);
 
@@ -145,6 +147,7 @@ void Application::display()
 {
 
     renderShadow();
+    renderSkybox();
     renderScene();
 
     glfwSwapBuffers(window);
@@ -196,7 +199,7 @@ void Application::renderScene()
 
     const glm::mat4& view_matrix = scene.getViewMatrix();
     const glm::mat4& projection_matrix = scene.getProjectionMatrix();
-    
+
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
     
     glActiveTexture(GL_TEXTURE2);
@@ -295,6 +298,19 @@ void Application::processSelection(int xx, int yy) {
     glReadPixels(xx*x_scale, viewport[3]-yy*y_scale, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
     
     std::cout << "Clicked on item n°" << (int)res[0] << std::endl;
+}
+
+void Application::renderSkybox() {
+    glDepthMask (GL_FALSE);
+    program_skybox.use();
+    scene.setView();
+    glUniformMatrix4fv(glGetUniformLocation(program_skybox.getId(), "V"), 1, GL_FALSE, scene.getViewMatrixArray());
+    glUniformMatrix4fv(glGetUniformLocation(program_skybox.getId(), "P"), 1, GL_FALSE, scene.getProjectionMatrixArray());
+    glActiveTexture (GL_TEXTURE0);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, *scene.getTexCube());
+    glBindVertexArray (scene.getSkyBox().getId());
+    glDrawArrays (GL_TRIANGLES, 0, 36);
+    glDepthMask (GL_TRUE);
 }
 
 void Application::saveTexture()

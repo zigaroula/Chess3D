@@ -30,7 +30,7 @@ public:
     int addVaoPiece(std::string model, int team, glm::vec3 pos);
     ///Créer un vao en reprenant le modèle précédent
     int copyLastVaoPiece(int team, glm::vec3 pos);
-    void slideVAOTo();
+    void slideVAOTo(int vao, glm::vec3 newPos);
 
     const Light& getLight(int index) const { return lights[index]; }
     size_t getLightCount() const { return lights.size(); }
@@ -46,6 +46,7 @@ public:
     int getShadowSize() const { return shadow_size; }
 
     const Vao& getSkyBox(){ return skyBoxCube;}
+    const GLuint* getTexCube() { return texCube; }
 
 
     // CAMERA
@@ -75,7 +76,6 @@ private:
     ///Charge les faces de la SkyBox
     bool load_cube_map_side(GLuint texture, GLenum side_target, const char* file_name);
     std::vector<Vao> vao_list;
-    Vao skyBoxCube;
     glm::mat4 view_matrix, projection_matrix, normal_matrix;
     Camera camera;
     GLuint shadow_texture, shadow_buffer;
@@ -83,6 +83,8 @@ private:
     int shadow_size;
     std::vector<Light> lights;
 
+    Vao skyBoxCube;
+    GLuint* texCube;
 };
 
 
