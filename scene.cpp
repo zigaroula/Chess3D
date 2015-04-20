@@ -7,8 +7,17 @@
 #include <iostream>
 #include "stb_image.h"
 
-static const glm::vec3 color1(0.5f, 0.f, 0.f);
-static const glm::vec3 color2(0.0f, 0.5f, 0.f);
+static const glm::vec3 color1(0.7f, 0.7f, 0.7f);
+static const glm::vec3 color2(0.1f, 0.1f, 0.1f);
+
+void Scene::selectModel(int index) {
+    selected_model = index;
+    vao_selected = true;
+}
+
+void Scene::unselected() {
+    vao_selected = false;
+}
 
 void Scene::initScene(int width, int height)
 {
@@ -18,6 +27,7 @@ void Scene::initScene(int width, int height)
 
     initLights();
     
+    selection_color = glm::vec3(1.0, 1.0, 0.0);
 
     projection_matrix = glm::mat4(1.0f);
     camera = Camera(width, height);
@@ -25,7 +35,7 @@ void Scene::initScene(int width, int height)
 
 void Scene::initLights()
 {
-    lights.push_back(Light(glm::vec3(400.f, 400.f, 400.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(1.0f, 1.0f, 1.0f)));
+    lights.push_back(Light(glm::vec3(400.f, 400.f, 400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(1.0f, 1.0f, 1.0f)));
 }
 
 void Scene::initShadow()
@@ -61,8 +71,8 @@ void Scene::initShadow()
     
     glBindFramebuffer(GL_FRAMEBUFFER , 0);
     
-    int box_size = 1500.f;
-    shadow_projection_matrix = glm::ortho<float>(-box_size, box_size, -box_size, box_size,  -box_size, box_size);
+    int box_size = 600.f;
+    shadow_projection_matrix = glm::perspective<float>(1.4f, 1.f, 20.f, 10000.f);
     
     bias_matrix = glm::mat4(
                          0.5, 0.0, 0.0, 0.0,
@@ -228,32 +238,30 @@ void Scene::createCubeMap (
   const char* bottom,
   const char* left,
   const char* right,
-  GLuint* tex_cube
+  GLuint* _tex_cube
 ) {
   // generate a cube-map texture to hold all the sides
   glActiveTexture (GL_TEXTURE0);
-  glGenTextures (1, tex_cube);
+  glGenTextures (1, _tex_cube);
 
   // load each image and copy into a side of the cube-map texture
-  assert (
-    load_cube_map_side (*tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, front));
-  assert (
-    load_cube_map_side (*tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, back));
-  assert (
-    load_cube_map_side (*tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, top));
-  assert (
-    load_cube_map_side (*tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, bottom));
-  assert (
-    load_cube_map_side (*tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, left));
-  assert (
-    load_cube_map_side (*tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_X, right));
+  assert (load_cube_map_side (*_tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, front));
+  assert (load_cube_map_side (*_tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, back));
+  assert (load_cube_map_side (*_tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, top));
+  assert (load_cube_map_side (*_tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, bottom));
+  assert (load_cube_map_side (*_tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, left));
+  assert (load_cube_map_side (*_tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_X, right));
+
   // format cube map texture
   glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
   glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  texCube = _tex_cube;
 }
+
 bool Scene::load_cube_map_side (
   GLuint texture, GLenum side_target, const char* file_name
 ) {
@@ -300,9 +308,10 @@ int Scene::addVaoPiece(std::string model, int team, glm::vec3 pos){
     }
     piece.translate(pos);
     vao_list.push_back(piece);
-    return (vao_list.size()-1);
+    return ((int)vao_list.size()-1);
 
 }
+
 std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos){
 
 //    std::map<std::string, int> modeles = std::map<std::string>(model.size());
@@ -324,8 +333,10 @@ std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector
 //        indices.push_back(vao_list.size()-1);
 
 //    }
+
 }
 
+/*
 void Scene::slideVAOTo(int vao, glm::vec3 newPos){
 
-}
+}*/

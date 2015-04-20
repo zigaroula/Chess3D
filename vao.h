@@ -19,7 +19,7 @@ class Vao
 public:
     Vao() { }
     Vao(const Vao& vao, const glm::vec3& color) { id = vao.id; model_matrix = vao.model_matrix; vertex_count = vao.vertex_count; ambient_color = color; texture_enabled = vao.texture_enabled;}
-    GLuint getId() const { return id; };
+    GLuint getId() const { return id; }
     GLsizei getVertexCount() const { return vertex_count; }
     
     const GLfloat* getModelMatrixArray() const { return glm::value_ptr(model_matrix); }
@@ -41,6 +41,14 @@ public:
     bool isTextureEnabled() const { return texture_enabled; }
     GLuint getTextureId() const { return texture_id; }
     
+    void requestMovement(glm::vec3 pos_end);
+    
+    inline bool isMovementRequested() const { return movement_requested; }
+    inline const glm::vec3& getMovementDirection() const { return movement_direction; }
+    inline double getMovementStartTime() const { return movement_start_time; }
+    inline float getMovementLength() const { return movement_length; }
+    void updateMovement();
+    void endMovement();
 
 private:
     GLuint id;
@@ -49,6 +57,13 @@ private:
     glm::mat4 model_matrix;
     glm::vec3 ambient_color;
     GLboolean texture_enabled;
+    
+    bool movement_requested = false;
+    float movement_length;
+    glm::vec3 position_start, position_end, movement_direction;
+    double movement_start_time;
+    glm::mat4 model_matrix_before_movement;
+    
 
 };
 

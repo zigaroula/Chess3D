@@ -5,7 +5,44 @@
 #include <sstream>
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <GLFW/glfw3.h>
 
+
+void Vao::endMovement()
+{
+    movement_requested = false;
+}
+
+void Vao::updateMovement()
+{
+    double elasped_time = glfwGetTime() - movement_start_time;
+    double total = 5.0;
+    float movement_length = (float)elasped_time/total * getMovementLength();
+    
+    glm::vec3 translation = movement_length * getMovementDirection();
+    
+    model_matrix = glm::translate(model_matrix_before_movement, translation);
+    
+    if (elasped_time >= total)
+    {
+        movement_requested = false;
+        
+    }
+
+}
+
+void Vao::requestMovement(glm::vec3 pos_end)
+{
+    position_start = glm::vec3(model_matrix * glm::vec4(0, 0, 0, 1));
+    movement_requested = true;
+    position_end = pos_end;
+    movement_length = glm::length(position_end-position_start);
+    movement_direction =position_end-position_start;
+    movement_direction = glm::normalize(movement_direction);
+    movement_start_time = glfwGetTime();
+    model_matrix_before_movement = model_matrix;
+
+}
 Vao Vao::loadObj(std::string filename, glm::vec3 color)
 {
 
@@ -14,6 +51,7 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color)
 
 Vao Vao::loadObj(std::string filename, glm::vec3 color, std::string texture_filename)
 {
+    
     Vao vao;
     
     vao.ambient_color = color;
@@ -193,54 +231,54 @@ void Vao::scale(const glm::vec3 &vector)
 
 Vao Vao::getSkyBoxCube(){
     float points[] = {
-        -100.0f,  100.0f, -100.0f,
-        -100.0f, -100.0f, -100.0f,
-        100.0f, -100.0f, -100.0f,
-        100.0f, -100.0f, -100.0f,
-        100.0f,  100.0f, -100.0f,
-        -100.0f,  100.0f, -100.0f,
+        -1000.0f,  1000.0f, -1000.0f,
+        -1000.0f, -1000.0f, -1000.0f,
+        1000.0f, -1000.0f, -1000.0f,
+        1000.0f, -1000.0f, -1000.0f,
+        1000.0f,  1000.0f, -1000.0f,
+        -1000.0f,  1000.0f, -1000.0f,
 
-        -100.0f, -100.0f,  100.0f,
-        -100.0f, -100.0f, -100.0f,
-        -100.0f,  100.0f, -100.0f,
-        -100.0f,  100.0f, -100.0f,
-        -100.0f,  100.0f,  100.0f,
-        -100.0f, -100.0f,  100.0f,
+        -1000.0f, -1000.0f,  1000.0f,
+        -1000.0f, -1000.0f, -1000.0f,
+        -1000.0f,  1000.0f, -1000.0f,
+        -1000.0f,  1000.0f, -1000.0f,
+        -1000.0f,  1000.0f,  1000.0f,
+        -1000.0f, -1000.0f,  1000.0f,
 
-        100.0f, -100.0f, -100.0f,
-        100.0f, -100.0f,  100.0f,
-        100.0f,  100.0f,  100.0f,
-        100.0f,  100.0f,  100.0f,
-        100.0f,  100.0f, -100.0f,
-        100.0f, -100.0f, -100.0f,
+        1000.0f, -1000.0f, -1000.0f,
+        1000.0f, -1000.0f,  1000.0f,
+        1000.0f,  1000.0f,  1000.0f,
+        1000.0f,  1000.0f,  1000.0f,
+        1000.0f,  1000.0f, -1000.0f,
+        1000.0f, -1000.0f, -1000.0f,
 
-        -100.0f, -100.0f,  100.0f,
-        -100.0f,  100.0f,  100.0f,
-        100.0f,  100.0f,  100.0f,
-        100.0f,  100.0f,  100.0f,
-        100.0f, -100.0f,  100.0f,
-        -100.0f, -100.0f,  100.0f,
+        -1000.0f, -1000.0f,  1000.0f,
+        -1000.0f,  1000.0f,  1000.0f,
+        1000.0f,  1000.0f,  1000.0f,
+        1000.0f,  1000.0f,  1000.0f,
+        1000.0f, -1000.0f,  1000.0f,
+        -1000.0f, -1000.0f,  1000.0f,
 
-        -100.0f,  100.0f, -100.0f,
-        100.0f,  100.0f, -100.0f,
-        100.0f,  100.0f,  100.0f,
-        100.0f,  100.0f,  100.0f,
-        -100.0f,  100.0f,  100.0f,
-        -100.0f,  100.0f, -100.0f,
+        -1000.0f,  1000.0f, -1000.0f,
+        1000.0f,  1000.0f, -1000.0f,
+        1000.0f,  1000.0f,  1000.0f,
+        1000.0f,  1000.0f,  1000.0f,
+        -1000.0f,  1000.0f,  1000.0f,
+        -1000.0f,  1000.0f, -1000.0f,
 
-        -100.0f, -100.0f, -100.0f,
-        -100.0f, -100.0f,  100.0f,
-        100.0f, -100.0f, -100.0f,
-        100.0f, -100.0f, -100.0f,
-        -100.0f, -100.0f,  100.0f,
-        100.0f, -100.0f,  100.0f
+        -1000.0f, -1000.0f, -1000.0f,
+        -1000.0f, -1000.0f,  1000.0f,
+        1000.0f, -1000.0f, -1000.0f,
+        1000.0f, -1000.0f, -1000.0f,
+        -1000.0f, -1000.0f,  1000.0f,
+        1000.0f, -1000.0f,  1000.0f
     };
     GLuint vbo;
     glGenBuffers (1, &vbo);
     glBindBuffer (GL_ARRAY_BUFFER, vbo);
     glBufferData (GL_ARRAY_BUFFER, 3 * 36 * sizeof (float), &points, GL_STATIC_DRAW);
 
-    GLuint vaoID;
+    GLuint vaoID = 0;
     Vao vao;
     vao.id = vaoID;
     vao.vertex_count = 6*2*3;

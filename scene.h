@@ -26,12 +26,12 @@ class Scene
 public:
     void initScene(int, int);
     size_t size() const { return vao_list.size(); }
-    const Vao& operator[](size_t index) const { return vao_list[index]; }
+    Vao& operator[](size_t index) { return vao_list[index]; }
     ///Créer un vao, l'ajoute à la liste des vao et retourne son index dans la liste
     int addVaoPiece(std::string model, int team, glm::vec3 pos);
+
     ///Créer une liste de vao sans avoir à recharger plusieurs fois le meme modèle
     std::vector<int> addVaoPieces(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos);
-
 
     void slideVAOTo(int vao, glm::vec3 newPos);
 
@@ -49,6 +49,7 @@ public:
     int getShadowSize() const { return shadow_size; }
 
     const Vao& getSkyBox(){ return skyBoxCube;}
+    const GLuint* getTexCube() { return texCube; }
 
 
     // CAMERA
@@ -67,10 +68,17 @@ public:
     void setCamZN(bool zn) { camera.setZN(zn); }
     void move(int);
     
+    void selectModel(int index);
+    void unselected();
+    inline int getSelected() const { return selected_model; }
+    inline bool selected() const { return vao_selected; }
+    inline GLfloat* getSelectectionColor() { return glm::value_ptr(selection_color); }
+    
 private:
     void initShadow();
     void initModels();
     void initLights();
+    
     //Creation de la SkyBox
     ///Créer le cube sous la forme d'un vba
     void initSkyBox();
@@ -78,14 +86,20 @@ private:
     ///Charge les faces de la SkyBox
     bool load_cube_map_side(GLuint texture, GLenum side_target, const char* file_name);
     std::vector<Vao> vao_list;
-    Vao skyBoxCube;
     glm::mat4 view_matrix, projection_matrix, normal_matrix;
     Camera camera;
     GLuint shadow_texture, shadow_buffer;
     glm::mat4 shadow_projection_matrix, bias_matrix;
     int shadow_size;
     std::vector<Light> lights;
+    
+    int selected_model;
+    glm::vec3 selection_color;
+    bool vao_selected = false;
+    
 
+    Vao skyBoxCube;
+    GLuint* texCube;
 };
 
 

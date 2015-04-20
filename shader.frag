@@ -46,7 +46,8 @@ void main(void)
         specular = pow(specAngle, 16.0) * specColor;
     }
 
-    float bias = 0.98;
+    //float bias = 1-(0.001*tan(acos(dot(normal, lightDir))));
+    float bias = 0.9999;
     vec4 shadow_coord2 = shadow_coord;
     shadow_coord2.z *= bias;
     float shadow = textureProj (shadow_text , shadow_coord2);
@@ -58,9 +59,9 @@ void main(void)
     }
 
     if (shadow<1.0) {
-        shadow = 0.4;
+        shadow = 0.1;
     }
 
-    outputColor = shadow * vec4(ambient + diffuse + specular, 1.0);
+    outputColor = vec4(ambient + shadow*diffuse + shadow*specular, 1.0);
 
 }

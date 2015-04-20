@@ -8,6 +8,7 @@ void Game::initClassicGame(Scene * _scene) {
     none.init(0);
     player1.init(1);
     player2.init(2);
+
     board.initClassic(_scene);
 
     turn = 1;

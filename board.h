@@ -25,8 +25,6 @@ public:
 
 
 private:
-    //##DEBUG :
-    void placerPion(int i, int j);
     std::vector<Piece *> initPiece(int side);
     Scene * scene;
     ///retourne la position réelle d'une case sur le plateau

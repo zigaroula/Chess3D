@@ -93,10 +93,8 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
     scene=_scene;
     computeAllSquares();
 
-   std::vector<std::vector<Piece *> > pieces =  std::vector<std::vector<Piece *> >(3);
-
-
-
+    std::vector<std::vector<Piece *> > pieces;
+    return pieces;
 }
 
 
@@ -115,8 +113,4 @@ void Board::computeAllSquares(){
     }
 
 }
-//###DEBUG
-void Board::placerPion(int i, int j){
 
-    scene->addVaoPiece("models/pion.obj",1,getPosAt(i,j));
-}

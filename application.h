@@ -40,6 +40,7 @@ private:
     static Program program;
     static Program program_shadows;
     static Program program_selection;
+    static Program program_skybox;
     static Scene scene;
     static Camera *camera;
     static Game game;
@@ -56,6 +57,9 @@ private:
     // Selection
     static void processSelection(int, int);
     static void renderSelection();
+
+    //Skybox
+    static void renderSkybox();
 };
 
 
