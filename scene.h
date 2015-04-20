@@ -25,7 +25,7 @@ class Scene
 public:
     void initScene(int, int);
     size_t size() const { return vao_list.size(); }
-    const Vao& operator[](size_t index) const { return vao_list[index]; }
+    Vao& operator[](size_t index) { return vao_list[index]; }
     ///Créer un vao, l'ajoute à la liste des vao et retourne son index dans la liste
     int addVaoPiece(std::string model, int team, glm::vec3 pos);
 

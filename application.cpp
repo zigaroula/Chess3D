@@ -73,7 +73,8 @@ void Application::start()
     nbFrames = 0;
     nbFramesLastSecond = 100;
 
-
+    Vao &vao = scene[26];
+    vao.requestMovement(glm::vec3(0.0));
 
     while (!glfwWindowShouldClose(window))
     {
@@ -121,7 +122,6 @@ void Application::initOpenGL()
     for (unsigned int i = 0; i < scene.getLightCount(); ++i)
     {
         const Light& light = scene.getLight(i);
-        std::cout << glm::to_string(light.getPos()) << std::endl;
     
         std::string pos = "lights[" + std::to_string(i) + "].position";
         std::string dcolor = "lights[" + std::to_string(i) + "].diffuse_color";
@@ -212,9 +212,17 @@ void Application::renderScene()
     
     for (unsigned int i = 0; i < scene.size(); ++i)
     {
-        const Vao &vao = scene[i];
+        Vao &vao = scene[i];
+        glm::mat4 model_matrix =  vao.getModelMatrix();
         
-        const glm::mat4& model_matrix =  vao.getModelMatrix();
+        if (vao.isMovementRequested())
+        {
+            vao.updateMovement();
+                
+        }
+
+        
+        
         glm::mat4 depthMVP = shadow_proj_matrix * depthViewMatrix * model_matrix;
         glm::mat4 depthBiasMVP = scene.getBiasMatrix() * depthMVP;
         
