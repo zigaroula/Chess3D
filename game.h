@@ -15,7 +15,6 @@
 class Game
 {
 public:
-    Game();
     ///Créer une nouvelle partie normale
     virtual void initClassicGame(Scene * _scene);
     ///Recharge une partie précédente
@@ -30,6 +29,8 @@ public:
     void changeTurn();
     ///Calcule les mouvements disponibles pour toutes les pièces
     void computeAvailableMovements();
+    
+    bool isMovementPossible(int vaoId, int caseX, int caseY);
     
     int getPlayerId() { return turn; }
 

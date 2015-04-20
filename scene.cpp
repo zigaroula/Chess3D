@@ -96,88 +96,7 @@ void Scene::initModels()
     glm::mat4 rotation_180(1.f);
     rotation_180 = glm::rotate(rotation_180, (float)M_PI, glm::vec3(0.f, 1.f, 0.f));
     
-    Vao roi1, roi2, dame1, dame2, tour11, tour12, tour21, tour22, cavalier11, cavalier12, cavalier21, cavalier22, fou11, fou12, fou21, fou22;
     
-    Vao pion;
-    
-    roi1 = Vao::loadObj("models/roi.obj", color1);
-    roi1.translate(glm::vec3(x_offset + 3*x_shift, 0.f, z_offset1));
-    roi2 = Vao(roi1, color2);
-    roi2.translate(glm::vec3(0.f, 0.f, z_offset2));
-
-    dame1 = Vao::loadObj("models/dame.obj", color1);
-    dame1.translate(glm::vec3(x_offset + 4*x_shift, 0.f, z_offset1));
-    dame2 = Vao(dame1, color2);
-    dame2.translate(glm::vec3(0.f, 0.f, z_offset2));
-    
-    tour11 = Vao::loadObj("models/tour.obj", color1);
-    tour12 = Vao(tour11, color1);
-    tour11.translate(glm::vec3(x_offset, 0.f, z_offset1));
-    tour12.translate(glm::vec3(x_offset+7*x_shift, 0.f, z_offset1));
-    tour21 = Vao(tour11, color2);
-    tour22 = Vao(tour12, color2);
-    tour21.translate(glm::vec3(0.f, 0.f, z_offset2));
-    tour22.translate(glm::vec3(0.f, 0.f, z_offset2));
-    
-    fou11 = Vao::loadObj("models/fou.obj", color1);
-    fou12 = Vao(fou11, color1);
-    fou11.translate(glm::vec3(x_offset + 2*x_shift, 0.f, z_offset1));
-    fou12.translate(glm::vec3(x_offset + 5*x_shift, 0.f, z_offset1));
-    fou21 = Vao(fou11, color2);
-    fou22 = Vao(fou12, color2);
-    fou21.translate(glm::vec3(0.f, 0.f, 2*z_offset2));
-    fou22.translate(glm::vec3(0.f, 0.f, 2*z_offset2));
-    fou21.rotate((float)M_PI, glm::vec3(0.f, 1.f, 0.f));
-    fou22.rotate((float)M_PI, glm::vec3(0.f, 1.f, 0.f));
-    
-    cavalier11 = Vao::loadObj("models/cavalier.obj", color1);
-    cavalier12 = Vao(cavalier11, color1);
-    cavalier11.translate(glm::vec3(x_offset + x_shift, 0.f, z_offset1));
-    cavalier12.translate(glm::vec3(x_offset + 6*x_shift, 0.f, z_offset1));
-    cavalier21 = Vao(cavalier11, color2);
-    cavalier22 = Vao(cavalier12, color2);
-    cavalier21.translate(glm::vec3(0.f, 0.f, 2*z_offset2));
-    cavalier22.translate(glm::vec3(0.f, 0.f, 2*z_offset2));
-    
-    cavalier21.rotate((float)M_PI, glm::vec3(0.f, 1.f, 0.f));
-    cavalier22.rotate((float)M_PI, glm::vec3(0.f, 1.f, 0.f));
-    tour21.translate(glm::vec3(0.f, 0.f, z_offset2));
-    tour22.translate(glm::vec3(0.f, 0.f, z_offset2));
-    roi2.translate(glm::vec3(0.f, 0.f, z_offset2));
-    dame2.translate(glm::vec3(0.f, 0.f, z_offset2));
-    
-    vao_list.push_back(roi1);
-    vao_list.push_back(dame1);
-    vao_list.push_back(roi2);
-    vao_list.push_back(dame2);
-    vao_list.push_back(tour11);
-    vao_list.push_back(tour12);
-    vao_list.push_back(tour21);
-    vao_list.push_back(tour22);
-    vao_list.push_back(cavalier11);
-    vao_list.push_back(cavalier12);
-    vao_list.push_back(cavalier21);
-    vao_list.push_back(cavalier22);
-    vao_list.push_back(fou11);
-    vao_list.push_back(fou12);
-    vao_list.push_back(fou21);
-    vao_list.push_back(fou22);
-
-    
-    pion = Vao::loadObj("models/pion.obj", color1);
-
-    for (int i = 0; i < 8; ++i)
-    {
-        Vao pion_current(pion, color1);
-        pion_current.translate(glm::vec3(x_offset + i*x_shift, 0.f, z_offset1 - pion1_z_translate));
-        
-        vao_list.push_back(pion_current);
-        
-        pion_current = Vao(pion, color2);
-        pion_current.translate(glm::vec3(x_offset + i*x_shift, 0.f, z_offset2 + pion1_z_translate));
-        
-        vao_list.push_back(pion_current);
-    }
     
     Vao plateau = Vao::loadObj("models/plane.obj", glm::vec3(0.f, 0.f, 0.f), "textures/board.tga");
     
@@ -363,6 +282,7 @@ std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector
                 piece = Vao(vao_list[it->second], color2);
             }
         }
+        
         piece.translate(pos[i]);
         vao_list.push_back(piece);
         indices.push_back((int) vao_list.size());
