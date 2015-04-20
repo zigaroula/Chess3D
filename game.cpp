@@ -1,7 +1,9 @@
 #include "game.h"
 
-Game::Game() {
-
+bool Game::isMovementPossible(int vaoId, int caseX, int caseY)
+{
+    
+    return false;
 }
 
 void Game::initClassicGame(Scene * _scene) {

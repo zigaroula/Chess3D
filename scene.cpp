@@ -253,7 +253,6 @@ std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector
             }
         }
         
-        std::cout << model[i] << glm::to_string(pos[i]) << std::endl;
         piece.translate(pos[i]);
         vao_list.push_back(piece);
         indices.push_back((int) vao_list.size());
