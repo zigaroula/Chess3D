@@ -83,7 +83,7 @@ void Scene::initShadow()
 
 void Scene::initModels()
 {
-    
+    //###########A COMMENTER SI INITIALISATION PAR LE MODULE DE JEU
     float x_shift = 76.f;
     
     float z_offset1 = 265.f;

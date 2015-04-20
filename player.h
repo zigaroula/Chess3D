@@ -14,7 +14,8 @@ class Player
     public:
         Player();
         virtual ~Player();
-        void init(int);
+        void init(int side);
+        void init(int side, const std::vector<Piece *> &_pieces);
         void loose();
         void win();
         std::vector<Piece*> getPieces() const { return pieces; }

@@ -10,6 +10,7 @@
 #include "board.h"
 #include "player.h"
 #include "scene.h"
+#include "piece.h"
 
 class Game
 {
