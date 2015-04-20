@@ -29,15 +29,16 @@ std::vector<Piece *> Board::initPiece(int side){
     Piece * queen = new Queen();
     Piece * king = new King();
 
+
     if (side == 1) {
-        pawn1->init(6, 7);
-        pawn2->init(6, 6);
-        pawn3->init(6, 5);
-        pawn4->init(6, 4);
-        pawn5->init(6, 3);
-        pawn6->init(6, 2);
-        pawn7->init(6, 1);
-        pawn8->init(6, 0);
+        pawn1->init(6, 0);
+        pawn2->init(6, 1);
+        pawn3->init(6, 2);
+        pawn4->init(6, 3);
+        pawn5->init(6, 4);
+        pawn6->init(6, 5);
+        pawn7->init(6, 6);
+        pawn8->init(6, 7);
         rook1->init(7, 0);
         knight1->init(7, 1);
         bishop1->init(7, 2);
@@ -142,6 +143,7 @@ void Board::movePieceTo(int vao, int i, int j){
     Piece * piece = vaoIDsMap[vao];
 
     if (piece == nullptr) throw std::string("La piece demandée n'existe pas");
+
 
     piece->moveTo(i,j);
     scene->slideVAOTo(vao - 1,getPosAt(i,j));

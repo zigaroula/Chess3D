@@ -327,7 +327,7 @@ void Application::processSelection(int xx, int yy) {
     {
         selected -= 100;
         int caseY = selected%8;
-        int caseX = selected/8;
+        int caseX = 7- (selected/8);
 
         if (scene.selected())
         {

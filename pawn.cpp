@@ -61,4 +61,5 @@ void Pawn::computeAvailableMovements(std::vector<Piece*> own, std::vector<Piece*
             availableMovements.push_back(pos);
         }
     }
+
 }

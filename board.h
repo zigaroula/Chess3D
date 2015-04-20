@@ -37,7 +37,7 @@ private:
     glm::vec3 computeRealPosition(int i, int j);
     ///Permet de maper un ensemble de 2 int en positions réelles dans l'espace
     std::vector<std::vector<glm::vec3> > squares;
-    const glm::vec3 centerToSquare0 = glm::vec3(-265.0f, 0.0f, -265.0f);
+    const glm::vec3 centerToSquare0 = glm::vec3(-265.0f, 0.0f, 267.0f);
     const float squareOffset = 76.0f;
 };
 
