@@ -48,6 +48,8 @@ rook.cpp
 rook.h
 scene.cpp
 scene.h
+selection_shader.frag
+selection_shader.vert
 shader.cpp
 shader.frag
 shader.h
