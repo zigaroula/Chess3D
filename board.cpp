@@ -82,6 +82,7 @@ std::vector<Piece *> Board::initPiece(int side){
     pieces.push_back(queen);
     pieces.push_back(king);
 
+
     return pieces;
 }
 
@@ -93,28 +94,29 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
     std::vector<std::vector<Piece *> > pieces;
 
 // ############### À DÉCOMMENTER POUR QUE L'INITIALISATION SE FASSE PAR LE MODULE LOGIQUE
-//    pieces.push_back(initPiece(1));
-//    pieces.push_back(initPiece(2));
+    pieces.push_back(initPiece(1));
+    pieces.push_back(initPiece(2));
+
+    
+    std::vector<std::string> model; std::vector<int> team ; std::vector<glm::vec3> pos ;
+
+    for (int i = 0; i<2; i++){
+        for (int j = 0; j<16; j++){
+
+            model.push_back(pieces[i][j]->getModelPath());
+            team.push_back(i+1);
+            pos.push_back(getPosAt(pieces[i][j]->getPosition()));
+        }
+    }
 
 
-//    std::vector<std::string> model; std::vector<int> team ; std::vector<glm::vec3> pos ;
+    std::vector<int> vaoIDs = scene->addVaoPieces(model,team,pos);
 
-//    for (int i = 0; i<2; i++){
-//        for (int j = 0; j<16; j++){
-
-//            model.push_back(pieces[i][j]->getModelPath());
-//            team.push_back(i+1);
-//            pos.push_back(getPosAt(pieces[i][j]->getPosition()));
-//        }
-//    }
-
-//    std::vector<int> vaoIDs = scene->addVaoPieces(model,team,pos);
-
-//    for (int i = 0; i<2; i++){
-//        for (int j = 0; j<16; j++){
-//            pieces[i][j]->setVaoID(vaoIDs[(i*16) + j]);
-//        }
-//    }
+    for (int i = 0; i<2; i++){
+        for (int j = 0; j<16; j++){
+            pieces[i][j]->setVaoID(vaoIDs[(i*16) + j]);
+        }
+    }
 
    return pieces;
 }
@@ -122,14 +124,14 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
 
 
 glm::vec3 Board::computeRealPosition(int i, int j){
-    return centerToSquare0 + glm::vec3(i*squareOffset , 0.0f, j*squareOffset);
+    return centerToSquare0 + glm::vec3(j*squareOffset, 0.0f, i*squareOffset);
 }
 
 void Board::computeAllSquares(){
 
     squares = std::vector<std::vector<glm::vec3> >(8);
     for(int i=0; i < 8; i++){
-        squares[i] = std::vector<glm::vec3> (8);
+        squares[i].resize(8);
         for(int j=0; j <8; j++)
             squares[i][j] = computeRealPosition(i,j);
     }
