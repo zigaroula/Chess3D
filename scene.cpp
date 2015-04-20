@@ -10,6 +10,15 @@
 static const glm::vec3 color1(0.7f, 0.7f, 0.7f);
 static const glm::vec3 color2(0.1f, 0.1f, 0.1f);
 
+void Scene::selectModel(int index) {
+    selected_model = index;
+    vao_selected = true;
+}
+
+void Scene::unselected() {
+    vao_selected = false;
+}
+
 void Scene::initScene(int width, int height)
 {
     initShadow();
@@ -18,6 +27,7 @@ void Scene::initScene(int width, int height)
 
     initLights();
     
+    selection_color = glm::vec3(1.0, 1.0, 0.0);
 
     projection_matrix = glm::mat4(1.0f);
     camera = Camera(width, height);
@@ -298,7 +308,7 @@ int Scene::addVaoPiece(std::string model, int team, glm::vec3 pos){
     }
     piece.translate(pos);
     vao_list.push_back(piece);
-    return (vao_list.size()-1);
+    return ((int)vao_list.size()-1);
 
 }
 int Scene::copyLastVaoPiece(int team, glm::vec3 pos){
@@ -311,9 +321,10 @@ int Scene::copyLastVaoPiece(int team, glm::vec3 pos){
     }
     piece.translate(pos);
     vao_list.push_back(piece);
-    return (vao_list.size()-1);
+    return ((int)vao_list.size()-1);
 }
 
+/*
 void Scene::slideVAOTo(int vao, glm::vec3 newPos){
 
-}
+}*/
