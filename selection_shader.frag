@@ -19,5 +19,5 @@ void main()
 		outputF = vec4(cell/255.0, 0, 0, 0);
 	}
 	else
-        outputF = vec4(code/255.0, 0, 0, 0);
+        outputF = vec4((code+1)/255.0, 0, 0, 0);
 }

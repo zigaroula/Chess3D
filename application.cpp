@@ -309,7 +309,7 @@ void Application::processSelection(int xx, int yy) {
     glGetIntegerv(GL_VIEWPORT, viewport);
     glReadPixels(xx*x_scale, viewport[3]-yy*y_scale, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
     
-    int selected = (int) res[0];
+    int selected = (int) res[0] - 1;
     
     if (selected < 100)
         scene.selectModel(selected);
