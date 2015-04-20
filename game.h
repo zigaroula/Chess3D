@@ -29,6 +29,8 @@ public:
     void changeTurn();
     ///Calcule les mouvements disponibles pour toutes les pièces
     void computeAvailableMovements();
+    
+    int getPlayerId() { return turn; }
 
     ///DEBUGGING
     void testDebug();
