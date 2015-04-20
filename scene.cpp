@@ -295,4 +295,5 @@ std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector
 
 void Scene::slideVAOTo(int vao, glm::vec3 newPos){
 
+    vao_list[vao].requestMovement(newPos);
 }
