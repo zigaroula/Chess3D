@@ -93,28 +93,28 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
     std::vector<std::vector<Piece *> > pieces;
 
 // ############### À DÉCOMMENTER POUR QUE L'INITIALISATION SE FASSE PAR LE MODULE LOGIQUE
-//    pieces.push_back(initPiece(1));
-//    pieces.push_back(initPiece(2));
+    pieces.push_back(initPiece(1));
+    pieces.push_back(initPiece(2));
 
 
-//    std::vector<std::string> model; std::vector<int> team ; std::vector<glm::vec3> pos ;
+    std::vector<std::string> model; std::vector<int> team ; std::vector<glm::vec3> pos ;
 
-//    for (int i = 0; i<2; i++){
-//        for (int j = 0; j<16; j++){
+    for (int i = 0; i<2; i++){
+        for (int j = 0; j<16; j++){
 
-//            model.push_back(pieces[i][j]->getModelPath());
-//            team.push_back(i+1);
-//            pos.push_back(getPosAt(pieces[i][j]->getPosition()));
-//        }
-//    }
+            model.push_back(pieces[i][j]->getModelPath());
+            team.push_back(i+1);
+            pos.push_back(getPosAt(pieces[i][j]->getPosition()));
+        }
+    }
 
-//    std::vector<int> vaoIDs = scene->addVaoPieces(model,team,pos);
+    std::vector<int> vaoIDs = scene->addVaoPieces(model,team,pos);
 
-//    for (int i = 0; i<2; i++){
-//        for (int j = 0; j<16; j++){
-//            pieces[i][j]->setVaoID(vaoIDs[(i*16) + j]);
-//        }
-//    }
+    for (int i = 0; i<2; i++){
+        for (int j = 0; j<16; j++){
+            pieces[i][j]->setVaoID(vaoIDs[(i*16) + j]);
+        }
+    }
 
    return pieces;
 }
