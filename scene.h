@@ -15,7 +15,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include <string>
-#include "piece.h"
+
 
 #define ZNEAR 10.0f
 #define ZFAR 10000.0f

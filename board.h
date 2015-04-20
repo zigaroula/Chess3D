@@ -20,6 +20,7 @@ public:
     std::vector<std::vector <Piece *>> initClassic(Scene * _scene);
     ///retourne la position d'une case dans l'espace
     inline glm::vec3 getPosAt(int i, int j){return squares[i][j];}
+    inline glm::vec3 getPosAt(std::vector<int> square){return squares[ square[0] ][ square[1] ];}
     ///calcule et stocke la position dans squares
     void computeAllSquares();
 
