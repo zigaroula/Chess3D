@@ -59,7 +59,7 @@ void main(void)
     }
 
     if (shadow<1.0) {
-        shadow = 0.00000001;
+        shadow = 0.1;
     }
 
     outputColor = vec4(ambient + shadow*diffuse + shadow*specular, 1.0);
