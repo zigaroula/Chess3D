@@ -323,8 +323,8 @@ void Application::renderSkybox() {
     glUniformMatrix4fv(glGetUniformLocation(program_skybox.getId(), "V"), 1, GL_FALSE, scene.getViewMatrixArray());
     glUniformMatrix4fv(glGetUniformLocation(program_skybox.getId(), "P"), 1, GL_FALSE, scene.getProjectionMatrixArray());
     glUniform1i(glGetUniformLocation(program_selection.getId(), "cube_texture"), 5);
-    //glActiveTexture (GL_TEXTURE5);
-    //glBindTexture (GL_TEXTURE_CUBE_MAP, scene.getTexCube());
+    glActiveTexture (GL_TEXTURE5);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, scene.getTexCube());
     glBindVertexArray (scene.getSkyBox());
     glDrawArrays (GL_TRIANGLES, 0, 36);
     glDepthMask (GL_TRUE);
