@@ -47,8 +47,8 @@ public:
     GLuint getShadowTexureId() { return shadow_texture; }
     int getShadowSize() const { return shadow_size; }
 
-    const Vao& getSkyBox(){ return skyBoxCube;}
-    const GLuint getTexCube() { return texCube; }
+    const GLuint& getSkyBox(){ return skyBox;}
+    const GLuint& getTexCube() { return texCube; }
 
 
     // CAMERA
@@ -81,7 +81,7 @@ private:
     //Creation de la SkyBox
     ///Créer le cube sous la forme d'un vba
     void initSkyBox();
-    void createCubeMap(const char* front,const char* back, const char* top,const char* bottom,const char* left,const char* right, GLuint* tex_cube);
+    void create_cube_map (const char* front, const char* back, const char* top, const char* bottom, const char* left, const char* right, GLuint* tex_cube );
     ///Charge les faces de la SkyBox
     bool load_cube_map_side(GLuint texture, GLenum side_target, const char* file_name);
     std::vector<Vao> vao_list;
@@ -97,7 +97,7 @@ private:
     bool vao_selected = false;
     
 
-    Vao skyBoxCube;
+    GLuint skyBox;
     GLuint texCube;
 };
 
