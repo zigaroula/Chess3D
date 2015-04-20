@@ -82,6 +82,7 @@ std::vector<Piece *> Board::initPiece(int side){
     pieces.push_back(queen);
     pieces.push_back(king);
 
+
     return pieces;
 }
 
