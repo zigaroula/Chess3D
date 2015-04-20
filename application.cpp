@@ -454,6 +454,6 @@ void Application::mouse_button_callback(GLFWwindow* window, int button, int acti
 
 void Application::setTitleFps()
 {
-    std::string title = "Chess 3D - FPS: " + std::to_string(nbFrames);
+    std::string title = "Chess 3D - FPS: " + std::to_string(nbFrames) + " - Joueur " + std::to_string(game.getPlayerId());
     glfwSetWindowTitle(window, title.c_str());
 }
