@@ -29,7 +29,6 @@ public:
     Vao& operator[](size_t index) { return vao_list[index]; }
     ///Créer un vao, l'ajoute à la liste des vao et retourne son index dans la liste
     int addVaoPiece(std::string model, int team, glm::vec3 pos);
-
     ///Créer une liste de vao sans avoir à recharger plusieurs fois le meme modèle
     std::vector<int> addVaoPieces(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos);
 
