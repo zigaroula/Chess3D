@@ -19,7 +19,7 @@ class Vao
 public:
     Vao() { }
     Vao(const Vao& vao, const glm::vec3& color) { id = vao.id; model_matrix = vao.model_matrix; vertex_count = vao.vertex_count; ambient_color = color; texture_enabled = vao.texture_enabled;}
-    GLuint getId() const { return id; };
+    GLuint getId() const { return id; }
     GLsizei getVertexCount() const { return vertex_count; }
     
     const GLfloat* getModelMatrixArray() const { return glm::value_ptr(model_matrix); }
