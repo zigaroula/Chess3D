@@ -96,7 +96,7 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
     pieces.push_back(initPiece(1));
     pieces.push_back(initPiece(2));
 
-
+    
     std::vector<std::string> model; std::vector<int> team ; std::vector<glm::vec3> pos ;
 
     for (int i = 0; i<2; i++){
