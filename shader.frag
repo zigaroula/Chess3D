@@ -53,8 +53,13 @@ void main(void)
 
     vec3 ambient = ambient_color;
 
-    if (texture_enabled) 
+    if (texture_enabled) {
         ambient = vec3(texture(object_texture, texture_coord));
+    }
+
+    if (shadow<1.0) {
+        shadow = 0.4;
+    }
 
     outputColor = shadow * vec4(ambient + diffuse + specular, 1.0);
 
