@@ -278,7 +278,7 @@ Vao Vao::getSkyBoxCube(){
     glBindBuffer (GL_ARRAY_BUFFER, vbo);
     glBufferData (GL_ARRAY_BUFFER, 3 * 36 * sizeof (float), &points, GL_STATIC_DRAW);
 
-    GLuint vaoID;
+    GLuint vaoID = 0;
     Vao vao;
     vao.id = vaoID;
     vao.vertex_count = 6*2*3;

@@ -301,7 +301,7 @@ int Scene::addVaoPiece(std::string model, int team, glm::vec3 pos){
     }
     piece.translate(pos);
     vao_list.push_back(piece);
-    return (vao_list.size()-1);
+    return ((int)vao_list.size()-1);
 
 }
 int Scene::copyLastVaoPiece(int team, glm::vec3 pos){
@@ -314,9 +314,10 @@ int Scene::copyLastVaoPiece(int team, glm::vec3 pos){
     }
     piece.translate(pos);
     vao_list.push_back(piece);
-    return (vao_list.size()-1);
+    return ((int)vao_list.size()-1);
 }
 
+/*
 void Scene::slideVAOTo(int vao, glm::vec3 newPos){
 
-}
+}*/
