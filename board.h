@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <map>
 #include "scene.h"
 #include "piece.h"
 #include "pawn.h"
@@ -23,11 +24,15 @@ public:
     inline glm::vec3 getPosAt(std::vector<int> square){return squares[ square[0] ][ square[1] ];}
     ///calcule et stocke la position dans squares
     void computeAllSquares();
+    Piece * getPieceByVao(int vao){return vaoIDsMap[vao];}
+    void movePieceTo(int vao, int i, int j);
 
 
 private:
+    ///Créer les 16 pièces d'un joueur
     std::vector<Piece *> initPiece(int side);
     Scene * scene;
+    std::map<int, Piece *> vaoIDsMap;
     ///retourne la position réelle d'une case sur le plateau
     glm::vec3 computeRealPosition(int i, int j);
     ///Permet de maper un ensemble de 2 int en positions réelles dans l'espace

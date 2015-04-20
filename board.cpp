@@ -93,7 +93,6 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
 
     std::vector<std::vector<Piece *> > pieces;
 
-// ############### À DÉCOMMENTER POUR QUE L'INITIALISATION SE FASSE PAR LE MODULE LOGIQUE
     pieces.push_back(initPiece(1));
     pieces.push_back(initPiece(2));
 
@@ -114,7 +113,9 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
 
     for (int i = 0; i<2; i++){
         for (int j = 0; j<16; j++){
-            pieces[i][j]->setVaoID(vaoIDs[(i*16) + j]);
+            int vaoID = (i*16) + j ;
+            pieces[i][j]->setVaoID(vaoIDs[vaoID]);
+            vaoIDsMap[vaoID] = pieces[i][j];
         }
     }
 
@@ -137,4 +138,13 @@ void Board::computeAllSquares(){
     }
 
 }
+void Board::movePieceTo(int vao, int i, int j){
+    Piece * piece = vaoIDsMap[vao];
 
+    if (piece == nullptr) throw std::string("La piece demandée n'existe pas");
+
+    piece->moveTo(i,j);
+    scene->slideVAOTo(vao,getPosAt(i,j));
+
+
+}
