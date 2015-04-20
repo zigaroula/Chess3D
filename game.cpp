@@ -1,9 +1,19 @@
 #include "game.h"
 
-bool Game::isMovementPossible(int vaoId, int caseX, int caseY)
+void Game::tryMovement(int vaoId, int caseX, int caseY)
 {
+
+    std::cout << "Player " << turn << " selected vao" << vaoId << " and clicked on cell (" << caseX << "," << caseY << ")" <<  std::endl;
+    Player &current = (turn == 1)?player1:player2;
     
-    return false;
+    Piece *current_piece = current.getPieceByVao(vaoId);
+    
+    if (current_piece != nullptr)
+    {
+        std::cout << current_piece->getPosition()[0] << ";" << current_piece->getPosition()[1] << std::endl;
+    }
+    
+
 }
 
 void Game::initClassicGame(Scene * _scene) {

@@ -309,12 +309,34 @@ void Application::processSelection(int xx, int yy) {
     glGetIntegerv(GL_VIEWPORT, viewport);
     glReadPixels(xx*x_scale, viewport[3]-yy*y_scale, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
     
-    int selected = (int) res[0] - 1;
+    //std::cout << "Clicked on:" << (int)res[0] << std::endl;
+
+    int selected = (int) res[0];
     
-    if (selected < 100)
+    
+    std::cout << "Clicked on:" << selected << std::endl;
+
+    if (game.getPlayerId() == 1 && selected > 16 && selected < 100)
+        return;
+    if (game.getPlayerId() == 2 && selected < 17 && selected < 100)
+        return;
+    
+    if (selected < 100 && selected >= 0)
         scene.selectModel(selected);
+    else if (selected >= 100)
+    {
+        selected -= 100;
+        int caseY = selected%8;
+        int caseX = selected/8;
+
+        if (scene.selected())
+        {
+            game.tryMovement(scene.getSelected() + 1, caseX, caseY);
+        }
+    }
     
-    std::cout << "Clicked on item n°" << (int)res[0] << std::endl;
+    
+    
 }
 
 void Application::renderSkybox() {

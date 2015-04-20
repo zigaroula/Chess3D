@@ -30,7 +30,7 @@ public:
     ///Calcule les mouvements disponibles pour toutes les pièces
     void computeAvailableMovements();
     
-    bool isMovementPossible(int vaoId, int caseX, int caseY);
+    void tryMovement(int vaoId, int caseX, int caseY);
     
     int getPlayerId() { return turn; }
 
