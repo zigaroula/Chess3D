@@ -16,7 +16,7 @@ void Vao::endMovement()
 void Vao::updateMovement()
 {
     double elasped_time = glfwGetTime() - movement_start_time;
-    double total = 5.0;
+    double total = 1.0;
     float movement_length = (float)elasped_time/total * getMovementLength();
     
     glm::vec3 translation = movement_length * getMovementDirection();
