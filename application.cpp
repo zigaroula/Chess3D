@@ -328,7 +328,7 @@ void Application::processSelection(int xx, int yy) {
         int caseX = 7- (selected/8);
 
         if (scene.selected())
-            game.tryMovement(scene.getSelected() + 1, caseX, caseY);
+            game.tryMovement(scene.getSelected()+1 , caseX, caseY);
     }
 }
 

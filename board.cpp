@@ -114,9 +114,9 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
 
     for (int i = 0; i<2; i++){
         for (int j = 0; j<16; j++){
-            int vaoID = (i*16) + j ;
-            pieces[i][j]->setVaoID(vaoIDs[vaoID]);
-            vaoIDsMap[vaoID] = pieces[i][j];
+            int indice = (i*16) + j ;
+            pieces[i][j]->setVaoID(vaoIDs[indice]);
+            vaoIDsMap[vaoIDs[indice]] = pieces[i][j];
         }
     }
 
@@ -148,8 +148,7 @@ void Board::movePieceTo(int vao, int i, int j){
     piece->moveTo(i,j);
 
     if(piece->getName() == "Knight"){
-        std::cerr << "CAVALIER" << std::endl;
-        scene->jumpVAOTo(vao-1, getPosAt(i,j));
+        scene->jumpVAOTo(vao -1, getPosAt(i,j));
     }else{
         scene->slideVAOTo(vao - 1,getPosAt(i,j));
     }

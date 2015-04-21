@@ -4,7 +4,8 @@ void Game::tryMovement(int vaoId, int caseX, int caseY)
 {
     Player &current = (turn == 1)?player1:player2;
     Piece *current_piece = current.getPieceByVao(vaoId);
-    
+
+
     if (current_piece != nullptr)
     {
         std::cout << "--> Player " << turn << " selected vao" << vaoId << "(" << current_piece->getPosition()[0] << ";" << current_piece->getPosition()[1] << ") and clicked on cell (" << caseX << "," << caseY << ")" <<  std::endl;

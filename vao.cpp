@@ -32,6 +32,7 @@ void Vao::updateMovement()
     if (elasped_time >= 1/speed)
     {
         movement_requested = false;
+        jump_movement_requested = false;
     }
 
 }

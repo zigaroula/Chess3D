@@ -23,7 +23,8 @@ class Piece
         ///Calcule l'ensemble des mouvements d'une pièce
         virtual void computeAvailableMovements(std::vector<Piece*>, std::vector<Piece*>);
         virtual std::string toString() const;
-        virtual std::string getName() const {return "Piece";}
+        //virtual std::string getName() const {return "Piece";}
+        virtual std::string getName() const =0;
     
  
 

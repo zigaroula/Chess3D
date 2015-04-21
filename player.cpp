@@ -19,10 +19,9 @@ void Player::init(int side,  std::vector<Piece *> const & _pieces) {
     pieces = _pieces;
 
     for(unsigned int i =0; i < pieces.size() ; i++){
-        std::cerr << std::endl << pieces[i]->getName() <<", numero " << pieces[i]->getVaoID() << std::endl;
         if(pieces[i]->getName() == "King" ) {
             king = (King *) pieces[i];
-            //break;
+            break;
         }
     }
 
