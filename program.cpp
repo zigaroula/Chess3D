@@ -78,27 +78,6 @@ void Program::initForSelection()
 
 }
 
-void Program::initForSkybox() {
-    const string & _name = "ProgrammeSelection";
-    const string & _vertexShaderFilename = "skybox_shader.vert";
-    const string & _fragmentShaderFilename = "skybox_shader.frag";
-
-    id = glCreateProgram();
-    name = _name;
-    Shader * vs = new Shader(_name + " Vertex Shader", GL_VERTEX_SHADER);
-    Shader * fs = new Shader(_name + " Fragment Shader",GL_FRAGMENT_SHADER);
-    vs->loadFromFile(_vertexShaderFilename);
-    vs->compile();
-    attach(vs);
-    fs->loadFromFile(_fragmentShaderFilename);
-    fs->compile();
-    attach(fs);
-
-    glBindAttribLocation(id, 0, "vertex");
-
-    link();
-}
-
 void Program::attach(Shader * shader) {
     glAttachShader (id, shader->getId());
     shaders.push_back (shader);

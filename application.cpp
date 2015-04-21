@@ -11,7 +11,6 @@ GLFWwindow *Application::window;
 Program Application::program;
 Program Application::program_shadows;
 Program Application::program_selection;
-Program Application::program_skybox;
 Scene Application::scene;
 Game Application::game;
 double Application::lastTime;
@@ -106,7 +105,6 @@ void Application::initOpenGL()
     program.init();
     program_shadows.initForShadowMap();
     program_selection.initForSelection();
-    program_skybox.initForSkybox();
 
     scene.initScene(window_width, window_height);
 
@@ -143,7 +141,7 @@ void Application::display()
         renderShadow(i);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //renderSkybox();
+    renderSkybox();
     renderScene();
 
     glfwSwapBuffers(window);
@@ -353,7 +351,7 @@ void Application::renderSkybox() {
     glUniform1i(glGetUniformLocation(program.getId(), "skybox_enabled"), 1);
     glActiveTexture (GL_TEXTURE5);
     glBindTexture (GL_TEXTURE_CUBE_MAP, scene.getTexCube());
-    glUniform1i(glGetUniformLocation(program.getId(), "cube_texture"), scene.getTexCube());
+    glUniform1i(glGetUniformLocation(program.getId(), "cube_texture"), 5);
     glBindVertexArray (scene.getSkyBox());
     glDrawArrays (GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
@@ -404,7 +402,8 @@ void Application::saveTexture()
 {
     std::cout << "save texture" << std::endl;
     
-    glBindTexture(GL_TEXTURE_2D, scene.getLight(0).getShadowTextureId());
+    //glBindTexture(GL_TEXTURE_2D, scene.getLight(0).getShadowTextureId());
+    glBindTexture(GL_TEXTURE_CUBE_MAP, scene.getTexCube());
     
     GLint textureWidth, textureHeight;
     glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &textureWidth);
@@ -412,8 +411,8 @@ void Application::saveTexture()
     
     std::cout << textureWidth << ";" << textureHeight << std::endl;
     
-    GLfloat *data = new GLfloat[textureWidth*textureHeight];
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, GL_FLOAT, data);
+    GLubyte *data = new GLubyte[textureWidth*textureHeight*3];
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     
     std::ofstream myfile;
     myfile.open("test.txt");
@@ -422,7 +421,7 @@ void Application::saveTexture()
         for (int j = 0; j < textureWidth; ++j)
         {
             int index = i*textureWidth+j;
-            myfile << data[index] << ",";
+            myfile << data[3*index] << ",";
             
         }
         myfile << "\n";
