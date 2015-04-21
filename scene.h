@@ -15,7 +15,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include <string>
-#include "SOIL/src/SOIL.h"
 
 
 #define ZNEAR 10.0f
