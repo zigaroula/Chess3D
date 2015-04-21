@@ -317,7 +317,7 @@ void Application::processSelection(int xx, int yy) {
     int selected = (int) res[0];
     
     
-    std::cout << "Clicked on:" << selected << std::endl;
+    //std::cout << "Clicked on:" << selected << std::endl;
 
     if (game.getPlayerId() == 1 && selected > 16 && selected < 100)
         return;

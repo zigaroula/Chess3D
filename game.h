@@ -15,28 +15,19 @@
 class Game
 {
 public:
-    ///Créer une nouvelle partie normale
-    virtual void initClassicGame(Scene * _scene);
-    ///Recharge une partie précédente
-    virtual void loadFromFile();
-    ///Sauvegarde la partie en cours
-    virtual void saveToFile();
-    ///Regarde si un joueur est en échec et renvoie le joueur associé
+    void initClassicGame(Scene * _scene);
+    void loadFromFile();
+    void saveToFile();
     Player check();
-    ///Regarde si un joueur est en échec et mat et renvoie le joueur associé
     Player checkMate();
-    ///Change le joueur en cours
     void changeTurn();
-    ///Calcule les mouvements disponibles pour toutes les pièces
     void computeAvailableMovements();
-    
     void tryMovement(int vaoId, int caseX, int caseY);
-    
-    int getPlayerId() { return turn; }
-
-    ///DEBUGGING
+    int getPlayerId() const { return turn; }
     void testDebug();
+    
 private:
+    Scene *scene;
     Board board;
     Player player1, player2, none;
     int turn;
