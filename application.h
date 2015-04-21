@@ -31,8 +31,6 @@ private:
     static void mousepos_callback(GLFWwindow* window, double mouseX, double mouseY);
     static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
-    static void saveTexture();
-
     static double lastTime;
     static int nbFrames;
     static int nbFramesLastSecond;
