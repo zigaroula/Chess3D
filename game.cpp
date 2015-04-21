@@ -2,37 +2,34 @@
 
 void Game::tryMovement(int vaoId, int caseX, int caseY)
 {
-
-    std::cout << "Player " << turn << " selected vao" << vaoId << " and clicked on cell (" << caseX << "," << caseY << ")" <<  std::endl;
     Player &current = (turn == 1)?player1:player2;
-    
     Piece *current_piece = current.getPieceByVao(vaoId);
     
     if (current_piece != nullptr)
     {
+        std::cout << "--> Player " << turn << " selected vao" << vaoId << "(" << current_piece->getPosition()[0] << ";" << current_piece->getPosition()[1] << ") and clicked on cell (" << caseX << "," << caseY << ")" <<  std::endl;
 
-        std::cout << current_piece->getPosition()[0] << ";" << current_piece->getPosition()[1] << std::endl;
-        
         if (current_piece->canMoveTo(caseX, caseY))
         {
-            std::cout  << "--> Mouvement valide" << std::endl;
+            std::cout  << "\tMouvement valide, Mouvements possibles:";
             board.movePieceTo(current_piece->getVaoID(), caseX, caseY);
+            changeTurn();
         }
         else
-        {
-            std::cout  << "--> Mouvement non valide" << std::endl;
-            std::cout << "Mouvements possibles:" << std::endl;
-            const std::vector<std::vector<int>> &mvts = current_piece->getAvailableMovements();
-            for (auto a : mvts)
-                std::cout << a[0] << ";" << a[1] << std::endl;
-        }
-    }
-    
+            std::cout  << "\tMouvement non valide, Mouvements possibles:";
 
+        const std::vector<std::vector<int>> &mvts_possibles = current_piece->getAvailableMovements();
+        for (auto a : mvts_possibles)
+            std::cout << "(" << a[0] << "," << a[1] << ");";
+        std::cout << std::endl;
+    }
 }
 
 void Game::initClassicGame(Scene * _scene) {
 
+    /*  Créer une nouvelle partie normale */
+
+    scene = _scene;
 
     std::vector<std::vector<Piece *> > pieces;
     pieces = board.initClassic(_scene);
@@ -48,14 +45,19 @@ void Game::initClassicGame(Scene * _scene) {
 }
 
 void Game::loadFromFile() {
+    ///Recharge une partie précédente
 
 }
 
 void Game::saveToFile() {
+    ///Sauvegarde la partie en cours
+
 
 }
 
 Player Game::check() {
+    /* Regarde si un joueur est en échec et renvoie le joueur associé */
+
     for (unsigned int i = 0 ; i < player1.getPieces().size() ; i++) {
         for (unsigned int j = 0 ; j < player1.getPieces()[i]->getAvailableMovements().size() ; j++) {
             if (player1.getPieces()[i]->getAvailableMovements()[j] == player2.getKing()->getPosition()) {
@@ -71,11 +73,14 @@ Player Game::check() {
             }
         }
     }
-
+    
     return none;
 }
 
-Player Game::checkMate() { //trop compliqué
+Player Game::checkMate() {
+    ///Regarde si un joueur est en échec et mat et renvoie le joueur associé
+
+    //trop compliqué
     /*int cM = 0;
     bool c = false;
     for (unsigned int k = 0 ; k < player2.getKing().getAvailableMovements().size() ; k++) {
@@ -112,18 +117,19 @@ Player Game::checkMate() { //trop compliqué
 }
 
 void Game::changeTurn() {
-    if (turn == 1) {
-        turn = 2;
-    } else {
-        turn = 1;
-    }
+    /* Change le joueur en cours */
+    turn = (turn == 1)?2:1;
+    
     player1.computeAvailableMovements(player1.getPieces(), player2.getPieces());
     player2.computeAvailableMovements(player2.getPieces(), player1.getPieces());
+    
+    scene->unselect();
 }
 
 void Game::computeAvailableMovements() {
+    /* Calcule les mouvements disponibles pour toutes les pièces */
     player1.computeAvailableMovements(player1.getPieces(), player2.getPieces());
-    player2.computeAvailableMovements(player1.getPieces(), player2.getPieces());
+    player2.computeAvailableMovements(player2.getPieces(), player1.getPieces());
 }
 
 void Game::testDebug() {

@@ -1,4 +1,5 @@
 #include "piece.h"
+#include <string>
 
 Piece::Piece() {
 
@@ -40,8 +41,8 @@ void Piece::computeAvailableMovements(std::vector<Piece*> own, std::vector<Piece
 
 }
 
-std::string Piece::toString() const{
+std::string Piece::toString() const {
     std::string s = "Pièce en " ;
-    s = posX + " et " + posY ;
+    s = std::to_string(posX) + " et " + std::to_string(posY) ;
     return s;
 }

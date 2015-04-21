@@ -27,36 +27,34 @@ public:
     void initScene(int, int);
     size_t size() const { return vao_list.size(); }
     Vao& operator[](size_t index) { return vao_list[index]; }
-    ///Créer un vao, l'ajoute à la liste des vao et retourne son index dans la liste
     int addVaoPiece(std::string model, int team, glm::vec3 pos);
-    ///Créer une liste de vao sans avoir à recharger plusieurs fois le meme modèle
     std::vector<int> addVaoPieces(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos);
 
     void slideVAOTo(int vao, glm::vec3 newPos);
 
-    const Light& getLight(int index) const { return lights[index]; }
+    inline const Light& getLight(int index) const { return lights[index]; }
     size_t getLightCount() const { return lights.size(); }
     
     void setPerspective(int width, int height);
-    GLfloat* getProjectionMatrixArray() { return glm::value_ptr(projection_matrix); }
-    const glm::mat4& getProjectionMatrix() const { return projection_matrix; }
-    const glm::mat4& getShadowProjectionMatrix() const { return shadow_projection_matrix; }
-    const glm::mat4& getBiasMatrix() const { return bias_matrix; }
+    inline GLfloat* getProjectionMatrixArray() { return glm::value_ptr(projection_matrix); }
+    inline const glm::mat4& getProjectionMatrix() const { return projection_matrix; }
+    inline const glm::mat4& getShadowProjectionMatrix() const { return shadow_projection_matrix; }
+    inline const glm::mat4& getBiasMatrix() const { return bias_matrix; }
+    inline const glm::mat4& getShadowViewMatrix() const { return shadow_view_matrix; }
 
-    GLuint getShadowBufferId() { return shadow_buffer; }
-    GLuint getShadowTexureId() { return shadow_texture; }
-    int getShadowSize() const { return shadow_size; }
+    inline GLuint getShadowBufferId() { return shadow_buffer; }
+    inline GLuint getShadowTexureId() { return shadow_texture; }
+    inline int getShadowSize() const { return shadow_size; }
 
-    const GLuint& getSkyBox(){ return skyBox;}
-    const GLuint& getTexCube() { return texCube; }
-
+    inline const GLuint& getSkyBox(){ return skyBox;}
+    inline const GLuint& getTexCube() { return texCube; }
 
     // CAMERA
     void setView();
     GLfloat *getNormalMatrixArray(unsigned int vao_index);
-    GLfloat* getViewMatrixArray() { return glm::value_ptr(view_matrix); }
+    inline GLfloat* getViewMatrixArray() { return glm::value_ptr(view_matrix); }
     
-    const glm::mat4& getViewMatrix() const { return view_matrix; }
+    inline const glm::mat4& getViewMatrix() const { return view_matrix; }
     
     Camera getCamera() { return camera; }
     void setCamFW(bool fw) { camera.setFW(fw); }
@@ -68,7 +66,7 @@ public:
     void move(int);
     
     void selectModel(int index);
-    void unselected();
+    void unselect();
     inline int getSelected() const { return selected_model; }
     inline bool selected() const { return vao_selected; }
     inline GLfloat* getSelectectionColor() { return glm::value_ptr(selection_color); }
@@ -88,7 +86,7 @@ private:
     glm::mat4 view_matrix, projection_matrix, normal_matrix;
     Camera camera;
     GLuint shadow_texture, shadow_buffer;
-    glm::mat4 shadow_projection_matrix, bias_matrix;
+    glm::mat4 shadow_projection_matrix, shadow_view_matrix, bias_matrix;
     int shadow_size;
     std::vector<Light> lights;
     

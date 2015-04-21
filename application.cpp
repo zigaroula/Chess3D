@@ -25,8 +25,6 @@ int Application::framebuffer_width, Application::framebuffer_height;
 
 void Application::start()
 {
-
-
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
@@ -36,10 +34,13 @@ void Application::start()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,  GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    //const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    window_height = mode->height;
-    window_width= mode->width;
+    //window_height = mode->height;
+    //window_width= mode->width;
+    
+    window_height = 400;
+    window_width = 800;
 
     midWindowX = window_width/2;
     midWindowY = window_height/2;
@@ -74,12 +75,8 @@ void Application::start()
     nbFrames = 0;
     nbFramesLastSecond = 100;
 
-    //Vao &vao = scene[26];
-    //vao.requestMovement(glm::vec3(0.0));
-
     while (!glfwWindowShouldClose(window))
     {
-
         display();
 
         /* computing fps */
@@ -98,7 +95,6 @@ void Application::start()
     glfwDestroyWindow(window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
-
 }
 
 void Application::initOpenGL()
@@ -133,10 +129,7 @@ void Application::initOpenGL()
         glUniform3fv(glGetUniformLocation(program.getId(), pos.c_str()), 1, &light.getPos()[0]);
         glUniform3fv(glGetUniformLocation(program.getId(), dcolor.c_str()), 1, &light.getDiffuseColor()[0]);
         glUniform3fv(glGetUniformLocation(program.getId(), scolor.c_str()), 1, &light.getSpecColor()[0]);
-
-
     }
-
 }
 
 void Application::initGame() {
@@ -166,11 +159,9 @@ void Application::renderShadow()
     glClear(GL_DEPTH_BUFFER_BIT); /* important */
     glViewport(0, 0, scene.getShadowSize(), scene.getShadowSize());
     
-    const glm::vec3& lightPos = scene.getLight(0).getPos();
-    
     // On calcule la matrice Model-Vue-Projection du point de vue de la lumière
     const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
-    glm::mat4 depthViewMatrix = glm::lookAt(lightPos, glm::vec3(0,0,0), glm::vec3(0,1,0));
+    const glm::mat4& shadow_view_matrix = scene.getShadowViewMatrix();
 
     /* render each VAO*/
     for (unsigned int i = 0; i < scene.size(); ++i)
@@ -178,7 +169,7 @@ void Application::renderShadow()
         const Vao &vao = scene[i];
         
         const glm::mat4& model_matrix =  vao.getModelMatrix();
-        glm::mat4 depthMVP = shadow_proj_matrix * depthViewMatrix * model_matrix;
+        glm::mat4 depthMVP = shadow_proj_matrix * shadow_view_matrix * model_matrix;
         // On envoie la matrix au shader lié (MVP_matrix)
         glUniformMatrix4fv(glGetUniformLocation(program_shadows.getId(), "MVP_matrix"), 1, GL_FALSE, &depthMVP[0][0]);
         
@@ -187,7 +178,6 @@ void Application::renderShadow()
     }
     
     glBindFramebuffer(GL_FRAMEBUFFER , 0);
-    
 }
 
 void Application::renderScene()
@@ -210,10 +200,8 @@ void Application::renderScene()
     
     glViewport(0, 0, framebuffer_width, framebuffer_height);
     
-    const glm::vec3& lightPos = scene.getLight(0).getPos();
-
     const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
-    glm::mat4 depthViewMatrix = glm::lookAt(lightPos, glm::vec3(0,0,0), glm::vec3(0,1,0));
+    const glm::mat4& shadow_view_matrix = scene.getShadowViewMatrix();
     
     glUniform1i(glGetUniformLocation(program.getId(), "skybox_enabled"), 0);
 
@@ -223,11 +211,8 @@ void Application::renderScene()
         glm::mat4 model_matrix =  vao.getModelMatrix();
         
         if (vao.isMovementRequested())
-        {
             vao.updateMovement();
-        }
-        
-        
+
         if (scene.selected() && scene.getSelected() == i)
         {
             glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, scene.getSelectectionColor());
@@ -235,9 +220,7 @@ void Application::renderScene()
         else
             glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());
 
-        
-        
-        glm::mat4 depthMVP = shadow_proj_matrix * depthViewMatrix * model_matrix;
+        glm::mat4 depthMVP = shadow_proj_matrix * shadow_view_matrix * model_matrix;
         glm::mat4 depthBiasMVP = scene.getBiasMatrix() * depthMVP;
         
         glm::mat4 view_model_matrix = view_matrix * model_matrix;
@@ -276,7 +259,6 @@ void Application::renderSelection(void) {
     const glm::mat4& projection_matrix = scene.getProjectionMatrix();
     
     glViewport(0, 0, framebuffer_width, framebuffer_height);
-    
     
     for (unsigned int i = 0; i < scene.size(); ++i)
     {
@@ -317,8 +299,7 @@ void Application::processSelection(int xx, int yy) {
 
     int selected = (int) res[0];
     
-    
-    std::cout << "Clicked on:" << selected << std::endl;
+    //std::cout << "Clicked on:" << selected << std::endl;
 
     if (game.getPlayerId() == 1 && selected > 16 && selected < 100)
         return;
@@ -334,13 +315,8 @@ void Application::processSelection(int xx, int yy) {
         int caseX = 7- (selected/8);
 
         if (scene.selected())
-        {
             game.tryMovement(scene.getSelected() + 1, caseX, caseY);
-        }
     }
-    
-    
-    
 }
 
 void Application::renderSkybox() {
@@ -393,38 +369,6 @@ void Application::renderSkybox() {
     glDepthMask (GL_TRUE);*/
 }
 
-void Application::saveTexture()
-{
-    std::cout << "save texture" << std::endl;
-
-    glBindTexture(GL_TEXTURE_2D, scene.getShadowTexureId());
-
-    GLint textureWidth, textureHeight;
-    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &textureWidth);
-    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &textureHeight);
-
-    std::cout << textureWidth << ";" << textureHeight << std::endl;
-
-    GLfloat *data = new GLfloat[textureWidth*textureHeight];
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, GL_FLOAT, data);
-
-    std::ofstream myfile;
-    myfile.open("test.txt");
-    for (int i = 0 ; i < textureHeight; ++i)
-    {
-        for (int j = 0; j < textureWidth; ++j)
-        {
-            int index = i*textureWidth+j;
-            myfile << data[index] << ",";
-
-        }
-        myfile << "\n";
-    }
-
-    myfile.close();
-
-}
-
 void Application::window_size_callback(GLFWwindow *window, int width, int height)
 {
     glfwGetFramebufferSize(window, &framebuffer_width, &framebuffer_height);
@@ -468,7 +412,6 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
             scene.setCamZN(true);
             break;
         case 'T':
-            saveTexture();
             break;
         default:
             break;
