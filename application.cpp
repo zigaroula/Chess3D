@@ -211,10 +211,10 @@ void Application::renderScene()
 
         if (scene.selected() && scene.getSelected() == i)
         {
-            glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, scene.getSelectectionColor());
+            glUniform3fv(glGetUniformLocation(program.getId(), "diffuse_color"), 1, scene.getSelectectionColor());
         }
         else
-            glUniform3fv(glGetUniformLocation(program.getId(), "ambient_color"), 1, vao.getAmbientColorArray());
+            glUniform3fv(glGetUniformLocation(program.getId(), "diffuse_color"), 1, vao.getDiffuseColorArray());
 
         glm::mat4 depthMVP = shadow_proj_matrix * shadow_view_matrix * model_matrix;
         glm::mat4 depthBiasMVP = scene.getBiasMatrix() * depthMVP;

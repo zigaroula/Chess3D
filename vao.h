@@ -18,12 +18,12 @@ class Vao
 {
 public:
     Vao() { }
-    Vao(const Vao& vao, const glm::vec3& color) { id = vao.id; vertex_count = vao.vertex_count; ambient_color = color; texture_enabled = vao.texture_enabled;}
+    Vao(const Vao& vao, const glm::vec3& color) { id = vao.id; vertex_count = vao.vertex_count; diffuse_color = color; texture_enabled = vao.texture_enabled;}
     GLuint getId() const { return id; }
     GLsizei getVertexCount() const { return vertex_count; }
     
     const GLfloat* getModelMatrixArray() const { return glm::value_ptr(model_matrix); }
-    const GLfloat* getAmbientColorArray() const { return glm::value_ptr(ambient_color); }
+    const GLfloat* getDiffuseColorArray() const { return glm::value_ptr(diffuse_color); }
     const glm::mat4& getModelMatrix() const { return model_matrix; }
     
     static Vao getCube();
@@ -55,7 +55,7 @@ private:
     GLuint texture_id = 0;
     GLsizei vertex_count;
     glm::mat4 model_matrix;
-    glm::vec3 ambient_color;
+    glm::vec3 diffuse_color;
     GLboolean texture_enabled;
     
     bool movement_requested = false;

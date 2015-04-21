@@ -15,7 +15,7 @@ in vec2 texture_coord;
 out vec4 outputColor;
 
 uniform mat4 view_matrix;
-uniform vec3 ambient_color;
+uniform vec3 diffuse_color;
 uniform sampler2DShadow shadow_text;
 
 uniform sampler2D object_texture;
@@ -25,6 +25,12 @@ uniform Light lights[1];
 
 void main(void)
 {
+    vec3 diffuse_color_ = diffuse_color;
+
+    if (texture_enabled) {
+        diffuse_color_ = vec3(texture(object_texture, texture_coord));
+    }
+
     vec3 lightPos = lights[0].position;
     vec3 diffuseColor = lights[0].diffuse_color;
     vec3 specColor = lights[0].specular_color;
@@ -34,7 +40,7 @@ void main(void)
     vec3 lightDir = normalize(lightPos - frag_position);
 
     float lambertian = max(dot(lightDir,normal), 0.0);
-    vec3 diffuse = lambertian * diffuseColor;
+    vec3 diffuse = lambertian * diffuse_color_;
 
     vec3 specular = vec3(0.0);
 
@@ -47,21 +53,15 @@ void main(void)
     }
 
     //float bias = 1-(0.001*tan(acos(dot(normal, lightDir))));
-    float bias = 0.9999;
+    float bias = 0.999;
     vec4 shadow_coord2 = shadow_coord;
     shadow_coord2.z *= bias;
     float shadow = textureProj (shadow_text , shadow_coord2);
 
-    vec3 ambient = ambient_color;
+    if (shadow<1.0) 
+        shadow = 0.5;
 
-    if (texture_enabled) {
-        ambient = vec3(texture(object_texture, texture_coord));
-    }
-
-    if (shadow<1.0) {
-        shadow = 0.1;
-    }
-
-    outputColor = vec4(ambient + shadow*diffuse + shadow*specular, 1.0);
+    vec3 ambient = vec3(0.0);
+    outputColor = vec4(ambient + shadow * (diffuse + specular), 1.0);
 
 }

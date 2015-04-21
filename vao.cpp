@@ -54,7 +54,7 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color, std::string texture_file
     
     Vao vao;
     
-    vao.ambient_color = color;
+    vao.diffuse_color = color;
 
     std::vector<glm::vec3> vertices, normals;
     std::vector<glm::vec2> textures;
@@ -283,7 +283,7 @@ Vao Vao::getSkyBoxCube(){
     vao.id = vaoID;
     vao.vertex_count = 6*2*3;
     vao.model_matrix = glm::mat4(1.0f);
-    vao.ambient_color = glm::vec3(0.0f,0.0f,1.0f);
+    vao.diffuse_color = glm::vec3(0.0f,0.0f,1.0f);
 
     glGenVertexArrays (1, &vaoID);
     glBindVertexArray (vaoID);

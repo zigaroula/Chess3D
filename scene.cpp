@@ -7,8 +7,8 @@
 #include <iostream>
 #include "stb_image.h"
 
-static const glm::vec3 color1(0.7f, 0.7f, 0.7f);
-static const glm::vec3 color2(0.1f, 0.1f, 0.1f);
+static const glm::vec3 color1(1.0f, 1.0f, 1.0f);
+static const glm::vec3 color2(0.2f, 0.2f, 0.2f);
 
 void Scene::selectModel(int index) {
     selected_model = index;
