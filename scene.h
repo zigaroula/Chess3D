@@ -50,7 +50,6 @@ public:
     const GLuint& getSkyBox(){ return skyBox;}
     const GLuint& getTexCube() { return texCube; }
 
-
     // CAMERA
     void setView();
     GLfloat *getNormalMatrixArray(unsigned int vao_index);
@@ -68,7 +67,7 @@ public:
     void move(int);
     
     void selectModel(int index);
-    void unselected();
+    void unselect();
     inline int getSelected() const { return selected_model; }
     inline bool selected() const { return vao_selected; }
     inline GLfloat* getSelectectionColor() { return glm::value_ptr(selection_color); }

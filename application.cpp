@@ -36,10 +36,13 @@ void Application::start()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,  GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    //const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    window_height = mode->height;
-    window_width= mode->width;
+    //window_height = mode->height;
+    //window_width= mode->width;
+    
+    window_height = 400;
+    window_width = 800;
 
     midWindowX = window_width/2;
     midWindowY = window_height/2;

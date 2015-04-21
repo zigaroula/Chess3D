@@ -15,7 +15,7 @@ void Scene::selectModel(int index) {
     vao_selected = true;
 }
 
-void Scene::unselected() {
+void Scene::unselect() {
     vao_selected = false;
 }
 
@@ -84,14 +84,6 @@ void Scene::initShadow()
 void Scene::initModels()
 {
     //###########A COMMENTER SI INITIALISATION PAR LE MODULE DE JEU
-    float x_shift = 76.f;
-    
-    float z_offset1 = 265.f;
-    float z_offset2 = -z_offset1;
-    
-    float x_offset = -265.f;
-    
-    float pion1_z_translate = 80.f;
     
     glm::mat4 rotation_180(1.f);
     rotation_180 = glm::rotate(rotation_180, (float)M_PI, glm::vec3(0.f, 1.f, 0.f));
@@ -274,7 +266,7 @@ std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector
             }else{
                 piece = Vao::loadObj(model[i],color2);
             }
-            loadedModeles[model[i]] = vao_list.size();
+            loadedModeles[model[i]] = (int)vao_list.size();
         }else{
             if(team[i]==1) {
                 piece = Vao(vao_list[it->second], color1);

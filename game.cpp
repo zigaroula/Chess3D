@@ -17,6 +17,7 @@ void Game::tryMovement(int vaoId, int caseX, int caseY)
         {
             std::cout  << "--> Mouvement valide" << std::endl;
             board.movePieceTo(current_piece->getVaoID(), caseX, caseY);
+            changeTurn();
         }
         else
         {
@@ -123,7 +124,7 @@ void Game::changeTurn() {
 
 void Game::computeAvailableMovements() {
     player1.computeAvailableMovements(player1.getPieces(), player2.getPieces());
-    player2.computeAvailableMovements(player1.getPieces(), player2.getPieces());
+    player2.computeAvailableMovements(player2.getPieces(), player1.getPieces());
 }
 
 void Game::testDebug() {
