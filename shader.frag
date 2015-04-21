@@ -11,6 +11,7 @@ in vec3 frag_position;
 in vec3 frag_normal;
 in vec4 shadow_coord;
 in vec2 texture_coord;
+in vec3 skybox_texcoords;
 
 out vec4 outputColor;
 
@@ -20,6 +21,9 @@ uniform sampler2DShadow shadow_text;
 
 uniform sampler2D object_texture;
 uniform bool texture_enabled;
+uniform bool skybox_enabled;
+
+uniform samplerCube cube_texture;
 
 uniform Light lights[1];
 
@@ -62,6 +66,12 @@ void main(void)
         shadow = 0.1;
     }
 
-    outputColor = vec4(ambient + shadow*diffuse + shadow*specular, 1.0);
+    if (skybox_enabled) {
+        outputColor = vec4(texture (cube_texture, skybox_texcoords));
+        //outputColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);
+    } else {
+        outputColor = vec4(ambient + shadow*diffuse + shadow*specular, 1.0);
+    }
+
 
 }

@@ -94,7 +94,7 @@ void Program::initForSkybox() {
     fs->compile();
     attach(fs);
 
-    glBindAttribLocation(id, 0, "vp");
+    glBindAttribLocation(id, 0, "vertex");
 
     link();
 }
