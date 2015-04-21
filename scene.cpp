@@ -40,7 +40,7 @@ void Scene::initLights()
 {
     lights.push_back(Light(glm::vec3(400.f, 400.f, 400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.0f, 0.0f, 1.0f)));
     
-    lights.push_back(Light(glm::vec3(-400.f, 50.f, -400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(1.0f, 0.0f, 0.0f)));
+    lights.push_back(Light(glm::vec3(-400.f, 400.f, -400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(1.0f, 0.0f, 0.0f)));
     
 
 }
