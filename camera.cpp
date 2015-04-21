@@ -121,6 +121,9 @@ void Camera::move(int fps) {
     }
     if (holdingZoomNegative) {
         distance += (float)500/fps;
+        if (distance >3000) {
+            distance -= (float)500/fps;
+        }
     }
     if (holdingZoomPositive) {
         distance -= (float)500/fps;

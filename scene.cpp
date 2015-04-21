@@ -132,47 +132,47 @@ GLfloat* Scene::getNormalMatrixArray(unsigned int vao_index)
 
 void Scene::initSkyBox(){
     float points[] = {
-        -1000.0f,  1000.0f,  -1000.0f,
-        1000.0f, -1000.0f,  -1000.0f,
-        -1000.0f, -1000.0f,  -1000.0f,
-        -1000.0f, 1000.0f, -1000.0f,
-        1000.0f, 1000.0f, -1000.0f,
-        1000.0f, -1000.0f, -1000.0f,
+        -4000.0f,  4000.0f, -4000.0f,
+          -4000.0f, -4000.0f, -4000.0f,
+           4000.0f, -4000.0f, -4000.0f,
+           4000.0f, -4000.0f, -4000.0f,
+           4000.0f,  4000.0f, -4000.0f,
+          -4000.0f,  4000.0f, -4000.0f,
 
-        1000.0f, 1000.0f, -1000.0f,
-        1000.0f, -1000.0f, -1000.0f,
-        1000.0f, -1000.0f, 1000.0f,
-        1000.0f, 1000.0f, -1000.0f,
-        1000.0f, -1000.0f, 1000.0f,
-        1000.0f, 1000.0f, 1000.0f,
+          -4000.0f, -4000.0f,  4000.0f,
+          -4000.0f, -4000.0f, -4000.0f,
+          -4000.0f,  4000.0f, -4000.0f,
+          -4000.0f,  4000.0f, -4000.0f,
+          -4000.0f,  4000.0f,  4000.0f,
+          -4000.0f, -4000.0f,  4000.0f,
 
-        -1000.0f, 1000.0f, -1000.0f,
-        1000.0f, 1000.0f, -1000.0f,
-        -1000.0f, 1000.0f, 1000.0f,
-        1000.0f, 1000.0f, -1000.0f,
-        -1000.0f, 1000.0f, 1000.0f,
-        1000.0f, 1000.0f, 1000.0f,
+           4000.0f, -4000.0f, -4000.0f,
+           4000.0f, -4000.0f,  4000.0f,
+           4000.0f,  4000.0f,  4000.0f,
+           4000.0f,  4000.0f,  4000.0f,
+           4000.0f,  4000.0f, -4000.0f,
+           4000.0f, -4000.0f, -4000.0f,
 
-        -1000.0f, -1000.0f, -1000.0f,
-        1000.0f, -1000.0f, -1000.0f,
-        -1000.0f, -1000.0f, 1000.0f,
-        1000.0f, -1000.0f, -1000.0f,
-        -1000.0f, -1000.0f, 1000.0f,
-        1000.0f, -1000.0f, 1000.0f,
+          -4000.0f, -4000.0f,  4000.0f,
+          -4000.0f,  4000.0f,  4000.0f,
+           4000.0f,  4000.0f,  4000.0f,
+           4000.0f,  4000.0f,  4000.0f,
+           4000.0f, -4000.0f,  4000.0f,
+          -4000.0f, -4000.0f,  4000.0f,
 
-        -1000.0f,  1000.0f,  1000.0f,
-        1000.0f, -1000.0f,  1000.0f,
-        -1000.0f, -1000.0f,  1000.0f,
-        -1000.0f, 1000.0f, 1000.0f,
-        1000.0f, 1000.0f, 1000.0f,
-        1000.0f, -1000.0f, 1000.0f,
+          -4000.0f,  4000.0f, -4000.0f,
+           4000.0f,  4000.0f, -4000.0f,
+           4000.0f,  4000.0f,  4000.0f,
+           4000.0f,  4000.0f,  4000.0f,
+          -4000.0f,  4000.0f,  4000.0f,
+          -4000.0f,  4000.0f, -4000.0f,
 
-        -1000.0f, 1000.0f, -1000.0f,
-        -1000.0f, -1000.0f, -1000.0f,
-        -1000.0f, -1000.0f, 1000.0f,
-        -1000.0f, 1000.0f, -1000.0f,
-        -1000.0f, -1000.0f, 1000.0f,
-        -1000.0f, 1000.0f, 1000.0f
+          -4000.0f, -4000.0f, -4000.0f,
+          -4000.0f, -4000.0f,  4000.0f,
+           4000.0f, -4000.0f, -4000.0f,
+           4000.0f, -4000.0f, -4000.0f,
+          -4000.0f, -4000.0f,  4000.0f,
+           4000.0f, -4000.0f,  4000.0f
     };
 
     glGenVertexArrays (1, &skyBox);
@@ -219,26 +219,37 @@ GLuint Scene::loadCubemap(std::vector<const GLchar*> faces)
     unsigned char* image;
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-    for(GLuint i = 0; i < faces.size(); i++)
-    {
-        
-        //image = SOIL_load_image(faces[i], &width, &height, 0, SOIL_LOAD_RGB);
-        image = stbi_load (faces[i], &width, &height, &n, 4);
-        
-        if (!image) {
-            fprintf (stderr, "ERROR: could not load %s\n", faces[i]);
-            //return false;
-        }
-        
-        std::cout << width << ";" << height << ";" << n << ";" <<faces[i]<< std::endl;
-        
-        glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-            GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image
-        );
 
-       /* glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                    GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, vao_list[0]);*/
-    }
+    image = stbi_load (faces[0], &width, &height, &n, 4);
+    if (!image) { fprintf (stderr, "ERROR: could not load %s\n", faces[0]); }
+    std::cout << width << ";" << height << ";" << n << ";" <<faces[0]<< std::endl;
+    glTexImage2D( GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
+    image = stbi_load (faces[1], &width, &height, &n, 4);
+    if (!image) { fprintf (stderr, "ERROR: could not load %s\n", faces[1]); }
+    std::cout << width << ";" << height << ";" << n << ";" <<faces[1]<< std::endl;
+    glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
+    image = stbi_load (faces[2], &width, &height, &n, 4);
+    if (!image) { fprintf (stderr, "ERROR: could not load %s\n", faces[2]); }
+    std::cout << width << ";" << height << ";" << n << ";" <<faces[2]<< std::endl;
+    glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
+    image = stbi_load (faces[3], &width, &height, &n, 4);
+    if (!image) { fprintf (stderr, "ERROR: could not load %s\n", faces[3]); }
+    std::cout << width << ";" << height << ";" << n << ";" <<faces[3]<< std::endl;
+    glTexImage2D( GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
+    image = stbi_load (faces[4], &width, &height, &n, 4);
+    if (!image) { fprintf (stderr, "ERROR: could not load %s\n", faces[4]); }
+    std::cout << width << ";" << height << ";" << n << ";" <<faces[4]<< std::endl;
+    glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
+    image = stbi_load (faces[5], &width, &height, &n, 4);
+    if (!image) { fprintf (stderr, "ERROR: could not load %s\n", faces[5]); }
+    std::cout << width << ";" << height << ";" << n << ";" <<faces[5]<< std::endl;
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
