@@ -21,11 +21,12 @@ void Scene::unselect() {
 
 void Scene::initScene(int width, int height)
 {
-    initShadow();
+    initLights();
 
     initModels();
 
-    initLights();
+    for (unsigned int i = 0; i < lights.size(); ++i)
+        initShadow(i);
     
     selection_color = glm::vec3(1.0, 1.0, 0.0);
 
@@ -37,18 +38,22 @@ void Scene::initScene(int width, int height)
 
 void Scene::initLights()
 {
-    lights.push_back(Light(glm::vec3(400.f, 400.f, 400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(1.0f, 1.0f, 1.0f)));
+    lights.push_back(Light(glm::vec3(400.f, 400.f, 400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.0f, 0.0f, 1.0f)));
     
-    shadow_view_matrix = glm::lookAt(lights[0].getPos(), glm::vec3(0,0,0), glm::vec3(0,1,0));
+    lights.push_back(Light(glm::vec3(-400.f, 400.f, -400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(1.0f, 0.0f, 0.0f)));
+    
+
 }
 
-void Scene::initShadow()
+void Scene::initShadow(int light_index)
 {
     shadow_size = 4096;
     
     // shadow map
-    glGenTextures(1, &shadow_texture);
-    glBindTexture(GL_TEXTURE_2D , shadow_texture);
+    Light &current_light = lights[light_index];
+    
+    glGenTextures(1, &current_light.getShadowTextureId());
+    glBindTexture(GL_TEXTURE_2D , current_light.getShadowTextureId());
     glTexImage2D(GL_TEXTURE_2D , 0, GL_DEPTH_COMPONENT,  shadow_size, shadow_size, 0, GL_DEPTH_COMPONENT , GL_FLOAT , NULL);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER , GL_NEAREST);
@@ -62,10 +67,10 @@ void Scene::initShadow()
 
     // shadow frame buffer
 
-    glGenFramebuffers(1, &shadow_buffer);
-    glBindFramebuffer(GL_FRAMEBUFFER , shadow_buffer);
+    glGenFramebuffers(1, &current_light.getShadowBufferId());
+    glBindFramebuffer(GL_FRAMEBUFFER , current_light.getShadowBufferId());
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER , GL_DEPTH_ATTACHMENT , GL_TEXTURE_2D , shadow_texture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER , GL_DEPTH_ATTACHMENT , GL_TEXTURE_2D , current_light.getShadowTextureId(), 0);
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
 

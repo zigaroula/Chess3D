@@ -33,7 +33,7 @@ public:
 
     void slideVAOTo(int vao, glm::vec3 newPos);
 
-    inline const Light& getLight(int index) const { return lights[index]; }
+    inline Light& getLight(int index) { return lights[index]; }
     size_t getLightCount() const { return lights.size(); }
     
     void setPerspective(int width, int height);
@@ -41,10 +41,8 @@ public:
     inline const glm::mat4& getProjectionMatrix() const { return projection_matrix; }
     inline const glm::mat4& getShadowProjectionMatrix() const { return shadow_projection_matrix; }
     inline const glm::mat4& getBiasMatrix() const { return bias_matrix; }
-    inline const glm::mat4& getShadowViewMatrix() const { return shadow_view_matrix; }
 
-    inline GLuint getShadowBufferId() { return shadow_buffer; }
-    inline GLuint getShadowTexureId() { return shadow_texture; }
+
     inline int getShadowSize() const { return shadow_size; }
 
     inline const GLuint& getSkyBox(){ return skyBox;}
@@ -73,7 +71,7 @@ public:
     inline GLfloat* getSelectectionColor() { return glm::value_ptr(selection_color); }
     
 private:
-    void initShadow();
+    void initShadow(int light_index);
     void initModels();
     void initLights();
     
@@ -87,8 +85,7 @@ private:
     std::vector<Vao> vao_list;
     glm::mat4 view_matrix, projection_matrix, normal_matrix;
     Camera camera;
-    GLuint shadow_texture, shadow_buffer;
-    glm::mat4 shadow_projection_matrix, shadow_view_matrix, bias_matrix;
+    glm::mat4 shadow_projection_matrix, bias_matrix;
     int shadow_size;
     std::vector<Light> lights;
     
