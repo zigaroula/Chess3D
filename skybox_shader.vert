@@ -1,10 +1,12 @@
 #version 400
 
-in vec3 vp;
-uniform mat4 P, V;
+in vec3 vertex;
+
 out vec3 texcoords;
 
+uniform mat4 MVP;
+
 void main () {
-  texcoords = vp;
-  gl_Position = P * V * vec4 (vp, 1.0);
+  //texcoords = vertex;
+  gl_Position = MVP * vec4 (vertex, 1.0);
 }

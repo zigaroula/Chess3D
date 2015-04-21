@@ -8,6 +8,7 @@ out vec3 frag_position;
 out vec3 frag_normal;
 out vec4 shadow_coord;
 out vec2 texture_coord;
+out vec3 skybox_texcoords;
 
 uniform mat4 normal_matrix;
 uniform mat4 bias_matrix;
@@ -25,4 +26,6 @@ void main(void)
 
     shadow_coord = bias_matrix * vec4(vertex, 1.0);
     texture_coord = texture;
+
+    skybox_texcoords = vertex;
 }

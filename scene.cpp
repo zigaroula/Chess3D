@@ -22,7 +22,7 @@ void Scene::unselect() {
 void Scene::initScene(int width, int height)
 {
     initShadow();
-    initSkyBox();
+
     initModels();
 
     initLights();
@@ -31,6 +31,8 @@ void Scene::initScene(int width, int height)
 
     projection_matrix = glm::mat4(1.0f);
     camera = Camera(width, height);
+
+    initSkyBox();
 }
 
 void Scene::initLights()
@@ -125,58 +127,60 @@ GLfloat* Scene::getNormalMatrixArray(unsigned int vao_index)
 
 void Scene::initSkyBox(){
     float points[] = {
-      -100.0f,  100.0f, -100.0f,
-      -100.0f, -100.0f, -100.0f,
-       100.0f, -100.0f, -100.0f,
-       100.0f, -100.0f, -100.0f,
-       100.0f,  100.0f, -100.0f,
-      -100.0f,  100.0f, -100.0f,
+        -1000.0f,  1000.0f,  -1000.0f,
+        1000.0f, -1000.0f,  -1000.0f,
+        -1000.0f, -1000.0f,  -1000.0f,
+        -1000.0f, 1000.0f, -1000.0f,
+        1000.0f, 1000.0f, -1000.0f,
+        1000.0f, -1000.0f, -1000.0f,
 
-      -100.0f, -100.0f,  100.0f,
-      -100.0f, -100.0f, -100.0f,
-      -100.0f,  100.0f, -100.0f,
-      -100.0f,  100.0f, -100.0f,
-      -100.0f,  100.0f,  100.0f,
-      -100.0f, -100.0f,  100.0f,
+        1000.0f, 1000.0f, -1000.0f,
+        1000.0f, -1000.0f, -1000.0f,
+        1000.0f, -1000.0f, 1000.0f,
+        1000.0f, 1000.0f, -1000.0f,
+        1000.0f, -1000.0f, 1000.0f,
+        1000.0f, 1000.0f, 1000.0f,
 
-       100.0f, -100.0f, -100.0f,
-       100.0f, -100.0f,  100.0f,
-       100.0f,  100.0f,  100.0f,
-       100.0f,  100.0f,  100.0f,
-       100.0f,  100.0f, -100.0f,
-       100.0f, -100.0f, -100.0f,
+        -1000.0f, 1000.0f, -1000.0f,
+        1000.0f, 1000.0f, -1000.0f,
+        -1000.0f, 1000.0f, 1000.0f,
+        1000.0f, 1000.0f, -1000.0f,
+        -1000.0f, 1000.0f, 1000.0f,
+        1000.0f, 1000.0f, 1000.0f,
 
-      -100.0f, -100.0f,  100.0f,
-      -100.0f,  100.0f,  100.0f,
-       100.0f,  100.0f,  100.0f,
-       100.0f,  100.0f,  100.0f,
-       100.0f, -100.0f,  100.0f,
-      -100.0f, -100.0f,  100.0f,
+        -1000.0f, -1000.0f, -1000.0f,
+        1000.0f, -1000.0f, -1000.0f,
+        -1000.0f, -1000.0f, 1000.0f,
+        1000.0f, -1000.0f, -1000.0f,
+        -1000.0f, -1000.0f, 1000.0f,
+        1000.0f, -1000.0f, 1000.0f,
 
-      -100.0f,  100.0f, -100.0f,
-       100.0f,  100.0f, -100.0f,
-       100.0f,  100.0f,  100.0f,
-       100.0f,  100.0f,  100.0f,
-      -100.0f,  100.0f,  100.0f,
-      -100.0f,  100.0f, -100.0f,
+        -1000.0f,  1000.0f,  1000.0f,
+        1000.0f, -1000.0f,  1000.0f,
+        -1000.0f, -1000.0f,  1000.0f,
+        -1000.0f, 1000.0f, 1000.0f,
+        1000.0f, 1000.0f, 1000.0f,
+        1000.0f, -1000.0f, 1000.0f,
 
-      -100.0f, -100.0f, -100.0f,
-      -100.0f, -100.0f,  100.0f,
-       100.0f, -100.0f, -100.0f,
-       100.0f, -100.0f, -100.0f,
-      -100.0f, -100.0f,  100.0f,
-       100.0f, -100.0f,  100.0f
+        -1000.0f, 1000.0f, -1000.0f,
+        -1000.0f, -1000.0f, -1000.0f,
+        -1000.0f, -1000.0f, 1000.0f,
+        -1000.0f, 1000.0f, -1000.0f,
+        -1000.0f, -1000.0f, 1000.0f,
+        -1000.0f, 1000.0f, 1000.0f
     };
-    GLuint vbo;
-    glGenBuffers (1, &vbo);
-    glBindBuffer (GL_ARRAY_BUFFER, vbo);
-    glBufferData (GL_ARRAY_BUFFER, 3 * 36 * sizeof (float), &points, GL_STATIC_DRAW);
 
     glGenVertexArrays (1, &skyBox);
     glBindVertexArray (skyBox);
-    glEnableVertexAttribArray (0);
+
+    GLuint vbo;
+    glGenBuffers (1, &vbo);
     glBindBuffer (GL_ARRAY_BUFFER, vbo);
-    glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glBufferData (GL_ARRAY_BUFFER, 3 * 36 * sizeof (float), points, GL_STATIC_DRAW);
+
+    glVertexAttribPointer ((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray (0);
+    //glBindBuffer (GL_ARRAY_BUFFER, vbo);
 
     std::string textName = "comawhite";
 

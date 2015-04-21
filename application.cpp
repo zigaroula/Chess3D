@@ -120,7 +120,7 @@ void Application::initOpenGL()
     for (unsigned int i = 0; i < scene.getLightCount(); ++i)
     {
         const Light& light = scene.getLight(i);
-    
+
         std::string pos = "lights[" + std::to_string(i) + "].position";
         std::string dcolor = "lights[" + std::to_string(i) + "].diffuse_color";
         std::string scolor = "lights[" + std::to_string(i) + "].specular_color";
@@ -140,7 +140,9 @@ void Application::display()
 {
 
     renderShadow();
-    renderSkybox();
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //renderSkybox();
     renderScene();
 
     glfwSwapBuffers(window);
@@ -180,7 +182,7 @@ void Application::renderShadow()
 
 void Application::renderScene()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // 2EME PASSE SHADOW
     program.use();
@@ -201,6 +203,8 @@ void Application::renderScene()
     const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
     const glm::mat4& shadow_view_matrix = scene.getShadowViewMatrix();
     
+    glUniform1i(glGetUniformLocation(program.getId(), "skybox_enabled"), 0);
+
     for (unsigned int i = 0; i < scene.size(); ++i)
     {
         Vao &vao = scene[i];
@@ -225,6 +229,7 @@ void Application::renderScene()
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "proj_view_model"), 1, GL_FALSE, glm::value_ptr(proj_view_model_matrix));
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_model"), 1, GL_FALSE, glm::value_ptr(view_model_matrix));
         glUniform1i(glGetUniformLocation(program.getId(), "texture_enabled"), vao.isTextureEnabled());
+        glUniform1i(glGetUniformLocation(program.getId(), "skybox_enabled"), 0);
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "bias_matrix"), 1, GL_FALSE, glm::value_ptr(depthBiasMVP));
         
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
@@ -268,7 +273,7 @@ void Application::renderSelection(void) {
         glUniform1i(glGetUniformLocation(program_selection.getId(), "code"), i);
         
         glUniform1i(glGetUniformLocation(program_selection.getId(), "texture_enabled"), vao.isTextureEnabled());
-       
+
         glBindVertexArray(vao.getId());
         glDrawArrays(GL_TRIANGLES, 0, vao.getVertexCount());
     }
@@ -315,17 +320,41 @@ void Application::processSelection(int xx, int yy) {
 }
 
 void Application::renderSkybox() {
+
     glDepthMask (GL_FALSE);
-    program_skybox.use();
-    glUniformMatrix4fv(glGetUniformLocation(program_skybox.getId(), "V"), 1, GL_FALSE, scene.getViewMatrixArray());
-    glUniformMatrix4fv(glGetUniformLocation(program_skybox.getId(), "P"), 1, GL_FALSE, scene.getProjectionMatrixArray());
-    glUniform1i(glGetUniformLocation(program_selection.getId(), "cube_texture"), 5);
+
+    scene.setView();
+
+    program.use();
+
+    glViewport(0, 0, framebuffer_width, framebuffer_height);
+
+    glm::mat4 model_matrix = glm::mat4(1.0f);
+    glm::mat4 view_matrix = scene.getViewMatrix();
+    glm::mat4 projection_matrix = scene.getProjectionMatrix();
+    glm::mat4 view_model_matrix = view_matrix * model_matrix;
+    glm::mat4 proj_view_model_matrix = projection_matrix * view_model_matrix;
+    glUniformMatrix4fv(glGetUniformLocation(program.getId(), "proj_view_model"), 1, GL_FALSE, glm::value_ptr(proj_view_model_matrix));
+    glUniform1i(glGetUniformLocation(program.getId(), "skybox_enabled"), 1);
     glActiveTexture (GL_TEXTURE5);
     glBindTexture (GL_TEXTURE_CUBE_MAP, scene.getTexCube());
+    glUniform1i(glGetUniformLocation(program.getId(), "cube_texture"), scene.getTexCube());
     glBindVertexArray (scene.getSkyBox());
     glDrawArrays (GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+    //std::cout<< scene.getTexCube() << std::endl;
+    //glUniform1i(glGetUniformLocation(program.getId(), "skybox_enabled"), 0);
+    //glfwSwapBuffers(window);
+    //glUniform1i(glGetUniformLocation(program_selection.getId(), "cube_texture"), 5);
+    //glActiveTexture (GL_TEXTURE5);
+    //glBindTexture (GL_TEXTURE_CUBE_MAP, scene.getTexCube());
+    //glBindTexture (GL_TEXTURE_2D, scene.getTexCube());
+
+    //std::cout<< scene.getSkyBox() << std::endl;
+
     glDepthMask (GL_TRUE);
-/*
+
+    /*
     glDepthMask (GL_FALSE);
     program_skybox.use();
     scene.setView();
@@ -383,7 +412,7 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
             scene.setCamZN(true);
             break;
         case 'T':
-        	break;
+            break;
         default:
             break;
         }
