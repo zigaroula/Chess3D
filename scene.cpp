@@ -40,7 +40,7 @@ void Scene::initLights()
 {
     lights.push_back(Light(glm::vec3(400.f, 400.f, 400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.0f, 0.0f, 1.0f)));
     
-    lights.push_back(Light(glm::vec3(-400.f, 50.f, -400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(1.0f, 0.0f, 0.0f)));
+    lights.push_back(Light(glm::vec3(-400.f, 400.f, -400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(1.0f, 0.0f, 0.0f)));
     
 
 }
@@ -296,11 +296,12 @@ std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector
     }
 
     return indices;
-
 }
 
 
 void Scene::slideVAOTo(int vao, glm::vec3 newPos){
-
     vao_list[vao].requestMovement(newPos);
+}
+void Scene::jumpVAOTo(int vao, glm::vec3 newPos){
+    vao_list[vao].requestJumpMovement(newPos);
 }

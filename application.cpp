@@ -215,7 +215,7 @@ void Application::renderScene()
         Vao &vao = scene[i];
         glm::mat4 model_matrix =  vao.getModelMatrix();
         
-        if (vao.isMovementRequested())
+        if (vao.isMovementRequested() || vao.isJumpMovementRequested())
             vao.updateMovement();
 
         if (scene.selected() && scene.getSelected() == i)

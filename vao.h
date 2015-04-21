@@ -42,8 +42,9 @@ public:
     GLuint getTextureId() const { return texture_id; }
     
     void requestMovement(glm::vec3 pos_end);
-    
+    void requestJumpMovement(glm::vec3 pos_end);
     inline bool isMovementRequested() const { return movement_requested; }
+    inline bool isJumpMovementRequested() const { return jump_movement_requested; }
     inline const glm::vec3& getMovementDirection() const { return movement_direction; }
     inline double getMovementStartTime() const { return movement_start_time; }
     inline float getMovementLength() const { return movement_length; }
@@ -59,6 +60,8 @@ private:
     GLboolean texture_enabled;
     
     bool movement_requested = false;
+    bool jump_movement_requested = false;
+    float a,b ; //variables utiles au calcul du saut
     float movement_length;
     glm::vec3 position_start, position_end, movement_direction;
     double movement_start_time;

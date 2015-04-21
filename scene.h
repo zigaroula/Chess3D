@@ -31,6 +31,7 @@ public:
     std::vector<int> addVaoPieces(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos);
 
     void slideVAOTo(int vao, glm::vec3 newPos);
+    void jumpVAOTo(int vao, glm::vec3 newPos);
 
     inline Light& getLight(int index) { return lights[index]; }
     size_t getLightCount() const { return lights.size(); }
