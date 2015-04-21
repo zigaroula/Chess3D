@@ -404,7 +404,8 @@ void Application::saveTexture()
 {
     std::cout << "save texture" << std::endl;
     
-    glBindTexture(GL_TEXTURE_2D, scene.getLight(0).getShadowTextureId());
+    //glBindTexture(GL_TEXTURE_2D, scene.getLight(0).getShadowTextureId());
+    glBindTexture(GL_TEXTURE_CUBE_MAP, scene.getTexCube());
     
     GLint textureWidth, textureHeight;
     glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &textureWidth);
@@ -412,8 +413,8 @@ void Application::saveTexture()
     
     std::cout << textureWidth << ";" << textureHeight << std::endl;
     
-    GLfloat *data = new GLfloat[textureWidth*textureHeight];
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, GL_FLOAT, data);
+    GLubyte *data = new GLubyte[textureWidth*textureHeight*3];
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     
     std::ofstream myfile;
     myfile.open("test.txt");
@@ -422,7 +423,7 @@ void Application::saveTexture()
         for (int j = 0; j < textureWidth; ++j)
         {
             int index = i*textureWidth+j;
-            myfile << data[index] << ",";
+            myfile << data[3*index] << ",";
             
         }
         myfile << "\n";
