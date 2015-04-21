@@ -43,7 +43,7 @@ private:
     static Camera *camera;
     static Game game;
     
-    static void renderShadow();
+    static void renderShadow(int);
     static void renderScene();
 
     static int window_width, window_height;
@@ -58,6 +58,8 @@ private:
 
     //Skybox
     static void renderSkybox();
+    
+    static void saveTexture();
 };
 
 

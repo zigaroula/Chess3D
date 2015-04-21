@@ -139,7 +139,8 @@ void Application::initGame() {
 void Application::display()
 {
 
-    renderShadow();
+    for (unsigned int i = 0; i < scene.getLightCount(); ++i)
+        renderShadow(i);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //renderSkybox();
@@ -149,19 +150,20 @@ void Application::display()
     glfwPollEvents();
 }
 
-void Application::renderShadow()
+void Application::renderShadow(int light_index)
 {
     // 1ERE PASSE SHADOW
     program_shadows.use();
     
-    glBindFramebuffer(GL_FRAMEBUFFER , scene.getShadowBufferId());
+    Light &light = scene.getLight(light_index);
+    glBindFramebuffer(GL_FRAMEBUFFER , light.getShadowBufferId());
     
     glClear(GL_DEPTH_BUFFER_BIT); /* important */
     glViewport(0, 0, scene.getShadowSize(), scene.getShadowSize());
     
     // On calcule la matrice Model-Vue-Projection du point de vue de la lumière
     const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
-    const glm::mat4& shadow_view_matrix = scene.getShadowViewMatrix();
+    const glm::mat4& shadow_view_matrix = light.getViewMatrix();
 
     /* render each VAO*/
     for (unsigned int i = 0; i < scene.size(); ++i)
@@ -194,14 +196,17 @@ void Application::renderScene()
 
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
     
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, scene.getShadowTexureId());
-    glUniform1i(glGetUniformLocation(program.getId(), "shadow_text"), 2);
-    
+    for (unsigned int i = 0 ; i < scene.getLightCount(); ++i)
+    {
+        std::string uniform = "shadow_text[" + std::to_string(i) + "]";
+        glActiveTexture(GL_TEXTURE10 + i);
+        glBindTexture(GL_TEXTURE_2D, scene.getLight(i).getShadowTextureId());
+        glUniform1i(glGetUniformLocation(program.getId(), uniform.c_str()), 10 + i);
+    }
+
     glViewport(0, 0, framebuffer_width, framebuffer_height);
     
     const glm::mat4& shadow_proj_matrix = scene.getShadowProjectionMatrix();
-    const glm::mat4& shadow_view_matrix = scene.getShadowViewMatrix();
     
     glUniform1i(glGetUniformLocation(program.getId(), "skybox_enabled"), 0);
 
@@ -220,8 +225,18 @@ void Application::renderScene()
         else
             glUniform3fv(glGetUniformLocation(program.getId(), "diffuse_color"), 1, vao.getDiffuseColorArray());
 
-        glm::mat4 depthMVP = shadow_proj_matrix * shadow_view_matrix * model_matrix;
-        glm::mat4 depthBiasMVP = scene.getBiasMatrix() * depthMVP;
+        for (unsigned int j = 0; j < scene.getLightCount(); ++j)
+        {
+            const glm::mat4& shadow_view_matrix = scene.getLight(j).getViewMatrix();
+
+            glm::mat4 depthMVP = shadow_proj_matrix * shadow_view_matrix * model_matrix;
+            glm::mat4 depthBiasMVP = scene.getBiasMatrix() * depthMVP;
+            
+            std::string uniform = "bias_matrix[" + std::to_string(j) + "]";
+            glUniformMatrix4fv(glGetUniformLocation(program.getId(), uniform.c_str()), 1, GL_FALSE, glm::value_ptr(depthBiasMVP));
+            
+        }
+
         
         glm::mat4 view_model_matrix = view_matrix * model_matrix;
         glm::mat4 proj_view_model_matrix = projection_matrix * view_model_matrix;
@@ -230,7 +245,7 @@ void Application::renderScene()
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_model"), 1, GL_FALSE, glm::value_ptr(view_model_matrix));
         glUniform1i(glGetUniformLocation(program.getId(), "texture_enabled"), vao.isTextureEnabled());
         glUniform1i(glGetUniformLocation(program.getId(), "skybox_enabled"), 0);
-        glUniformMatrix4fv(glGetUniformLocation(program.getId(), "bias_matrix"), 1, GL_FALSE, glm::value_ptr(depthBiasMVP));
+
         
         glUniformMatrix4fv(glGetUniformLocation(program.getId(), "normal_matrix"), 1, GL_FALSE, scene.getNormalMatrixArray(i));
 
@@ -385,6 +400,38 @@ void Application::error_callback(int error, const char* description)
     fputs(description, stderr);
 }
 
+void Application::saveTexture()
+{
+    std::cout << "save texture" << std::endl;
+    
+    glBindTexture(GL_TEXTURE_2D, scene.getLight(0).getShadowTextureId());
+    
+    GLint textureWidth, textureHeight;
+    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &textureWidth);
+    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &textureHeight);
+    
+    std::cout << textureWidth << ";" << textureHeight << std::endl;
+    
+    GLfloat *data = new GLfloat[textureWidth*textureHeight];
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, GL_FLOAT, data);
+    
+    std::ofstream myfile;
+    myfile.open("test.txt");
+    for (int i = 0 ; i < textureHeight; ++i)
+    {
+        for (int j = 0; j < textureWidth; ++j)
+        {
+            int index = i*textureWidth+j;
+            myfile << data[index] << ",";
+            
+        }
+        myfile << "\n";
+    }
+    
+    myfile.close();
+}
+
+
 void Application::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -412,6 +459,7 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
             scene.setCamZN(true);
             break;
         case 'T':
+                saveTexture();
             break;
         default:
             break;

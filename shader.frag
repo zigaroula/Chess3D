@@ -9,7 +9,7 @@ struct Light
 
 in vec3 frag_position;
 in vec3 frag_normal;
-in vec4 shadow_coord;
+in vec4 shadow_coord[2];
 in vec2 texture_coord;
 in vec3 skybox_texcoords;
 
@@ -17,7 +17,7 @@ out vec4 outputColor;
 
 uniform mat4 view_matrix;
 uniform vec3 diffuse_color;
-uniform sampler2DShadow shadow_text;
+uniform sampler2DShadow shadow_text[2];
 
 uniform sampler2D object_texture;
 uniform bool texture_enabled;
@@ -25,45 +25,53 @@ uniform bool skybox_enabled;
 
 uniform samplerCube cube_texture;
 
-uniform Light lights[1];
+uniform Light lights[2];
 
 void main(void)
 {
+    int light_count = 2;
     vec3 diffuse_color_ = diffuse_color;
 
     if (texture_enabled) {
         diffuse_color_ = vec3(texture(object_texture, texture_coord));
     }
 
-    vec3 lightPos = lights[0].position;
-    vec3 diffuseColor = lights[0].diffuse_color;
-    vec3 specColor = lights[0].specular_color;
+    vec3 diffuse = vec3(0);
+    vec3 specular = vec3(0);
 
-    lightPos = vec3(view_matrix * vec4(lightPos,1));
-    vec3 normal = normalize(frag_normal);
-    vec3 lightDir = normalize(lightPos - frag_position);
+    float bias = 0.999;
 
-    float lambertian = max(dot(lightDir,normal), 0.0);
-    vec3 diffuse = lambertian * diffuse_color_;
+    for (int i = 0; i < light_count; ++i)
+    {
+        vec4 shadow_coord2 = shadow_coord[i];
+        shadow_coord2.z *= bias;
 
-    vec3 specular = vec3(0.0);
+        float shadow = 1;
+        float shadow_coeff = textureProj(shadow_text[i] , shadow_coord2);
+        if (shadow_coeff < 1.0)
+            shadow = 0.5;
 
-    if(lambertian > 0.0) {
+        vec3 lightPos = lights[i].position;
+        vec3 diffuseColor = lights[i].diffuse_color;
+        vec3 specColor = lights[i].specular_color;
 
-        vec3 viewDir = normalize(-frag_position);
-        vec3 halfDir = normalize(lightDir + viewDir);
-        float specAngle = max(dot(halfDir, normal), 0.0);
-        specular = pow(specAngle, 16.0) * specColor;
+        lightPos = vec3(view_matrix * vec4(lightPos,1));
+        vec3 normal = normalize(frag_normal);
+        vec3 lightDir = normalize(lightPos - frag_position);
+
+        float lambertian = max(dot(lightDir,normal), 0.0);
+        diffuse += shadow * lambertian * diffuse_color_;
+
+        if(lambertian > 0.0) {
+
+            vec3 viewDir = normalize(-frag_position);
+            vec3 halfDir = normalize(lightDir + viewDir);
+            float specAngle = max(dot(halfDir, normal), 0.0);
+            specular += shadow * pow(specAngle, 16.0) * specColor;
+        }
     }
 
     //float bias = 1-(0.001*tan(acos(dot(normal, lightDir))));
-    float bias = 0.999;
-    vec4 shadow_coord2 = shadow_coord;
-    shadow_coord2.z *= bias;
-    float shadow = textureProj (shadow_text , shadow_coord2);
-
-    if (shadow<1.0) 
-        shadow = 0.5;
 
     vec3 ambient = vec3(0.0);
     
@@ -71,7 +79,7 @@ void main(void)
         outputColor = vec4(texture (cube_texture, skybox_texcoords));
         //outputColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);
     } else {
-        outputColor = vec4(ambient + shadow * (diffuse + specular), 1.0);
+        outputColor = vec4(ambient + diffuse + specular, 1.0);
     }
 
 
