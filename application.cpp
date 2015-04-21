@@ -142,7 +142,7 @@ void Application::display()
     renderShadow();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //renderSkybox();
+    renderSkybox();
     renderScene();
 
     glfwSwapBuffers(window);
@@ -338,7 +338,7 @@ void Application::renderSkybox() {
     glUniform1i(glGetUniformLocation(program.getId(), "skybox_enabled"), 1);
     glActiveTexture (GL_TEXTURE5);
     glBindTexture (GL_TEXTURE_CUBE_MAP, scene.getTexCube());
-    glUniform1i(glGetUniformLocation(program.getId(), "cube_texture"), scene.getTexCube());
+    glUniform1i(glGetUniformLocation(program.getId(), "cube_texture"), 5);
     glBindVertexArray (scene.getSkyBox());
     glDrawArrays (GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);

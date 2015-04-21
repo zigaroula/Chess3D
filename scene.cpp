@@ -185,8 +185,47 @@ void Scene::initSkyBox(){
     std::string textName = "comawhite";
 
     std::string path = "textures/" + textName + "_";
+    std::vector<const GLchar*> faces;
+    faces.push_back((path +"right.jpg").c_str());
+    faces.push_back((path +"left.jpg").c_str());
+    faces.push_back((path +"top.jpg").c_str());
+    faces.push_back((path +"bottom.jpg").c_str());
+    faces.push_back((path +"back.jpg").c_str());
+    faces.push_back((path +"front.jpg").c_str());
+    texCube = loadCubemap(faces);
 
-    create_cube_map((path +"front.jpg").c_str(), (path +"back.jpg").c_str(), (path +"top.jpg").c_str(), (path +"bottom.jpg").c_str(), (path +"left.jpg").c_str(), (path +"right.jpg").c_str(), &texCube);
+    //create_cube_map((path +"front.jpg").c_str(), (path +"back.jpg").c_str(), (path +"top.jpg").c_str(), (path +"bottom.jpg").c_str(), (path +"left.jpg").c_str(), (path +"right.jpg").c_str(), &texCube);
+}
+
+GLuint Scene::loadCubemap(std::vector<const GLchar*> faces)
+{
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+    glActiveTexture(GL_TEXTURE5);
+
+    int width,height;
+    unsigned char* image;
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+    for(GLuint i = 0; i < faces.size(); i++)
+    {
+        //image = SOIL_load_image(faces[i], &width, &height, 0, SOIL_LOAD_RGB);
+        image = stbi_load (faces[i], &width, &height, 0, 4);
+       /* glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+            GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image
+        );*/
+
+       /* glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+                    GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, vao_list[0]);*/
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+    return textureID;
 }
 
 void Scene::create_cube_map (const char* front, const char* back, const char* top, const char* bottom, const char* left, const char* right, GLuint* tex_cube ) {

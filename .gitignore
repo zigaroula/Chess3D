@@ -18,3 +18,5 @@ chess3D.creator
 chess3D.files
 chess3D.includes
 *.autosave
+Simple OpenGL Image Library/
+SOIL/

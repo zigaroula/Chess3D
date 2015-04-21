@@ -15,6 +15,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include <string>
+#include "SOIL/src/SOIL.h"
 
 
 #define ZNEAR 10.0f
@@ -80,6 +81,7 @@ private:
     ///Créer le cube sous la forme d'un vba
     void initSkyBox();
     void create_cube_map (const char* front, const char* back, const char* top, const char* bottom, const char* left, const char* right, GLuint* tex_cube );
+    GLuint loadCubemap(std::vector<const GLchar*> faces);
     ///Charge les faces de la SkyBox
     bool load_cube_map_side(GLuint texture, GLenum side_target, const char* file_name);
     std::vector<Vao> vao_list;
