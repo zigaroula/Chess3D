@@ -11,7 +11,6 @@ GLFWwindow *Application::window;
 Program Application::program;
 Program Application::program_shadows;
 Program Application::program_selection;
-Program Application::program_skybox;
 Scene Application::scene;
 Game Application::game;
 double Application::lastTime;
@@ -106,7 +105,6 @@ void Application::initOpenGL()
     program.init();
     program_shadows.initForShadowMap();
     program_selection.initForSelection();
-    program_skybox.initForSkybox();
 
     scene.initScene(window_width, window_height);
 

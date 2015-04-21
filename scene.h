@@ -77,10 +77,8 @@ private:
     //Creation de la SkyBox
     ///Créer le cube sous la forme d'un vba
     void initSkyBox();
-    void create_cube_map (const char* front, const char* back, const char* top, const char* bottom, const char* left, const char* right, GLuint* tex_cube );
     GLuint loadCubemap(std::vector<const GLchar*> faces);
     ///Charge les faces de la SkyBox
-    bool load_cube_map_side(GLuint texture, GLenum side_target, const char* file_name);
     std::vector<Vao> vao_list;
     glm::mat4 view_matrix, projection_matrix, normal_matrix;
     Camera camera;
