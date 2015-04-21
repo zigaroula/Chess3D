@@ -9,6 +9,7 @@ class Pawn : public Piece
         Pawn(int);
         virtual void computeAvailableMovements(std::vector<Piece*>, std::vector<Piece*>);
         virtual std::string getModelPath() const{return "models/pion.obj";}
+        virtual std::string getName() const{return "Pawn";}
     private:
         int d;
 };

@@ -7,6 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 
+static float const jumpHigh = 150.0f;
+static float const speed = 1.0f;
 
 void Vao::endMovement()
 {
@@ -16,17 +18,20 @@ void Vao::endMovement()
 void Vao::updateMovement()
 {
     double elasped_time = glfwGetTime() - movement_start_time;
-    double total = 1.0;
-    float movement_length = (float)elasped_time/total * getMovementLength();
-    
+
+    float movement_length = (float)elasped_time* speed * getMovementLength();
     glm::vec3 translation = movement_length * getMovementDirection();
+
+    if(jump_movement_requested){
+        float y= a * pow(movement_length, 2.0f) + b* movement_length;
+        translation += glm::vec3(0.0f, y, 0.0f);
+    }
     
     model_matrix = glm::translate(model_matrix_before_movement, translation);
     
-    if (elasped_time >= total)
+    if (elasped_time >= 1/speed)
     {
         movement_requested = false;
-        
     }
 
 }
@@ -43,6 +48,20 @@ void Vao::requestMovement(glm::vec3 pos_end)
     model_matrix_before_movement = model_matrix;
 
 }
+
+void Vao::requestJumpMovement(glm::vec3 pos_end){
+    position_start = glm::vec3(model_matrix * glm::vec4(0, 0, 0, 1));
+    jump_movement_requested = true;
+    position_end = pos_end;
+    movement_length = glm::length(position_end-position_start);
+    movement_direction =position_end-position_start;
+    movement_direction = glm::normalize(movement_direction);
+    movement_start_time = glfwGetTime();
+    float alpha = getMovementLength();
+    b= 4 * jumpHigh / alpha; a =  - 4 * jumpHigh / (float) powf(alpha, 2.0f);
+    model_matrix_before_movement = model_matrix;
+}
+
 Vao Vao::loadObj(std::string filename, glm::vec3 color)
 {
 
@@ -195,7 +214,7 @@ Vao Vao::loadObj(std::string filename, glm::vec3 color, std::string texture_file
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         
-    
+
         Tga tga = Tga::LoadTGAFile(texture_filename.c_str());
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tga.imageWidth, tga.imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, tga.imageData);
 

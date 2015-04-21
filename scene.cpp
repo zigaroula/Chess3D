@@ -307,11 +307,12 @@ std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector
     }
 
     return indices;
-
 }
 
 
 void Scene::slideVAOTo(int vao, glm::vec3 newPos){
-
     vao_list[vao].requestMovement(newPos);
+}
+void Scene::jumpVAOTo(int vao, glm::vec3 newPos){
+    vao_list[vao].requestJumpMovement(newPos);
 }

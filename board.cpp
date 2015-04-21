@@ -120,7 +120,7 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
         }
     }
 
-   return pieces;
+    return pieces;
 }
 
 
@@ -146,7 +146,13 @@ void Board::movePieceTo(int vao, int i, int j){
 
 
     piece->moveTo(i,j);
-    scene->slideVAOTo(vao - 1,getPosAt(i,j));
+
+    if(piece->getName() == "Knight"){
+        std::cerr << "CAVALIER" << std::endl;
+        scene->jumpVAOTo(vao-1, getPosAt(i,j));
+    }else{
+        scene->slideVAOTo(vao - 1,getPosAt(i,j));
+    }
 
 
 }
