@@ -52,3 +52,12 @@ Piece * Player::getPieceByVao(int VaoId){
 
     return nullptr;
 }
+
+void Player::deletePieceAt(std::vector<int> position) {
+    for (int i = 0 ; i < pieces.size() ; i++) {
+        if (pieces[i]->getPosition() == position) {
+            pieces.erase(pieces.begin() + i);
+            return;
+        }
+    }
+}
