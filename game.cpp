@@ -1,4 +1,5 @@
 #include "game.h"
+#include <fstream>
 
 void Game::tryMovement(int vaoId, int caseX, int caseY)
 {
@@ -23,8 +24,11 @@ void Game::tryMovement(int vaoId, int caseX, int caseY)
         const std::vector<std::vector<int>> &mvts_possibles = current_piece->getAvailableMovements();
         for (auto a : mvts_possibles)
             std::cout << "(" << a[0] << "," << a[1] << ");";
+        
         std::cout << std::endl;
     }
+    else
+        std::cout << "--> Player " << turn << " selected vao" << vaoId << " and clicked on cell (" << caseX << "," << caseY << ") VAO NULLPOINTER" <<  std::endl;
 }
 
 void Game::initClassicGame(Scene * _scene) {
@@ -46,15 +50,45 @@ void Game::initClassicGame(Scene * _scene) {
     //testDebug();
 }
 
-void Game::loadFromFile() {
+void Game::loadFromFile(Scene *_scene) {
     ///Recharge une partie précédente
-
+    std::cout << "Opening a previous game..." << std::endl;
+    
+    std::vector<std::vector<Piece *> > pieces;
+    pieces = board.initWithFile(_scene, "save.txt");
+    
+    none.init(0);
+    player1.init(1, pieces[0]);
+    player2.init(2, pieces[1]);
+    
+    std::string line;
+    std::ifstream myfile;
+    myfile.open("save.txt");
+    
+    myfile >> line;
+    
+    _scene->unselect();
+    turn = std::stoi(line);
+    
+    computeAvailableMovements();
 }
 
 void Game::saveToFile() {
     ///Sauvegarde la partie en cours
-
-
+    std::cout << "Saving the game..." << std::endl;
+    
+    std::ofstream myfile;
+    myfile.open("save.txt");
+ 
+    myfile << turn << std::endl;
+    
+    for (Piece *piece : player1.getPieces())
+        myfile << "1 " << piece->getName() << " " << piece->getPosition()[0] << " " << piece->getPosition()[1] << std::endl;
+    
+    for (Piece *piece : player2.getPieces())
+        myfile << "2 " << piece->getName() << " " << piece->getPosition()[0] << " " << piece->getPosition()[1] << std::endl;
+    
+    myfile.close();
 }
 
 Player Game::check() {

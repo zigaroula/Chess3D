@@ -331,6 +331,7 @@ void Application::processSelection(int xx, int yy) {
 
         if (scene.selected())
             game.tryMovement(scene.getSelected()+1 , caseX, caseY);
+        
     }
 }
 
@@ -462,6 +463,12 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
         case 'T':
                 saveTexture();
             break;
+        case 'O':
+                game.loadFromFile(&scene);
+                break;
+        case 'N':
+                game.saveToFile();
+                break;
         default:
             break;
         }

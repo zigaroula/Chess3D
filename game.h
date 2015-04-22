@@ -16,7 +16,7 @@ class Game
 {
 public:
     void initClassicGame(Scene * _scene);
-    void loadFromFile();
+    void loadFromFile(Scene *scene);
     void saveToFile();
     Player check();
     Player checkMate();

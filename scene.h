@@ -15,6 +15,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include <string>
+#include <map>
 
 
 #define ZNEAR 10.0f
@@ -28,6 +29,8 @@ public:
     size_t size() const { return vao_list.size(); }
     Vao& operator[](size_t index) { return vao_list[index]; }
     int addVaoPiece(std::string model, int team, glm::vec3 pos);
+    
+    std::vector<int> addVaoPiecesLoadedGame(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos);
     std::vector<int> addVaoPieces(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos);
 
     void slideVAOTo(int vao, glm::vec3 newPos);
@@ -91,6 +94,8 @@ private:
     glm::vec3 selection_color;
     bool vao_selected = false;
     
+    
+    std::map<std::string, Vao> loadedModeles;
 
     GLuint skyBox;
     GLuint texCube;

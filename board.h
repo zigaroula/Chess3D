@@ -19,6 +19,7 @@ public:
     Board();
     virtual ~Board();
     std::vector<std::vector <Piece *>> initClassic(Scene * _scene);
+    std::vector<std::vector <Piece *>> initWithFile(Scene * _scene, std::string);
     ///retourne la position d'une case dans l'espace
     inline glm::vec3 getPosAt(int i, int j){return squares[i][j];}
     inline glm::vec3 getPosAt(std::vector<int> square){return squares[ square[0] ][ square[1] ];}
@@ -30,6 +31,7 @@ public:
 
 private:
     ///Créer les 16 pièces d'un joueur
+    std::vector<Piece *> initPieceFromFile(int side);
     std::vector<Piece *> initPiece(int side);
     Scene * scene;
     std::map<int, Piece *> vaoIDsMap;
