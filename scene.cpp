@@ -38,11 +38,9 @@ void Scene::initScene(int width, int height)
 
 void Scene::initLights()
 {
-    lights.push_back(Light(glm::vec3(400.f, 400.f, 400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.0f, 0.0f, 1.0f)));
+    lights.push_back(Light(glm::vec3(400.f, 400.f, 400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.5f, 0.5f, 0.5f)));
     
-    lights.push_back(Light(glm::vec3(-400.f, 400.f, -400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(1.0f, 0.0f, 0.0f)));
-    
-
+    lights.push_back(Light(glm::vec3(-400.f, 400.f, -400.f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.5f, 0.5f, 0.5f)));
 }
 
 void Scene::initShadow(int light_index)
@@ -185,9 +183,8 @@ void Scene::initSkyBox(){
 
     glVertexAttribPointer ((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray (0);
-    //glBindBuffer (GL_ARRAY_BUFFER, vbo);
 
-    std::string textName = "comawhite";
+    std::string textName = "sky";
 
     std::string path = "textures/" + textName + "_";
     std::string right = path + "right.jpg";

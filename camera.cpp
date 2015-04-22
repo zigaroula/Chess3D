@@ -103,8 +103,8 @@ void Camera::move(int fps) {
     }
     if (holdingBackward) {
         angleV += toRads(45) / fps;
-        if (angleV > toRads(179.999)) {
-            angleV = toRads(179.999);
+        if (angleV > toRads(90.0)) {
+            angleV = toRads(90.0);
         }
     }
     if (holdingLeftStrafe) {
