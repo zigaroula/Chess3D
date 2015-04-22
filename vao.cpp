@@ -21,15 +21,15 @@ void Vao::updateMovement()
 
     float movement_length = (float)elasped_time* speed * getMovementLength();
     glm::vec3 translation = movement_length * getMovementDirection();
-
+    float y;
     if(jump_movement_requested){
-        float y= a * pow(movement_length, 2.0f) + b* movement_length;
+        y= a * pow(movement_length, 2.0f) + b* movement_length;
         translation += glm::vec3(0.0f, y, 0.0f);
     }
     
-    model_matrix = glm::translate(model_matrix_before_movement, translation);
+    if(movement_length <= getMovementLength())model_matrix = glm::translate(model_matrix_before_movement, translation);
     
-    if (elasped_time >= 1/speed)
+    if (elasped_time >= 1.0f/speed)
     {
         movement_requested = false;
         jump_movement_requested = false;
