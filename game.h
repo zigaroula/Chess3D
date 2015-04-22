@@ -18,14 +18,18 @@ public:
     void initClassicGame(Scene * _scene);
     void loadFromFile(Scene *scene);
     void saveToFile();
-    Player check();
-    Player checkMate();
+    /// Vérifie si le joueur désigné est en échec.
+    bool check(Player player, Player opponent, std::vector<int> KingPos);
+    /// Vérifie si le joueur désigné est en échec et mat.
+    bool checkMate(Player player, Player opponent);
     void changeTurn();
     void computeAvailableMovements();
     void tryMovement(int vaoId, int caseX, int caseY);
     int getPlayerId() const { return turn; }
+    void endGame(int winner);
     void testDebug();
     
+
 private:
     Scene *scene;
     Board board;
