@@ -102,12 +102,10 @@ void Game::saveToFile() {
 
 bool Game::check(Player player, Player opponent, std::vector<int> KingPos) {
 
-    std::cout << "Vérification échec pour un roi en " << KingPos[0] << " : " << KingPos[0] << std::endl;
     for (unsigned int i = 0 ; i < opponent.getPieces().size() ; i++) {
         for (unsigned int j = 0 ; j < opponent.getPieces()[i]->getAvailableMovements().size() ; j++) {
             std::vector<int> checkSquare = opponent.getPieces()[i]->getAvailableMovements()[j];
-            if ( checkSquare[0] == KingPos[0] || checkSquare[1] == KingPos[1] ) {
-                std::cout << "\nEchec en " << checkSquare[0] << ":" << checkSquare[1] << std::endl;
+            if ( checkSquare[0] == KingPos[0] && checkSquare[1] == KingPos[1] ) {
                 return true;
             }
         }
@@ -117,9 +115,19 @@ bool Game::check(Player player, Player opponent, std::vector<int> KingPos) {
 
 bool Game::checkMate(Player player, Player opponent) {
 
+    std::vector<int> tempPos = player.getKing()->getPosition();
+
     for (unsigned int j = 0 ; j < player.getKing()->getAvailableMovements().size() ; j++) {
-        if(!(check(player, opponent,player.getKing()->getAvailableMovements()[j]) )) return false;
+        std::vector<int> kingPos = player.getKing()->getAvailableMovements()[j] ;
+        player.getKing()->moveTo(kingPos[0], kingPos[1]);
+        opponent.computeAvailableMovements(opponent.getPieces(), player.getPieces());
+        if(!(check(player, opponent,player.getKing()->getAvailableMovements()[j]) )){
+            std::cout << "\nPas en échec sur " << player.getKing()->getAvailableMovements()[j][0] << " : " << player.getKing()->getAvailableMovements()[j][1] << std::endl;
+            return false;
+        }
     }
+     player.getKing()->moveTo(tempPos[0], tempPos[1]);
+     opponent.computeAvailableMovements(opponent.getPieces(), player.getPieces());
     return true;
 }
 
@@ -132,7 +140,9 @@ void Game::changeTurn() {
 
     scene->unselect();
 
+
     if(turn == 1){
+
         bool checkState = check(player1, player2, player1.getKing()->getPosition());
         if (checkState){
             std::cout << "\nJoueur 1, vous êtes en échec !" << std::endl;
