@@ -154,7 +154,7 @@ std::vector<std::vector<Piece *> > Board::initWithFile(Scene * _scene, std::stri
         }
     }
 
-    std::vector<int> vaoIDs = scene->addVaoPiecesLoadedGame(model, team, pos);
+    std::vector<int> vaoIDs = scene->addVaoPieces(model, team, pos);
     
     for (int i = 0; i<2; i++){
         for (int j = 0; j<pieces[i].size(); j++){

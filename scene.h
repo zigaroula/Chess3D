@@ -30,7 +30,6 @@ public:
     Vao& operator[](size_t index) { return vao_list[index]; }
     int addVaoPiece(std::string model, int team, glm::vec3 pos);
     
-    std::vector<int> addVaoPiecesLoadedGame(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos);
     std::vector<int> addVaoPieces(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos);
 
     void slideVAOTo(int vao, glm::vec3 newPos);

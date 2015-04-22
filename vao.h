@@ -11,8 +11,11 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 
 #include <iostream>
+#include <cmath>
 
 class Vao
 {
@@ -50,6 +53,10 @@ public:
     inline float getMovementLength() const { return movement_length; }
     void updateMovement();
     void endMovement();
+    
+    inline bool isRotated90() { return rotated; }
+    
+    void rotate90() { rotate(M_PI, glm::vec3(0.f, 1.f, 0.f));  rotated = true;}
 
 private:
     GLuint id;
@@ -66,6 +73,7 @@ private:
     glm::vec3 position_start, position_end, movement_direction;
     double movement_start_time;
     glm::mat4 model_matrix_before_movement;
+    bool rotated = false;
     
 
 };

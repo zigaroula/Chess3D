@@ -20,38 +20,57 @@ void Vao::updateMovement()
     double elasped_time = glfwGetTime() - movement_start_time;
 
     float movement_length = (float)elasped_time* speed * getMovementLength();
-    glm::vec3 translation = movement_length * getMovementDirection();
+    glm::vec3 translation = movement_length * movement_direction;
     float y;
+    
     if(jump_movement_requested){
         y= a * pow(movement_length, 2.0f) + b* movement_length;
         translation += glm::vec3(0.0f, y, 0.0f);
     }
-    
-    if(movement_length <= getMovementLength())model_matrix = glm::translate(model_matrix_before_movement, translation);
+
+    if(movement_length <= getMovementLength())
+    {
+        model_matrix = glm::translate(model_matrix_before_movement, translation);
+        if (rotated)
+            rotate90();
+    }
     
     if (elasped_time >= 1.0f/speed)
     {
         movement_requested = false;
         jump_movement_requested = false;
+        
+        if (rotated)
+        {
+            model_matrix = glm::mat4(1.f);
+            model_matrix = glm::translate(model_matrix, position_end);
+            rotate90();
+        }
     }
-
 }
 
 void Vao::requestMovement(glm::vec3 pos_end)
 {
     position_start = glm::vec3(model_matrix * glm::vec4(0, 0, 0, 1));
+
+    model_matrix_before_movement = glm::mat4(1.f);
+    model_matrix_before_movement = glm::translate(model_matrix_before_movement, position_start);
+
     movement_requested = true;
     position_end = pos_end;
     movement_length = glm::length(position_end-position_start);
     movement_direction =position_end-position_start;
     movement_direction = glm::normalize(movement_direction);
     movement_start_time = glfwGetTime();
-    model_matrix_before_movement = model_matrix;
-
 }
 
 void Vao::requestJumpMovement(glm::vec3 pos_end){
+    
     position_start = glm::vec3(model_matrix * glm::vec4(0, 0, 0, 1));
+    
+    model_matrix_before_movement = glm::mat4(1.f);
+    model_matrix_before_movement = glm::translate(model_matrix_before_movement, position_start);
+    
     jump_movement_requested = true;
     position_end = pos_end;
     movement_length = glm::length(position_end-position_start);
@@ -60,7 +79,6 @@ void Vao::requestJumpMovement(glm::vec3 pos_end){
     movement_start_time = glfwGetTime();
     float alpha = getMovementLength();
     b= 4 * jumpHigh / alpha; a =  - 4 * jumpHigh / (float) powf(alpha, 2.0f);
-    model_matrix_before_movement = model_matrix;
 }
 
 Vao Vao::loadObj(std::string filename, glm::vec3 color)
@@ -433,3 +451,6 @@ Vao Vao::getCube()
 
     return vao;
 }
+
+
+
