@@ -16,6 +16,7 @@ in vec3 skybox_texcoords;
 out vec4 outputColor;
 
 uniform mat4 view_matrix;
+uniform mat4 inv_view_matrix;
 uniform vec3 diffuse_color;
 uniform sampler2DShadow shadow_text[2];
 
@@ -80,11 +81,11 @@ void main(void)
     vec3 normal_eye = normalize (frag_normal);
     //REFLECTION
     vec3 reflected = reflect (incident_eye, normal_eye);
-    reflected = vec3 (inverse (view_matrix) * vec4 (reflected, 0.0));
+    reflected = vec3 (inv_view_matrix * vec4 (reflected, 0.0));
     //REFRACTION
     float ratio = 1.0 /1.3333;
     vec3 refracted = refract (incident_eye, normal_eye, ratio);
-    refracted = vec3 (inverse (view_matrix) * vec4 (refracted, 0.0));
+    refracted = vec3 (inv_view_matrix * vec4 (refracted, 0.0));
 
     if (skybox_enabled) {
         outputColor = vec4(texture (cube_texture, skybox_texcoords));

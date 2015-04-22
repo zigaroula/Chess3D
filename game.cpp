@@ -14,6 +14,7 @@ void Game::tryMovement(int vaoId, int caseX, int caseY)
         {
             std::cout  << "\tMouvement valide, Mouvements possibles:";
             board.movePieceTo(current_piece->getVaoID(), caseX, caseY);
+            //board.ejectPieceAt(caseX, caseY);
             changeTurn();
         }
         else

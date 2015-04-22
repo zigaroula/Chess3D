@@ -190,10 +190,12 @@ void Application::renderScene()
     scene.setView();
 
     const glm::mat4& view_matrix = scene.getViewMatrix();
+    const glm::mat4& inv_view_matrix = glm::inverse(view_matrix);
     const glm::mat4& projection_matrix = scene.getProjectionMatrix();
 
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
-    
+    glUniformMatrix4fv(glGetUniformLocation(program.getId(), "inv_view_matrix"), 1, GL_FALSE, glm::value_ptr(inv_view_matrix));
+
     for (unsigned int i = 0 ; i < scene.getLightCount(); ++i)
     {
         std::string uniform = "shadow_text[" + std::to_string(i) + "]";

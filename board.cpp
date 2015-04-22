@@ -144,14 +144,28 @@ void Board::movePieceTo(int vao, int i, int j){
 
     if (piece == nullptr) throw std::string("La piece demandée n'existe pas");
 
-
-    piece->moveTo(i,j);
-
     if(piece->getName() == "Knight"){
         scene->jumpVAOTo(vao -1, getPosAt(i,j));
     }else{
         scene->slideVAOTo(vao - 1,getPosAt(i,j));
     }
 
+    //ejectPieceAt(i,j);
 
+    piece->moveTo(i,j);
+
+}
+
+void Board::ejectPieceAt(int x, int y) {
+    Piece * piece;
+    for (unsigned int i = 1 ; i < vaoIDsMap.size() ; i++) {
+        std::cout << "segfault" << std::endl;
+        piece = vaoIDsMap[i];
+        std::vector<int> position;
+        position[0] = x;
+        position[1] = y;
+        if (piece->getPosition()[0] == position[0] && piece->getPosition()[1] == position[1]) {
+            scene->jumpVAOTo(i -1, getPosAt(x+2,y+2));
+        }
+    }
 }

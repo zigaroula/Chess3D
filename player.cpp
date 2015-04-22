@@ -24,8 +24,6 @@ void Player::init(int side,  std::vector<Piece *> const & _pieces) {
             break;
         }
     }
-
-
 }
 
 void Player::loose() {

@@ -26,7 +26,7 @@ public:
     void computeAllSquares();
     Piece * getPieceByVao(int vao){return vaoIDsMap[vao];}
     void movePieceTo(int vao, int i, int j);
-
+    void ejectPieceAt(int i, int j);
 
 private:
     ///Créer les 16 pièces d'un joueur
