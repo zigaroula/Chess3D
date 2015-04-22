@@ -97,8 +97,13 @@ void Scene::initModels()
     glm::mat4 rotation_180(1.f);
     rotation_180 = glm::rotate(rotation_180, (float)M_PI, glm::vec3(0.f, 1.f, 0.f));
     
-    
-    
+    loadedModeles["models/bishop.obj"] = Vao::loadObj("models/bishop.obj", glm::vec3(1.0));
+    loadedModeles["models/king.obj"] = Vao::loadObj("models/king.obj", glm::vec3(1.0));
+    loadedModeles["models/knight.obj"] = Vao::loadObj("models/knight.obj", glm::vec3(1.0));
+    loadedModeles["models/pawn.obj"] = Vao::loadObj("models/pawn.obj", glm::vec3(1.0));
+    loadedModeles["models/queen.obj"] = Vao::loadObj("models/queen.obj", glm::vec3(1.0));
+    loadedModeles["models/rook.obj"] = Vao::loadObj("models/rook.obj", glm::vec3(1.0));
+
     Vao plateau = Vao::loadObj("models/plane.obj", glm::vec3(0.f, 0.f, 0.f), "textures/board.tga");
     
     vao_list.push_back(plateau);
@@ -222,32 +227,32 @@ GLuint Scene::loadCubemap(std::vector<const GLchar*> faces)
 
     image = stbi_load (faces[0], &width, &height, &n, 4);
     if (!image) { fprintf (stderr, "ERROR: could not load %s\n", faces[0]); }
-    std::cout << width << ";" << height << ";" << n << ";" <<faces[0]<< std::endl;
+    //std::cout << width << ";" << height << ";" << n << ";" <<faces[0]<< std::endl;
     glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
     image = stbi_load (faces[1], &width, &height, &n, 4);
     if (!image) { fprintf (stderr, "ERROR: could not load %s\n", faces[1]); }
-    std::cout << width << ";" << height << ";" << n << ";" <<faces[1]<< std::endl;
+    //std::cout << width << ";" << height << ";" << n << ";" <<faces[1]<< std::endl;
     glTexImage2D( GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
     image = stbi_load (faces[2], &width, &height, &n, 4);
     if (!image) { fprintf (stderr, "ERROR: could not load %s\n", faces[2]); }
-    std::cout << width << ";" << height << ";" << n << ";" <<faces[2]<< std::endl;
+    //std::cout << width << ";" << height << ";" << n << ";" <<faces[2]<< std::endl;
     glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
     image = stbi_load (faces[3], &width, &height, &n, 4);
     if (!image) { fprintf (stderr, "ERROR: could not load %s\n", faces[3]); }
-    std::cout << width << ";" << height << ";" << n << ";" <<faces[3]<< std::endl;
+    //std::cout << width << ";" << height << ";" << n << ";" <<faces[3]<< std::endl;
     glTexImage2D( GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
     image = stbi_load (faces[4], &width, &height, &n, 4);
     if (!image) { fprintf (stderr, "ERROR: could not load %s\n", faces[4]); }
-    std::cout << width << ";" << height << ";" << n << ";" <<faces[4]<< std::endl;
+    //std::cout << width << ";" << height << ";" << n << ";" <<faces[4]<< std::endl;
     glTexImage2D( GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
     image = stbi_load (faces[5], &width, &height, &n, 4);
     if (!image) { fprintf (stderr, "ERROR: could not load %s\n", faces[5]); }
-    std::cout << width << ";" << height << ";" << n << ";" <<faces[5]<< std::endl;
+    //std::cout << width << ";" << height << ";" << n << ";" <<faces[5]<< std::endl;
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -275,6 +280,43 @@ int Scene::addVaoPiece(std::string model, int team, glm::vec3 pos){
     return ((int)vao_list.size());
 
 }
+
+std::vector<int> Scene::addVaoPiecesLoadedGame(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos){
+    
+    ///Créer une liste de vao sans avoir à recharger plusieurs fois le meme modèle
+    
+    Vao plateau = vao_list[0];
+    vao_list.clear();
+    vao_list.push_back(plateau);
+    
+    std::vector<int> indices;
+    
+    for (int i = 0 ; i < (int) model.size() ; i++){
+        Vao piece;
+        std::map<std::string, Vao>::iterator it = loadedModeles.find(model[i]);
+        if(it ==loadedModeles.end() ){
+            if(team[i]==1) {
+                piece = Vao::loadObj(model[i],color1);
+            }else{
+                piece = Vao::loadObj(model[i],color2);
+            }
+            loadedModeles[model[i]] = piece;
+        }else{
+            if(team[i]==1) {
+                piece = Vao(loadedModeles[model[i]], color1);
+            }else{
+                piece = Vao(loadedModeles[model[i]], color2);
+            }
+        }
+        
+        piece.translate(pos[i]);
+        vao_list.push_back(piece);
+        indices.push_back((int) vao_list.size());
+    }
+    
+    return indices;
+}
+
 
 std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos){
 

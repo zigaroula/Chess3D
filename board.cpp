@@ -1,5 +1,8 @@
 #include "board.h"
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 Board::Board(){
 
@@ -9,9 +12,54 @@ Board::~Board() {
 
 }
 
-std::vector<Piece *> Board::initPiece(int side){
+std::vector<Piece *> Board::initPieceFromFile(int side)
+{
     std::vector<Piece *> pieces;
+    std::string line;
+    std::ifstream myfile;
+    myfile.open("save.txt");
+    
+    std::getline(myfile, line);
+    while(std::getline(myfile, line))
+    {
+        std::istringstream iss(line);
+        std::string playerId, pieceName, x, y;
+        
+        std::getline(iss, playerId, ' ');
+        std::getline(iss, pieceName, ' ');
+        std::getline(iss, x, ' ');
+        std::getline(iss, y, ' ');
+        
+        if (std::stoi(playerId) == side)
+        {
+            Piece *piece;
+            
+            if (pieceName == "King") {
+                piece = new King();
+                
+            } else if (pieceName == "Bishop")
+                piece = new Bishop();
+            else if (pieceName == "Knight")
+                piece = new Knight();
+            else if (pieceName == "Pawn")
+                piece = new Pawn(side);
+            else if (pieceName == "Queen")
+                piece = new Queen();
+            else if (pieceName == "Rook")
+                piece = new Rook();
+            
+            piece->init(std::stoi(x), std::stoi(y));
+            pieces.push_back(piece);
+        }
+    }
+    
+    return pieces;
+}
 
+std::vector<Piece *> Board::initPiece(int side){
+    
+    std::vector<Piece *> pieces;
+    
     Piece * pawn1 = new Pawn(side);
     Piece * pawn2 = new Pawn(side);
     Piece * pawn3 = new Pawn(side);
@@ -28,8 +76,7 @@ std::vector<Piece *> Board::initPiece(int side){
     Piece * bishop2 = new Bishop();
     Piece * queen = new Queen();
     Piece * king = new King();
-
-
+    
     if (side == 1) {
         pawn1->init(6, 0);
         pawn2->init(6, 1);
@@ -65,7 +112,7 @@ std::vector<Piece *> Board::initPiece(int side){
         knight2->init(0, 6);
         rook2->init(0, 7);
     }
-
+    
     pieces.push_back(pawn1);
     pieces.push_back(pawn2);
     pieces.push_back(pawn3);
@@ -82,8 +129,41 @@ std::vector<Piece *> Board::initPiece(int side){
     pieces.push_back(bishop2);
     pieces.push_back(queen);
     pieces.push_back(king);
+    
+    return pieces;
+}
 
+std::vector<std::vector<Piece *> > Board::initWithFile(Scene * _scene, std::string filename) {
+    
+    scene=_scene;
+    
+    std::vector<std::vector<Piece *> > pieces;
+    
+    pieces.resize(2);
+    pieces[0] = initPieceFromFile(1);
+    pieces[1] = initPieceFromFile(2);
+    
+    std::vector<std::string> model; std::vector<int> team ; std::vector<glm::vec3> pos ;
+    
+    for (int i = 0; i<2; i++){
+        for (int j = 0; j<pieces[i].size(); j++){
+            
+            model.push_back(pieces[i][j]->getModelPath());
+            team.push_back(i+1);
+            pos.push_back(getPosAt(pieces[i][j]->getPosition()));
+        }
+    }
 
+    std::vector<int> vaoIDs = scene->addVaoPiecesLoadedGame(model, team, pos);
+    
+    for (int i = 0; i<2; i++){
+        for (int j = 0; j<pieces[i].size(); j++){
+            int indice = (i*16) + j ;
+            pieces[i][j]->setVaoID(vaoIDs[indice]);
+            vaoIDsMap[vaoIDs[indice]] = pieces[i][j];
+        }
+    }
+    
     return pieces;
 }
 
@@ -97,7 +177,6 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
     pieces.push_back(initPiece(1));
     pieces.push_back(initPiece(2));
 
-    
     std::vector<std::string> model; std::vector<int> team ; std::vector<glm::vec3> pos ;
 
     for (int i = 0; i<2; i++){
@@ -108,7 +187,6 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
             pos.push_back(getPosAt(pieces[i][j]->getPosition()));
         }
     }
-
 
     std::vector<int> vaoIDs = scene->addVaoPieces(model,team,pos);
 
@@ -122,8 +200,6 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
 
     return pieces;
 }
-
-
 
 glm::vec3 Board::computeRealPosition(int i, int j){
     return centerToSquare0 + glm::vec3(j*squareOffset, 0.0f, i*squareOffset);
@@ -143,8 +219,7 @@ void Board::movePieceTo(int vao, int i, int j){
     Piece * piece = vaoIDsMap[vao];
 
     if (piece == nullptr) throw std::string("La piece demandée n'existe pas");
-
-
+    
     piece->moveTo(i,j);
 
     if(piece->getName() == "Knight"){
@@ -152,6 +227,4 @@ void Board::movePieceTo(int vao, int i, int j){
     }else{
         scene->slideVAOTo(vao - 1,getPosAt(i,j));
     }
-
-
 }
