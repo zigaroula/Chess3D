@@ -321,6 +321,15 @@ std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector
 void Scene::slideVAOTo(int vao, glm::vec3 newPos){
     vao_list[vao].requestMovement(newPos);
 }
+
 void Scene::jumpVAOTo(int vao, glm::vec3 newPos){
     vao_list[vao].requestJumpMovement(newPos);
+}
+
+void Scene::ejectVAO(int vao) {
+    vao_list[vao].requestEjectMovement();
+}
+
+void Scene::deleteVAO(int vao) {
+    vao_list.erase(vao_list.begin() + vao);
 }

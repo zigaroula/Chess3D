@@ -22,20 +22,20 @@ void Vao::updateMovement()
     float movement_length = (float)elasped_time* speed * getMovementLength();
     glm::vec3 translation = movement_length * movement_direction;
     float y;
-    
-    if(jump_movement_requested){
+
+    if(jump_movement_requested || eject_movement_requested){
         y= a * pow(movement_length, 2.0f) + b* movement_length;
         translation += glm::vec3(0.0f, y, 0.0f);
     }
 
-    if(movement_length <= getMovementLength())
+    if(movement_length <= getMovementLength() || eject_movement_requested)
     {
         model_matrix = glm::translate(model_matrix_before_movement, translation);
         if (rotated)
             rotate90();
     }
     
-    if (elasped_time >= 1.0f/speed)
+    if (elasped_time >= 1.0f/speed && !eject_movement_requested)
     {
         movement_requested = false;
         jump_movement_requested = false;
@@ -45,6 +45,10 @@ void Vao::updateMovement()
         
         if (rotated)
             rotate90();
+    }
+
+    if (elasped_time >= 10.0f/speed && eject_movement_requested) {
+        eject_movement_requested = false;
     }
 }
 
@@ -72,6 +76,22 @@ void Vao::requestJumpMovement(glm::vec3 pos_end){
     
     jump_movement_requested = true;
     position_end = pos_end;
+    movement_length = glm::length(position_end-position_start);
+    movement_direction =position_end-position_start;
+    movement_direction = glm::normalize(movement_direction);
+    movement_start_time = glfwGetTime();
+    float alpha = getMovementLength();
+    b= 4 * jumpHigh / alpha; a =  - 4 * jumpHigh / (float) powf(alpha, 2.0f);
+}
+
+void Vao::requestEjectMovement() {
+    position_start = glm::vec3(model_matrix * glm::vec4(0, 0, 0, 1));
+
+    model_matrix_before_movement = glm::mat4(1.f);
+    model_matrix_before_movement = glm::translate(model_matrix_before_movement, position_start);
+
+    eject_movement_requested = true;
+    position_end = glm::vec3(500.0f, 0.0f, 0.0f);
     movement_length = glm::length(position_end-position_start);
     movement_direction =position_end-position_start;
     movement_direction = glm::normalize(movement_direction);

@@ -34,6 +34,9 @@ public:
 
     void slideVAOTo(int vao, glm::vec3 newPos);
     void jumpVAOTo(int vao, glm::vec3 newPos);
+    void ejectVAO(int vao);
+
+    void deleteVAO(int vao);
 
     inline Light& getLight(int index) { return lights[index]; }
     size_t getLightCount() const { return lights.size(); }

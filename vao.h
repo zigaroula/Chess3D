@@ -46,8 +46,10 @@ public:
     
     void requestMovement(glm::vec3 pos_end);
     void requestJumpMovement(glm::vec3 pos_end);
+    void requestEjectMovement();
     inline bool isMovementRequested() const { return movement_requested; }
     inline bool isJumpMovementRequested() const { return jump_movement_requested; }
+    inline bool isEjectMovementRequested() const { return eject_movement_requested; }
     inline const glm::vec3& getMovementDirection() const { return movement_direction; }
     inline double getMovementStartTime() const { return movement_start_time; }
     inline float getMovementLength() const { return movement_length; }
@@ -68,13 +70,14 @@ private:
     
     bool movement_requested = false;
     bool jump_movement_requested = false;
+    bool eject_movement_requested = false;
     float a,b ; //variables utiles au calcul du saut
     float movement_length;
     glm::vec3 position_start, position_end, movement_direction;
     double movement_start_time;
     glm::mat4 model_matrix_before_movement;
     bool rotated = false;
-    
+    //bool visible = true;
 
 };
 

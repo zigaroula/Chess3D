@@ -186,15 +186,17 @@ void Game::ejectPiece(int x, int y) {
     for (unsigned int i = 0 ; i < player1.getPieces().size() ; i++) {
         piece = player1.getPieces()[i];
         if (piece->getPosition()[0] == position[0] && piece->getPosition()[1] == position[1]) {
-            scene->jumpVAOTo(piece->getVaoID() -1, board.getOut());
+            scene->ejectVAO(piece->getVaoID()-1);
             player1.deletePieceAt(position);
+            //scene->deleteVAO(piece->getVaoID()-1);
         }
     }
     for (unsigned int j = 0 ; j < player2.getPieces().size() ; j++) {
         piece = player2.getPieces()[j];
         if (piece->getPosition()[0] == position[0] && piece->getPosition()[1] == position[1]) {
-            scene->jumpVAOTo(piece->getVaoID() -1, board.getOut());
+            scene->ejectVAO(piece->getVaoID()-1);
             player2.deletePieceAt(position);
+            //scene->deleteVAO(piece->getVaoID()-1);
         }
     }
 }
