@@ -1,4 +1,4 @@
-2
+1
 1 Pawn 6 0
 1 Pawn 6 1
 1 Pawn 6 2
@@ -25,8 +25,8 @@
 2 Rook 0 0
 2 Rook 0 7
 2 Knight 0 1
-2 Knight 0 6
+2 Knight 2 7
 2 Bishop 0 2
 2 Bishop 0 5
 2 Queen 0 3
-2 King 0 4
+2 King 1 5

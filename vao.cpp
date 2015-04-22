@@ -40,12 +40,11 @@ void Vao::updateMovement()
         movement_requested = false;
         jump_movement_requested = false;
         
+        model_matrix = glm::mat4(1.f);
+        model_matrix = glm::translate(model_matrix, position_end);
+        
         if (rotated)
-        {
-            model_matrix = glm::mat4(1.f);
-            model_matrix = glm::translate(model_matrix, position_end);
             rotate90();
-        }
     }
 }
 
