@@ -1,11 +1,20 @@
 #include "game.h"
 #include <fstream>
 
+void Game::tryMovement(int vaoId1, int vaoId2)
+{
+    Player &current2 = (turn == 2)?player1:player2;
+    Piece  *piece_joueur2 = current2.getPieceByVao(vaoId2);
+    
+    if (piece_joueur2 != nullptr)
+    {
+        tryMovement(vaoId1, piece_joueur2->getPosition()[0], piece_joueur2->getPosition()[1]);
+    }
+}
 void Game::tryMovement(int vaoId, int caseX, int caseY)
 {
     Player &current = (turn == 1)?player1:player2;
     Piece *current_piece = current.getPieceByVao(vaoId);
-
 
     if (current_piece != nullptr)
     {
@@ -91,65 +100,27 @@ void Game::saveToFile() {
     myfile.close();
 }
 
-Player Game::check() {
-    /* Regarde si un joueur est en échec et renvoie le joueur associé */
+bool Game::check(Player player, Player opponent, std::vector<int> KingPos) {
 
-    for (unsigned int i = 0 ; i < player1.getPieces().size() ; i++) {
-        for (unsigned int j = 0 ; j < player1.getPieces()[i]->getAvailableMovements().size() ; j++) {
-            if (player1.getPieces()[i]->getAvailableMovements()[j] == player2.getKing()->getPosition()) {
-                return player2;
+    std::cout << "Vérification échec pour un roi en " << KingPos[0] << " : " << KingPos[0] << std::endl;
+    for (unsigned int i = 0 ; i < opponent.getPieces().size() ; i++) {
+        for (unsigned int j = 0 ; j < opponent.getPieces()[i]->getAvailableMovements().size() ; j++) {
+            std::vector<int> checkSquare = opponent.getPieces()[i]->getAvailableMovements()[j];
+            if ( checkSquare[0] == KingPos[0] || checkSquare[1] == KingPos[1] ) {
+                std::cout << "\nEchec en " << checkSquare[0] << ":" << checkSquare[1] << std::endl;
+                return true;
             }
         }
     }
-
-    for (unsigned int i = 0 ; i < player2.getPieces().size() ; i++) {
-        for (unsigned int j = 0 ; j < player2.getPieces()[i]->getAvailableMovements().size() ; j++) {
-            if (player2.getPieces()[i]->getAvailableMovements()[j] == player1.getKing()->getPosition()) {
-                return player1;
-            }
-        }
-    }
-    
-    return none;
+    return false;
 }
 
-Player Game::checkMate() {
-    ///Regarde si un joueur est en échec et mat et renvoie le joueur associé
+bool Game::checkMate(Player player, Player opponent) {
 
-    //trop compliqué
-    /*int cM = 0;
-    bool c = false;
-    for (unsigned int k = 0 ; k < player2.getKing().getAvailableMovements().size() ; k++) {
-        for (unsigned int i = 0 ; i < player1.getPieces().size() ; i++) {
-            for (unsigned int j = 0 ; j < player1.getPieces()[i].getAvailableMovements().size() ; j++) {
-                if (player1.getPieces()[i].getAvailableMovements()[j] == player2.getKing().getAvailableMovements()[k]) {
-                    c = true;
-                }
-            }
-        }
-        if (c) {
-            cM++;
-        }
-        c = false;
+    for (unsigned int j = 0 ; j < player.getKing()->getAvailableMovements().size() ; j++) {
+        if(!(check(player, opponent,player.getKing()->getAvailableMovements()[j]) )) return false;
     }
-    if (cM = )
-
-    cM = 0;
-    c = false;
-    for (unsigned int k = 0 ; k < player1.getKing().getAvailableMovements().size() ; k++) {
-        for (unsigned int i = 0 ; i < player2.getPieces().size() ; i++) {
-            for (unsigned int j = 0 ; j < player2.getPieces()[i].getAvailableMovements().size() ; j++) {
-                if (player2.getPieces()[i].getAvailableMovements()[j] == player1.getKing().getAvailableMovements()[k]) {
-                    c = true;
-                }
-            }
-        }
-        if (c) {
-            cM++;
-        }
-        c = false;
-    }*/
-    return none;
+    return true;
 }
 
 void Game::changeTurn() {
@@ -158,8 +129,25 @@ void Game::changeTurn() {
     
     player1.computeAvailableMovements(player1.getPieces(), player2.getPieces());
     player2.computeAvailableMovements(player2.getPieces(), player1.getPieces());
-    
+
     scene->unselect();
+
+    if(turn == 1){
+        bool checkState = check(player1, player2, player1.getKing()->getPosition());
+        if (checkState){
+            std::cout << "\nJoueur 1, vous êtes en échec !" << std::endl;
+            if(checkMate(player1, player2)) endGame(2);
+        }
+    }else if (turn == 2){
+        bool checkState = check(player2, player1, player2.getKing()->getPosition());
+        if (checkState){
+            std::cout << "\nJoueur 2, vous êtes en échec !" << std::endl;
+            if(checkMate(player2, player1)) endGame(1);
+        }
+    }
+
+
+
 }
 
 void Game::computeAvailableMovements() {
@@ -196,4 +184,8 @@ void Game::ejectPiece(int x, int y) {
             scene->jumpVAOTo(piece->getVaoID() -1, board.getOut());
         }
     }
+}
+
+void Game::endGame(int winner){
+    std::cout << "\nLe joueur " << winner << " remporte la partie ! ";
 }
