@@ -88,7 +88,7 @@ void Game::saveToFile() {
     
     std::ofstream myfile;
     myfile.open("save.txt");
- 
+
     myfile << turn << std::endl;
     
     for (Piece *piece : player1.getPieces())
@@ -126,8 +126,8 @@ bool Game::checkMate(Player player, Player opponent) {
             return false;
         }
     }
-     player.getKing()->moveTo(tempPos[0], tempPos[1]);
-     opponent.computeAvailableMovements(opponent.getPieces(), player.getPieces());
+    player.getKing()->moveTo(tempPos[0], tempPos[1]);
+    opponent.computeAvailableMovements(opponent.getPieces(), player.getPieces());
     return true;
 }
 
@@ -186,12 +186,14 @@ void Game::ejectPiece(int x, int y) {
         piece = player1.getPieces()[i];
         if (piece->getPosition()[0] == position[0] && piece->getPosition()[1] == position[1]) {
             scene->jumpVAOTo(piece->getVaoID() -1, board.getOut());
+            player1.deletePieceAt(position);
         }
     }
     for (unsigned int j = 0 ; j < player2.getPieces().size() ; j++) {
         piece = player2.getPieces()[j];
         if (piece->getPosition()[0] == position[0] && piece->getPosition()[1] == position[1]) {
             scene->jumpVAOTo(piece->getVaoID() -1, board.getOut());
+            player2.deletePieceAt(position);
         }
     }
 }

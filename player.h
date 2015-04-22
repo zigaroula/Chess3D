@@ -23,7 +23,7 @@ class Player
         Piece* getKing() const { return king; }
         ///Calcule les mouvements disponibles pour toutes les pièces du joueur
         void computeAvailableMovements(std::vector<Piece*>, std::vector<Piece*>);
-
+        void deletePieceAt(std::vector<int>);
 
 
     private:
