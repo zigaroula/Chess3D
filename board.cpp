@@ -32,7 +32,7 @@ std::vector<Piece *> Board::initPieceFromFile(int side)
         
         if (std::stoi(playerId) == side)
         {
-            Piece *piece;
+            Piece *piece = nullptr;
             
             if (pieceName == "King") {
                 piece = new King();
