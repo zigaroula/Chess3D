@@ -278,47 +278,14 @@ int Scene::addVaoPiece(std::string model, int team, glm::vec3 pos){
 
 }
 
-std::vector<int> Scene::addVaoPiecesLoadedGame(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos){
-    
-    ///Créer une liste de vao sans avoir à recharger plusieurs fois le meme modèle
-    
-    Vao plateau = vao_list[0];
-    vao_list.clear();
-    vao_list.push_back(plateau);
-    
-    std::vector<int> indices;
-    
-    for (int i = 0 ; i < (int) model.size() ; i++){
-        Vao piece;
-        std::map<std::string, Vao>::iterator it = loadedModeles.find(model[i]);
-        if(it ==loadedModeles.end() ){
-            if(team[i]==1) {
-                piece = Vao::loadObj(model[i],color1);
-            }else{
-                piece = Vao::loadObj(model[i],color2);
-            }
-            loadedModeles[model[i]] = piece;
-        }else{
-            if(team[i]==1) {
-                piece = Vao(loadedModeles[model[i]], color1);
-            }else{
-                piece = Vao(loadedModeles[model[i]], color2);
-            }
-        }
-        
-        piece.translate(pos[i]);
-        vao_list.push_back(piece);
-        indices.push_back((int) vao_list.size());
-    }
-    
-    return indices;
-}
-
-
 std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector<int> team, std::vector<glm::vec3> pos){
 
     ///Créer une liste de vao sans avoir à recharger plusieurs fois le meme modèle
 
+    Vao plateau = vao_list[0];
+    vao_list.clear();
+    vao_list.push_back(plateau);
+    
     std::map<std::string, int> loadedModeles;
     std::vector<int> indices;
 
@@ -343,6 +310,9 @@ std::vector<int> Scene::addVaoPieces(std::vector<std::string> model, std::vector
         piece.translate(pos[i]);
         vao_list.push_back(piece);
         indices.push_back((int) vao_list.size());
+        
+        if (team[i] == 2 && (model[i] == "models/cavalier.obj" || model[i] == "models/fou.obj"))
+            vao_list[i+1].rotate90();
     }
 
     return indices;
