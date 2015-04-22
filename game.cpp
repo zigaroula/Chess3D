@@ -115,6 +115,7 @@ bool Game::check(Player player, Player opponent, std::vector<int> KingPos) {
 
 bool Game::checkMate(Player player, Player opponent) {
 
+    bool notCheckMate = true;
     std::vector<int> tempPos = player.getKing()->getPosition();
 
     for (unsigned int j = 0 ; j < player.getKing()->getAvailableMovements().size() ; j++) {
@@ -123,12 +124,12 @@ bool Game::checkMate(Player player, Player opponent) {
         opponent.computeAvailableMovements(opponent.getPieces(), player.getPieces());
         if(!(check(player, opponent,player.getKing()->getAvailableMovements()[j]) )){
             std::cout << "\nPas en échec sur " << player.getKing()->getAvailableMovements()[j][0] << " : " << player.getKing()->getAvailableMovements()[j][1] << std::endl;
-            return false;
+            notCheckMate = false;
         }
     }
     player.getKing()->moveTo(tempPos[0], tempPos[1]);
     opponent.computeAvailableMovements(opponent.getPieces(), player.getPieces());
-    return true;
+    return notCheckMate;
 }
 
 void Game::changeTurn() {
