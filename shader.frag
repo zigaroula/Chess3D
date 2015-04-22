@@ -75,17 +75,23 @@ void main(void)
 
     vec3 ambient = vec3(0.0);
     
-    //REFLECTION
+    // EFFETS
     vec3 incident_eye = normalize (frag_position);
     vec3 normal_eye = normalize (frag_normal);
+    //REFLECTION
     vec3 reflected = reflect (incident_eye, normal_eye);
     reflected = vec3 (inverse (view_matrix) * vec4 (reflected, 0.0));
+    //REFRACTION
+    float ratio = 1.0 /1.3333;
+    vec3 refracted = refract (incident_eye, normal_eye, ratio);
+    refracted = vec3 (inverse (view_matrix) * vec4 (refracted, 0.0));
 
     if (skybox_enabled) {
         outputColor = vec4(texture (cube_texture, skybox_texcoords));
     } else if (texture_enabled) {
         outputColor = vec4(ambient + diffuse + specular, 1.0) + 0.7*texture (cube_texture, reflected);
     } else {
+        //outputColor = vec4(ambient + diffuse + specular, 1.0) + 0.9*texture (cube_texture, refracted);
         outputColor = vec4(ambient + diffuse + specular, 1.0);
     }
 
