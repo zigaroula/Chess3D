@@ -320,7 +320,7 @@ void Application::processSelection(int xx, int yy) {
     {
         if (scene.selected() && ((game.getPlayerId() == 1 && selected > 16) || (game.getPlayerId() == 2 && selected < 17)))
             game.tryMovement(scene.getSelected() + 1, selected + 1);
-        else
+        else if ((game.getPlayerId() == 1 && selected <= 16) || (game.getPlayerId() == 2 && selected > 16))
             scene.selectModel(selected);
     }
     else if (selected >= 100)
