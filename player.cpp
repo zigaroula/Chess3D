@@ -38,6 +38,7 @@ void Player::win() {
 
 void Player::computeAvailableMovements(std::vector<Piece*> own, std::vector<Piece*> opp) {
     for (unsigned int i = 0 ; i < pieces.size() ; i++) {
+        pieces[i]->clearAvailableMovements();
         pieces[i]->computeAvailableMovements(own, opp);
     }
 }

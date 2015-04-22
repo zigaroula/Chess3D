@@ -46,3 +46,7 @@ std::string Piece::toString() const {
     s = std::to_string(posX) + " et " + std::to_string(posY) ;
     return s;
 }
+
+void Piece::clearAvailableMovements() {
+    availableMovements.clear();
+}
