@@ -19,7 +19,7 @@ class Piece
         void moveTo(int, int);
         virtual std::string getModelPath() const{ return "";}
         const std::vector<std::vector<int> > & getAvailableMovements() const { return availableMovements; }
-        std::vector<int> getPosition();
+        virtual std::vector<int> const getPosition();
         ///Calcule l'ensemble des mouvements d'une pièce
         virtual void computeAvailableMovements(std::vector<Piece*>, std::vector<Piece*>);
         void clearAvailableMovements();

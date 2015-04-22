@@ -199,8 +199,6 @@ std::vector<std::vector<Piece *> > Board::initClassic(Scene * _scene) {
         }
     }
 
-    pieceList = pieces;
-
     return pieces;
 }
 
@@ -229,24 +227,8 @@ void Board::movePieceTo(int vao, int i, int j){
         scene->slideVAOTo(vao - 1,getPosAt(i,j));
     }
 
-    ejectPieceAt(i,j);
+    //ejectPieceAt(i,j);
 
     piece->moveTo(i,j);
 
-}
-
-void Board::ejectPieceAt(int x, int y) {
-    Piece * piece;
-    for (unsigned int i = 0 ; i < pieceList.size() ; i++) {
-        for (unsigned int j = 0 ; j < pieceList[i].size() ; j++) {
-            piece = pieceList[i][j];
-            std::vector<int> position;
-            position.resize(2);
-            position[0] = x;
-            position[1] = y;
-            if (piece->getPosition()[0] == position[0] && piece->getPosition()[1] == position[1]) {
-                scene->jumpVAOTo(piece->getVaoID() -1, outOfBound);
-            }
-        }
-    }
 }

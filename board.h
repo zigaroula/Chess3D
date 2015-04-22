@@ -27,7 +27,7 @@ public:
     void computeAllSquares();
     Piece * getPieceByVao(int vao){return vaoIDsMap[vao];}
     void movePieceTo(int vao, int i, int j);
-    void ejectPieceAt(int i, int j);
+    const glm::vec3 getOut() { return outOfBound; }
 
 private:
     ///Créer les 16 pièces d'un joueur
@@ -40,9 +40,8 @@ private:
     ///Permet de maper un ensemble de 2 int en positions réelles dans l'espace
     std::vector<std::vector<glm::vec3> > squares;
     ///Liste de toutes les pièces
-    std::vector<std::vector<Piece *> > pieceList;
     const glm::vec3 centerToSquare0 = glm::vec3(-265.0f, 0.0f, -267.0f);
-    const glm::vec3 outOfBound = glm::vec3(4000.0f, 0.0f, 4000.0f);
+    const glm::vec3 outOfBound = glm::vec3(2000.0f, 0.0f, 2000.0f);
     const float squareOffset = 76.0f;
 };
 

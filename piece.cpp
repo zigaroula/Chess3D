@@ -29,7 +29,7 @@ void Piece::moveTo(int targetX, int targetY) {
     posY = targetY;
 }
 
-std::vector<int> Piece::getPosition() {
+const std::vector<int> Piece::getPosition() {
     std::vector<int> position;
     position.resize(2);
     position[0] = posX;
