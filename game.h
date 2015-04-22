@@ -25,6 +25,7 @@ public:
     void tryMovement(int vaoId, int caseX, int caseY);
     int getPlayerId() const { return turn; }
     void testDebug();
+    void ejectPiece(int, int);
     
 private:
     Scene *scene;

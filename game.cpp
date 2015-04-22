@@ -14,8 +14,8 @@ void Game::tryMovement(int vaoId, int caseX, int caseY)
         if (current_piece->canMoveTo(caseX, caseY))
         {
             std::cout  << "\tMouvement valide, Mouvements possibles:";
+            ejectPiece(caseX, caseY);
             board.movePieceTo(current_piece->getVaoID(), caseX, caseY);
-            //board.ejectPieceAt(caseX, caseY);
             changeTurn();
         }
         else
@@ -174,5 +174,26 @@ void Game::testDebug() {
     std::cout << std::endl << "AVAILABLE MOVEMENTS" << std::endl;
     for (unsigned int i = 0 ; i < debugMovements.size() ; i++) {
         std::cout << debugMovements[i][0] << " " << debugMovements[i][1] << std::endl;
+    }
+}
+
+void Game::ejectPiece(int x, int y) {
+    Piece * piece;
+    std::vector<int> position;
+    position.resize(2);
+    position[0] = x;
+    position[1] = y;
+
+    for (unsigned int i = 0 ; i < player1.getPieces().size() ; i++) {
+        piece = player1.getPieces()[i];
+        if (piece->getPosition()[0] == position[0] && piece->getPosition()[1] == position[1]) {
+            scene->jumpVAOTo(piece->getVaoID() -1, board.getOut());
+        }
+    }
+    for (unsigned int j = 0 ; j < player2.getPieces().size() ; j++) {
+        piece = player2.getPieces()[j];
+        if (piece->getPosition()[0] == position[0] && piece->getPosition()[1] == position[1]) {
+            scene->jumpVAOTo(piece->getVaoID() -1, board.getOut());
+        }
     }
 }
