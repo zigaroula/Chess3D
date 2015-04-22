@@ -315,14 +315,14 @@ void Application::processSelection(int xx, int yy) {
     int selected = (int) res[0];
     
     //std::cout << "Clicked on:" << selected << std::endl;
-
-    if (game.getPlayerId() == 1 && selected > 16 && selected < 100)
-        return;
-    if (game.getPlayerId() == 2 && selected < 17 && selected < 100)
-        return;
     
     if (selected < 100 && selected >= 0)
-        scene.selectModel(selected);
+    {
+        if (scene.selected() && ((game.getPlayerId() == 1 && selected > 16) || (game.getPlayerId() == 2 && selected < 17)))
+            game.tryMovement(scene.getSelected() + 1, selected + 1);
+        else
+            scene.selectModel(selected);
+    }
     else if (selected >= 100)
     {
         selected -= 100;

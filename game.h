@@ -23,6 +23,7 @@ public:
     void changeTurn();
     void computeAvailableMovements();
     void tryMovement(int vaoId, int caseX, int caseY);
+    void tryMovement(int vaoId1, int vaoId2);
     int getPlayerId() const { return turn; }
     void testDebug();
     

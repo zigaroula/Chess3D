@@ -1,11 +1,20 @@
 #include "game.h"
 #include <fstream>
 
+void Game::tryMovement(int vaoId1, int vaoId2)
+{
+    Player &current2 = (turn == 2)?player1:player2;
+    Piece  *piece_joueur2 = current2.getPieceByVao(vaoId2);
+    
+    if (piece_joueur2 != nullptr)
+    {
+        tryMovement(vaoId1, piece_joueur2->getPosition()[0], piece_joueur2->getPosition()[1]);
+    }
+}
 void Game::tryMovement(int vaoId, int caseX, int caseY)
 {
     Player &current = (turn == 1)?player1:player2;
     Piece *current_piece = current.getPieceByVao(vaoId);
-
 
     if (current_piece != nullptr)
     {
