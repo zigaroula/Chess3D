@@ -327,7 +327,6 @@ void Scene::jumpVAOTo(int vao, glm::vec3 newPos){
 }
 
 void Scene::ejectVAO(int vao) {
-    std::cout << "\nejection de " << vao;
     vao_list[vao].requestEjectMovement();
 }
 

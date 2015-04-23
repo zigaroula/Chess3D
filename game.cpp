@@ -14,6 +14,7 @@ void Game::tryMovement(int vaoId1, int vaoId2)
 void Game::tryMovement(int vaoId, int caseX, int caseY)
 {
     Player &current = (turn == 1)?player1:player2;
+    Player &opponent = (turn == 1)?player2:player1;
     Piece *current_piece = current.getPieceByVao(vaoId);
 
     if (current_piece != nullptr)
@@ -22,19 +23,24 @@ void Game::tryMovement(int vaoId, int caseX, int caseY)
 
         if (current_piece->canMoveTo(caseX, caseY))
         {
-            std::cout  << "\tMouvement valide, Mouvements possibles:";
-            ejectPiece(caseX, caseY);
-            board.movePieceTo(current_piece->getVaoID(), caseX, caseY);
-            changeTurn();
-        }
-        else
-            std::cout  << "\tMouvement non valide, Mouvements possibles:";
+            std::vector<int> tempPos = current_piece->getPosition();
+            current_piece->moveTo(caseX,caseY);
+            opponent.computeAvailableMovements(opponent.getPieces(),current.getPieces());
+            if (check(current, opponent, current.getKing()->getPosition()).size() == 0){
+                current_piece->moveTo(tempPos);
+                ejectPiece(caseX, caseY);
+                board.movePieceTo(current_piece->getVaoID(), caseX, caseY);
+                changeTurn();
+            }else{
+                std::cout  << "\tMouvement non valide, votre roi est en échec !\n";
+                current_piece->moveTo(tempPos);
+                opponent.computeAvailableMovements(opponent.getPieces(),current.getPieces());
 
-        const std::vector<std::vector<int>> &mvts_possibles = current_piece->getAvailableMovements();
-        for (auto a : mvts_possibles)
-            std::cout << "(" << a[0] << "," << a[1] << ");";
-        
-        std::cout << std::endl;
+            }
+
+        }
+        else{
+            std::cout  << "\tMouvement non valide\n"; }
     }
     else
         std::cout << "--> Player " << turn << " selected vao" << vaoId << " and clicked on cell (" << caseX << "," << caseY << ") VAO NULLPOINTER" <<  std::endl;
