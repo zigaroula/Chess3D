@@ -24,7 +24,7 @@ uniform sampler2D object_texture;
 uniform bool texture_enabled;
 uniform bool skybox_enabled;
 uniform bool shadow_enabled;
-
+uniform bool light_enabled[2];
 
 uniform samplerCube cube_texture;
 
@@ -64,7 +64,7 @@ void main(void)
 
         if (!shadow_enabled)
             shadow = 1.f;
-            
+
         float lambertian = max(dot(lightDir,normal), 0.0);
         diffuse += shadow * lambertian * diffuse_color_;
 

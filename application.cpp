@@ -24,6 +24,7 @@ int Application::framebuffer_width, Application::framebuffer_height;
 
 bool Application::skybox_enabled_demo = false;
 bool Application::shadow_enabled_demo = false;
+bool Application::light_enabled_demo[2];
 
 void Application::start()
 {
@@ -40,6 +41,8 @@ void Application::start()
 
     //window_height = mode->height;
     //window_width= mode->width;
+    
+    light_enabled_demo[0] = light_enabled_demo[1] = false;
     
     window_height = 400;
     window_width = 800;
@@ -199,6 +202,12 @@ void Application::renderScene()
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "inv_view_matrix"), 1, GL_FALSE, glm::value_ptr(inv_view_matrix));
     glUniform1i(glGetUniformLocation(program.getId(), "shadow_enabled"), shadow_enabled_demo);
+    
+    for (unsigned int i = 0; i < scene.getLightCount(); ++i)
+    {
+        std::string uniform = "light_enabled[" + std::to_string(i) + "]";
+        glUniform1i(glGetUniformLocation(program.getId(), uniform.c_str()), light_enabled_demo[i]);
+    }
 
 
     for (unsigned int i = 0 ; i < scene.getLightCount(); ++i)

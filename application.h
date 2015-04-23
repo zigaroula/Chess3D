@@ -62,6 +62,7 @@ private:
     static void saveTexture();
     
     static bool skybox_enabled_demo, shadow_enabled_demo;
+    static bool light_enabled_demo[2];
 };
 
 
