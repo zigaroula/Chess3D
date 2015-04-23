@@ -1,4 +1,5 @@
 #include "king.h"
+#include <iostream>
 
 void King::computeAvailableMovements(std::vector<Piece*> own, std::vector<Piece*> opp) {
     std::vector<int> pos = std::vector<int>();
@@ -130,7 +131,7 @@ void King::computeAvailableMovements(std::vector<Piece*> own, std::vector<Piece*
         availableMovements.push_back(pos);
     }
 
-    pos[0] = posX-1;
+    pos[0] = posX+1;
     pos[1] = posY-1;
     found = false;
     for (unsigned int i = 0 ; i < own.size() ; i++) {
@@ -146,5 +147,13 @@ void King::computeAvailableMovements(std::vector<Piece*> own, std::vector<Piece*
     }
     if (!found && pos[0]>=0 && pos[0]<8 && pos[1]>=0 && pos[1]<8) {
         availableMovements.push_back(pos);
+    }
+}
+
+void King::deleteAvailableMovements(std::vector<int> impossibleMovements) {
+    std::cout << std::endl;
+    for (int i = impossibleMovements.size()-1 ; i >= 0 ; i--) {
+        std::cout << "Deleted : " << availableMovements[i][0] << " : " << availableMovements[i][1] << std::endl;
+        availableMovements.erase(availableMovements.begin()+i);
     }
 }

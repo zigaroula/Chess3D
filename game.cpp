@@ -183,8 +183,10 @@ void Game::changeTurn() {
     /* Change le joueur en cours */
     turn = (turn == 1)?2:1;
     
-    player1.computeAvailableMovements(player1.getPieces(), player2.getPieces());
-    player2.computeAvailableMovements(player2.getPieces(), player1.getPieces());
+    //player1.computeAvailableMovements(player1.getPieces(), player2.getPieces());
+    //player2.computeAvailableMovements(player2.getPieces(), player1.getPieces());
+
+    computeAvailableMovements();
 
     scene->unselect();
 
@@ -203,15 +205,31 @@ void Game::changeTurn() {
             if(checkMate(player2, player1, checkState)) endGame(1);
         }
     }
-
-
-
 }
 
 void Game::computeAvailableMovements() {
     /* Calcule les mouvements disponibles pour toutes les pièces */
     player1.computeAvailableMovements(player1.getPieces(), player2.getPieces());
     player2.computeAvailableMovements(player2.getPieces(), player1.getPieces());
+    computeKingMovements(player1, player2);
+    computeKingMovements(player2, player1);
+}
+
+void Game::computeKingMovements(Player player, Player opponent) {
+    std::vector<int> tempPos = player.getKing()->getPosition();
+    std::vector<int> kingPos = tempPos;
+    std::vector<int> impossibleMovements;
+    for (unsigned int j = 0 ; j < player.getKing()->getAvailableMovements().size() ; j++) {
+        kingPos = player.getKing()->getAvailableMovements()[j] ;
+        player.getKing()->moveTo(kingPos[0], kingPos[1]);
+        opponent.computeAvailableMovements(opponent.getPieces(), player.getPieces());
+        if(check(player, opponent,kingPos).size() > 0){
+            impossibleMovements.push_back(j);
+        }
+    }
+    player.getKing()->moveTo(tempPos[0], tempPos[1]);
+    opponent.computeAvailableMovements(opponent.getPieces(), player.getPieces());
+    player.getKing()->deleteAvailableMovements(impossibleMovements);
 }
 
 void Game::testDebug() {

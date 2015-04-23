@@ -24,6 +24,7 @@ public:
     bool checkMate(Player player, Player opponent, std::vector<Piece *> threateningPieces);
     void changeTurn();
     void computeAvailableMovements();
+    void computeKingMovements(Player player, Player opponent);
     void tryMovement(int vaoId, int caseX, int caseY);
     void tryMovement(int vaoId1, int vaoId2);
     int getPlayerId() const { return turn; }

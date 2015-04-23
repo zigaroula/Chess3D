@@ -50,3 +50,7 @@ std::string Piece::toString() const {
 void Piece::clearAvailableMovements() {
     availableMovements.clear();
 }
+
+void Piece::deleteAvailableMovements(std::vector<int>) {
+
+}
