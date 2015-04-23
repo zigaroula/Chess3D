@@ -377,31 +377,8 @@ void Application::renderSkybox() {
     glBindVertexArray (scene.getSkyBox());
     glDrawArrays (GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
-    //std::cout<< scene.getTexCube() << std::endl;
-    //glUniform1i(glGetUniformLocation(program.getId(), "skybox_enabled"), 0);
-    //glfwSwapBuffers(window);
-    //glUniform1i(glGetUniformLocation(program_selection.getId(), "cube_texture"), 5);
-    //glActiveTexture (GL_TEXTURE5);
-    //glBindTexture (GL_TEXTURE_CUBE_MAP, scene.getTexCube());
-    //glBindTexture (GL_TEXTURE_2D, scene.getTexCube());
-
-    //std::cout<< scene.getSkyBox() << std::endl;
 
     glDepthMask (GL_TRUE);
-
-    /*
-    glDepthMask (GL_FALSE);
-    program_skybox.use();
-    scene.setView();
-    glUniformMatrix4fv(glGetUniformLocation(program_skybox.getId(), "V"), 1, GL_FALSE, scene.getViewMatrixArray());
-    glUniformMatrix4fv(glGetUniformLocation(program_skybox.getId(), "P"), 1, GL_FALSE, scene.getProjectionMatrixArray());
-    //glUniform1i(glGetUniformLocation(program_selection.getId(), "cube_texture"), scene.getTexCube());
-    glActiveTexture (GL_TEXTURE4);
-    glBindTexture (GL_TEXTURE_CUBE_MAP, 4);
-    //std::cout << scene.getTexCube() << std::endl;
-    glBindVertexArray (scene.getSkyBox().getId());
-    glDrawArrays (GL_TRIANGLES, 0, 36);
-    glDepthMask (GL_TRUE);*/
 }
 
 void Application::window_size_callback(GLFWwindow *window, int width, int height)
@@ -489,6 +466,7 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
             game.saveToFile();
             break;
         case 'Y':
+            scene.setSelectTex(0);
             game.initClassicGame(&scene);
             break;
         case 'X':

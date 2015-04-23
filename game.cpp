@@ -14,6 +14,7 @@ void Game::tryMovement(int vaoId1, int vaoId2)
 void Game::tryMovement(int vaoId, int caseX, int caseY)
 {
     Player &current = (turn == 1)?player1:player2;
+    Player &opponent = (turn == 1)?player2:player1;
     Piece *current_piece = current.getPieceByVao(vaoId);
 
     if (current_piece != nullptr)
@@ -22,19 +23,24 @@ void Game::tryMovement(int vaoId, int caseX, int caseY)
 
         if (current_piece->canMoveTo(caseX, caseY))
         {
-            std::cout  << "\tMouvement valide, Mouvements possibles:";
-            ejectPiece(caseX, caseY);
-            board.movePieceTo(current_piece->getVaoID(), caseX, caseY);
-            changeTurn();
-        }
-        else
-            std::cout  << "\tMouvement non valide, Mouvements possibles:";
+            std::vector<int> tempPos = current_piece->getPosition();
+            current_piece->moveTo(caseX,caseY);
+            opponent.computeAvailableMovements(opponent.getPieces(),current.getPieces());
+            if (check(current, opponent, current.getKing()->getPosition()).size() == 0){
+                current_piece->moveTo(tempPos);
+                ejectPiece(caseX, caseY);
+                board.movePieceTo(current_piece->getVaoID(), caseX, caseY);
+                changeTurn();
+            }else{
+                std::cout  << "\tMouvement non valide, votre roi est en échec !\n";
+                current_piece->moveTo(tempPos);
+                opponent.computeAvailableMovements(opponent.getPieces(),current.getPieces());
 
-        const std::vector<std::vector<int>> &mvts_possibles = current_piece->getAvailableMovements();
-        for (auto a : mvts_possibles)
-            std::cout << "(" << a[0] << "," << a[1] << ");";
-        
-        std::cout << std::endl;
+            }
+
+        }
+        else{
+            std::cout  << "\tMouvement non valide\n"; }
     }
     else
         std::cout << "--> Player " << turn << " selected vao" << vaoId << " and clicked on cell (" << caseX << "," << caseY << ") VAO NULLPOINTER" <<  std::endl;
@@ -111,7 +117,6 @@ std::vector<Piece *> Game::check(Player player, Player opponent, std::vector<int
             std::vector<int> checkSquare = opponent.getPieces()[i]->getAvailableMovements()[j];
             if ( checkSquare[0] == KingPos[0] && checkSquare[1] == KingPos[1] ) {
                 threateningPieces.push_back(opponent.getPieces()[i]);
-                break;
                 if(threateningPieces.size() >= 2){
                     return threateningPieces;
                 }
@@ -166,9 +171,9 @@ bool Game::checkMate(Player player, Player opponent, std::vector<Piece *> threat
             player.getPieces()[i]->moveTo(possibleMovement);
             opponent.computeAvailableMovements(opponent.getPieces(), player.getPieces());
             if( check(player, opponent,kingPos).size() == 0 ) {
-//                std::cout << "\nAttend attend, si tu bouges ton " << player.getPieces()[i]->getName() << " (" << tempPos[0] << ":"
-//                          << tempPos[1] << ") en " <<
-//                          " (" << possibleMovement[0] << ":"<< possibleMovement[1] << "), tu n'est plus en échec !\n" <<std::endl;
+                //                std::cout << "\nAttend attend, si tu bouges ton " << player.getPieces()[i]->getName() << " (" << tempPos[0] << ":"
+                //                          << tempPos[1] << ") en " <<
+                //                          " (" << possibleMovement[0] << ":"<< possibleMovement[1] << "), tu n'est plus en échec !\n" <<std::endl;
                 player.getPieces()[i]->moveTo(tempPos);
                 return false;
             }
@@ -198,13 +203,19 @@ void Game::changeTurn() {
         std::vector<Piece *> checkState = check(player1, player2, player1.getKing()->getPosition());
         if (checkState.size()>0){
             std::cout << "\nJoueur 1, vous êtes en échec !" << std::endl;
+            scene->setSelectTex(1);
             if(checkMate(player1, player2,checkState)) endGame(2);
+        } else {
+            scene->setSelectTex(0);
         }
-    }else if (turn == 2){
+    } else if (turn == 2){
         std::vector<Piece *> checkState = check(player2, player1, player2.getKing()->getPosition());
         if (checkState.size()){
             std::cout << "\nJoueur 2, vous êtes en échec !" << std::endl;
+            scene->setSelectTex(1);
             if(checkMate(player2, player1, checkState)) endGame(1);
+        } else {
+            scene->setSelectTex(0);
         }
     }
 }
@@ -269,5 +280,21 @@ void Game::ejectPiece(int x, int y) {
 }
 
 void Game::endGame(int winner){
+    scene->setSelectTex(2);
+
+    Player looser;
+    if(winner == 1){
+        looser = player2;
+    }else{
+        looser = player1;
+    }
     std::cout << "\nLe joueur " << winner << " remporte la partie ! ";
+
+    for (unsigned int i = 0 ; i< looser.getPieces().size() ; i++){
+        Piece * piece = looser.getPieces()[i];
+        if(piece->getName() == "King") continue;
+        scene->ejectVAO(piece->getVaoID()-1);
+    }
+
+
 }
