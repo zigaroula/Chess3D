@@ -198,13 +198,19 @@ void Game::changeTurn() {
         std::vector<Piece *> checkState = check(player1, player2, player1.getKing()->getPosition());
         if (checkState.size()>0){
             std::cout << "\nJoueur 1, vous êtes en échec !" << std::endl;
+            scene->setSelectTex(1);
             if(checkMate(player1, player2,checkState)) endGame(2);
+        } else {
+            scene->setSelectTex(0);
         }
-    }else if (turn == 2){
+    } else if (turn == 2){
         std::vector<Piece *> checkState = check(player2, player1, player2.getKing()->getPosition());
         if (checkState.size()){
             std::cout << "\nJoueur 2, vous êtes en échec !" << std::endl;
+            scene->setSelectTex(1);
             if(checkMate(player2, player1, checkState)) endGame(1);
+        } else {
+            scene->setSelectTex(0);
         }
     }
 }
@@ -269,5 +275,6 @@ void Game::ejectPiece(int x, int y) {
 }
 
 void Game::endGame(int winner){
+    scene->setSelectTex(2);
     std::cout << "\nLe joueur " << winner << " remporte la partie ! ";
 }

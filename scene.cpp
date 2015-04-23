@@ -21,6 +21,8 @@ void Scene::unselect() {
 
 void Scene::initScene(int width, int height)
 {
+    selectTex = 0;
+
     initLights();
 
     initModels();
@@ -189,7 +191,6 @@ void Scene::initSkyBox(){
     glEnableVertexAttribArray (0);
 
     std::string textName = "sky";
-
     std::string path = "textures/" + textName + "_";
     std::string right = path + "right.jpg";
     std::string left = path + "left.jpg";
@@ -197,7 +198,6 @@ void Scene::initSkyBox(){
     std::string bottom = path + "bottom.jpg";
     std::string back = path + "back.jpg";
     std::string front = path + "front.jpg";
-
     std::vector<const GLchar*> faces;
     faces.push_back(right.c_str());
     faces.push_back(left.c_str());
@@ -206,6 +206,42 @@ void Scene::initSkyBox(){
     faces.push_back(back.c_str());
     faces.push_back(front.c_str());
     texCube = loadCubemap(faces);
+
+
+    textName = "yellow_sky";
+    path = "textures/" + textName + "_";
+    right = path + "right.jpg";
+    left = path + "left.jpg";
+    top = path + "top.jpg";
+    bottom = path + "bottom.jpg";
+    back = path + "back.jpg";
+    front = path + "front.jpg";
+    std::vector<const GLchar*> facesY;
+    facesY.push_back(right.c_str());
+    facesY.push_back(left.c_str());
+    facesY.push_back(top.c_str());
+    facesY.push_back(bottom.c_str());
+    facesY.push_back(back.c_str());
+    facesY.push_back(front.c_str());
+    texCubeYellow = loadCubemap(facesY);
+
+
+    textName = "red_sky";
+    path = "textures/" + textName + "_";
+    right = path + "right.jpg";
+    left = path + "left.jpg";
+    top = path + "top.jpg";
+    bottom = path + "bottom.jpg";
+    back = path + "back.jpg";
+    front = path + "front.jpg";
+    std::vector<const GLchar*> facesR;
+    facesR.push_back(right.c_str());
+    facesR.push_back(left.c_str());
+    facesR.push_back(top.c_str());
+    facesR.push_back(bottom.c_str());
+    facesR.push_back(back.c_str());
+    facesR.push_back(front.c_str());
+    texCubeRed = loadCubemap(facesR);
 
     //create_cube_map((path +"front.jpg").c_str(), (path +"back.jpg").c_str(), (path +"top.jpg").c_str(), (path +"bottom.jpg").c_str(), (path +"left.jpg").c_str(), (path +"right.jpg").c_str(), &texCube);
 }
@@ -332,4 +368,14 @@ void Scene::ejectVAO(int vao) {
 
 void Scene::deleteVAO(int vao) {
     vao_list.erase(vao_list.begin() + vao);
+}
+
+const GLuint& Scene::getTexCube() {
+     if (selectTex == 0) {
+          return texCube;
+     } else if (selectTex == 1) {
+          return texCubeYellow;
+     } else if (selectTex == 2) {
+          return texCubeRed;
+     }
 }
