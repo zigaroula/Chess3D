@@ -47,11 +47,12 @@ public:
     inline const glm::mat4& getShadowProjectionMatrix() const { return shadow_projection_matrix; }
     inline const glm::mat4& getBiasMatrix() const { return bias_matrix; }
 
-
     inline int getShadowSize() const { return shadow_size; }
 
     inline const GLuint& getSkyBox(){ return skyBox;}
-    inline const GLuint& getTexCube() { return texCube; }
+    const GLuint& getTexCube();
+    void setSelectTex(int value) { selectTex = value; }
+    const int getSelectTex() { return selectTex; }
 
     // CAMERA
     void setView();
@@ -101,6 +102,9 @@ private:
 
     GLuint skyBox;
     GLuint texCube;
+    GLuint texCubeYellow;
+    GLuint texCubeRed;
+    int selectTex;
 };
 
 
