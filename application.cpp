@@ -25,9 +25,14 @@ int Application::framebuffer_width, Application::framebuffer_height;
 bool Application::skybox_enabled_demo = false;
 bool Application::shadow_enabled_demo = false;
 bool Application::light_enabled_demo[2];
+bool Application::reflection_enabled_demo = false;
 
 void Application::start()
 {
+    light_enabled_demo[0] = light_enabled_demo[1] = false;
+
+    //skybox_enabled_demo = shadow_enabled_demo = reflection_enabled_demo = light_enabled_demo[0] = light_enabled_demo[1] = true;
+    
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
@@ -41,8 +46,6 @@ void Application::start()
 
     //window_height = mode->height;
     //window_width= mode->width;
-    
-    light_enabled_demo[0] = light_enabled_demo[1] = false;
     
     window_height = 400;
     window_width = 800;
@@ -202,6 +205,8 @@ void Application::renderScene()
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "inv_view_matrix"), 1, GL_FALSE, glm::value_ptr(inv_view_matrix));
     glUniform1i(glGetUniformLocation(program.getId(), "shadow_enabled"), shadow_enabled_demo);
+    glUniform1i(glGetUniformLocation(program.getId(), "reflection_enabled"), reflection_enabled_demo);
+
     
     for (unsigned int i = 0; i < scene.getLightCount(); ++i)
     {
@@ -480,17 +485,26 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
         case 'O':
             game.loadFromFile(&scene);
             break;
-        case 'N':
+        case 'F':
             game.saveToFile();
             break;
         case 'Y':
             game.initClassicGame(&scene);
             break;
+        case 'X':
+            light_enabled_demo[0] = light_enabled_demo[0]?false:true;
+            break;
         case 'C':
+            light_enabled_demo[1] = light_enabled_demo[1]?false:true;
+            break;
+        case 'B':
             skybox_enabled_demo = skybox_enabled_demo?false:true;
             break;
         case 'V':
             shadow_enabled_demo = shadow_enabled_demo?false:true;
+            break;
+        case 'N':
+            reflection_enabled_demo = reflection_enabled_demo?false:true;
             break;
         default:
             break;

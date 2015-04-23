@@ -25,6 +25,7 @@ uniform bool texture_enabled;
 uniform bool skybox_enabled;
 uniform bool shadow_enabled;
 uniform bool light_enabled[2];
+uniform bool reflection_enabled;
 
 uniform samplerCube cube_texture;
 
@@ -46,6 +47,9 @@ void main(void)
 
     for (int i = 0; i < light_count; ++i)
     {
+        if (!light_enabled[i])
+            continue;
+
         vec4 shadow_coord2 = shadow_coord[i];
         shadow_coord2.z *= bias;
 
@@ -97,7 +101,7 @@ void main(void)
     } else if (texture_enabled) {
         int x_row = int((texture_coord.x - 0.703) / 0.036);
         int y_row = int((texture_coord.y - 0.709) / 0.0353);
-        if((x_row <8 && x_row >=0 && y_row <8 && y_row >=0)
+        if(reflection_enabled && (x_row <8 && x_row >=0 && y_row <8 && y_row >=0)
                 &&(((x_row %2 == 0)&&( y_row %2 ==0))
                 ||((x_row %2 == 1)&&( y_row %2 ==1)))){
             outputColor = vec4(ambient + diffuse + specular, 1.0) + 0.6*texture (cube_texture, reflected);

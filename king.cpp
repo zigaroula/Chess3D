@@ -152,7 +152,7 @@ void King::computeAvailableMovements(std::vector<Piece*> own, std::vector<Piece*
 
 void King::deleteAvailableMovements(std::vector<int> impossibleMovements) {
     std::cout << std::endl;
-    for (int i = impossibleMovements.size()-1 ; i >= 0 ; i--) {
+    for (int i = (int)impossibleMovements.size()-1 ; i >= 0 ; i--) {
         std::cout << "Deleted : " << availableMovements[i][0] << " : " << availableMovements[i][1] << std::endl;
         availableMovements.erase(availableMovements.begin()+i);
     }
