@@ -90,7 +90,15 @@ void main(void)
     if (skybox_enabled) {
         outputColor = vec4(texture (cube_texture, skybox_texcoords));
     } else if (texture_enabled) {
-        outputColor = vec4(ambient + diffuse + specular, 1.0) + 0.7*texture (cube_texture, reflected);
+        int x_row = int((texture_coord.x - 0.703) / 0.036);
+        int y_row = int((texture_coord.y - 0.709) / 0.0353);
+        if((x_row <8 && x_row >=0 && y_row <8 && y_row >=0)
+                &&(((x_row %2 == 0)&&( y_row %2 ==0))
+                ||((x_row %2 == 1)&&( y_row %2 ==1)))){
+            outputColor = vec4(ambient + diffuse + specular, 1.0) + 0.6*texture (cube_texture, reflected);
+        }else{
+            outputColor = vec4(ambient + diffuse + 0.7*specular, 1.0);
+        }
     } else {
         //outputColor = vec4(ambient + diffuse + specular, 1.0) + 0.9*texture (cube_texture, refracted);
         outputColor = vec4(ambient + diffuse + specular, 1.0);
