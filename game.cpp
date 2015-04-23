@@ -117,7 +117,6 @@ std::vector<Piece *> Game::check(Player player, Player opponent, std::vector<int
             std::vector<int> checkSquare = opponent.getPieces()[i]->getAvailableMovements()[j];
             if ( checkSquare[0] == KingPos[0] && checkSquare[1] == KingPos[1] ) {
                 threateningPieces.push_back(opponent.getPieces()[i]);
-                break;
                 if(threateningPieces.size() >= 2){
                     return threateningPieces;
                 }
