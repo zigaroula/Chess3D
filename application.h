@@ -60,6 +60,8 @@ private:
     static void renderSkybox();
     
     static void saveTexture();
+    
+    static bool skybox_enabled_demo, shadow_enabled_demo;
 };
 
 

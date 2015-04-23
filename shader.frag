@@ -23,6 +23,8 @@ uniform sampler2DShadow shadow_text[2];
 uniform sampler2D object_texture;
 uniform bool texture_enabled;
 uniform bool skybox_enabled;
+uniform bool shadow_enabled;
+
 
 uniform samplerCube cube_texture;
 
@@ -60,6 +62,9 @@ void main(void)
         vec3 normal = normalize(frag_normal);
         vec3 lightDir = normalize(lightPos - frag_position);
 
+        if (!shadow_enabled)
+            shadow = 1.f;
+            
         float lambertian = max(dot(lightDir,normal), 0.0);
         diffuse += shadow * lambertian * diffuse_color_;
 

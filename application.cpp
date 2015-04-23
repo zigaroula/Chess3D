@@ -22,6 +22,9 @@ int Application::midWindowX;
 int Application::midWindowY;
 int Application::framebuffer_width, Application::framebuffer_height;
 
+bool Application::skybox_enabled_demo = false;
+bool Application::shadow_enabled_demo = false;
+
 void Application::start()
 {
     glfwSetErrorCallback(error_callback);
@@ -195,6 +198,8 @@ void Application::renderScene()
 
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "view_matrix"), 1, GL_FALSE, scene.getViewMatrixArray());
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "inv_view_matrix"), 1, GL_FALSE, glm::value_ptr(inv_view_matrix));
+    glUniform1i(glGetUniformLocation(program.getId(), "shadow_enabled"), shadow_enabled_demo);
+
 
     for (unsigned int i = 0 ; i < scene.getLightCount(); ++i)
     {
@@ -351,7 +356,7 @@ void Application::renderSkybox() {
     glm::mat4 view_model_matrix = view_matrix * model_matrix;
     glm::mat4 proj_view_model_matrix = projection_matrix * view_model_matrix;
     glUniformMatrix4fv(glGetUniformLocation(program.getId(), "proj_view_model"), 1, GL_FALSE, glm::value_ptr(proj_view_model_matrix));
-    glUniform1i(glGetUniformLocation(program.getId(), "skybox_enabled"), 1);
+    glUniform1i(glGetUniformLocation(program.getId(), "skybox_enabled"), skybox_enabled_demo);
     glActiveTexture (GL_TEXTURE5);
     glBindTexture (GL_TEXTURE_CUBE_MAP, scene.getTexCube());
     glUniform1i(glGetUniformLocation(program.getId(), "cube_texture"), 5);
@@ -471,6 +476,12 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
             break;
         case 'Y':
             game.initClassicGame(&scene);
+            break;
+        case 'C':
+            skybox_enabled_demo = skybox_enabled_demo?false:true;
+            break;
+        case 'V':
+            shadow_enabled_demo = shadow_enabled_demo?false:true;
             break;
         default:
             break;
