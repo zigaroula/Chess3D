@@ -31,7 +31,7 @@ void Application::start()
 {
     light_enabled_demo[0] = light_enabled_demo[1] = false;
 
-    //skybox_enabled_demo = shadow_enabled_demo = reflection_enabled_demo = light_enabled_demo[0] = light_enabled_demo[1] = true;
+    skybox_enabled_demo = shadow_enabled_demo = reflection_enabled_demo = light_enabled_demo[0] = light_enabled_demo[1] = true;
     
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
