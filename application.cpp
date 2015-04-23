@@ -447,6 +447,7 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
             game.saveToFile();
             break;
         case 'Y':
+            scene.setSelectTex(0);
             game.initClassicGame(&scene);
             break;
         default:
