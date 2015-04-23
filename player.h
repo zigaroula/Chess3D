@@ -24,6 +24,7 @@ class Player
         ///Calcule les mouvements disponibles pour toutes les pièces du joueur
         void computeAvailableMovements(std::vector<Piece*>, std::vector<Piece*>);
         void deletePieceAt(std::vector<int>);
+        void deletePieces();
 
 
     private:
