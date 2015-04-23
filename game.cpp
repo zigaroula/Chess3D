@@ -166,9 +166,9 @@ bool Game::checkMate(Player player, Player opponent, std::vector<Piece *> threat
             player.getPieces()[i]->moveTo(possibleMovement);
             opponent.computeAvailableMovements(opponent.getPieces(), player.getPieces());
             if( check(player, opponent,kingPos).size() == 0 ) {
-//                std::cout << "\nAttend attend, si tu bouges ton " << player.getPieces()[i]->getName() << " (" << tempPos[0] << ":"
-//                          << tempPos[1] << ") en " <<
-//                          " (" << possibleMovement[0] << ":"<< possibleMovement[1] << "), tu n'est plus en échec !\n" <<std::endl;
+                //                std::cout << "\nAttend attend, si tu bouges ton " << player.getPieces()[i]->getName() << " (" << tempPos[0] << ":"
+                //                          << tempPos[1] << ") en " <<
+                //                          " (" << possibleMovement[0] << ":"<< possibleMovement[1] << "), tu n'est plus en échec !\n" <<std::endl;
                 player.getPieces()[i]->moveTo(tempPos);
                 return false;
             }
@@ -276,5 +276,20 @@ void Game::ejectPiece(int x, int y) {
 
 void Game::endGame(int winner){
     scene->setSelectTex(2);
+
+    Player looser;
+    if(winner == 1){
+        looser = player2;
+    }else{
+        looser = player1;
+    }
     std::cout << "\nLe joueur " << winner << " remporte la partie ! ";
+
+    for (unsigned int i = 0 ; i< looser.getPieces().size() ; i++){
+        Piece * piece = looser.getPieces()[i];
+        if(piece->getName() == "King") continue;
+        scene->ejectVAO(piece->getVaoID()-1);
+    }
+
+
 }
