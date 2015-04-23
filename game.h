@@ -19,9 +19,9 @@ public:
     void loadFromFile(Scene *scene);
     void saveToFile();
     /// Vérifie si le joueur désigné est en échec.
-    bool check(Player player, Player opponent, std::vector<int> KingPos);
+    std::vector<Piece *> check(Player player, Player opponent, std::vector<int> KingPos);
     /// Vérifie si le joueur désigné est en échec et mat.
-    bool checkMate(Player player, Player opponent);
+    bool checkMate(Player player, Player opponent, std::vector<Piece *> threateningPieces);
     void changeTurn();
     void computeAvailableMovements();
     void tryMovement(int vaoId, int caseX, int caseY);

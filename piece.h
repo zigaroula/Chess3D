@@ -17,6 +17,7 @@ class Piece
         bool canMoveTo(int, int);
         ///Déplace la pièce
         void moveTo(int, int);
+        void moveTo(std::vector<int> pos){ moveTo(pos[0], pos[1]);}
         virtual std::string getModelPath() const{ return "";}
         const std::vector<std::vector<int> > & getAvailableMovements() const { return availableMovements; }
         virtual std::vector<int> const getPosition();
