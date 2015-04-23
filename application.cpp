@@ -461,14 +461,17 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
             scene.setCamZN(true);
             break;
         case 'T':
-                saveTexture();
+            saveTexture();
             break;
         case 'O':
-                game.loadFromFile(&scene);
-                break;
+            game.loadFromFile(&scene);
+            break;
         case 'N':
-                game.saveToFile();
-                break;
+            game.saveToFile();
+            break;
+        case 'Y':
+            game.initClassicGame(&scene);
+            break;
         default:
             break;
         }

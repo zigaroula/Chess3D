@@ -61,3 +61,9 @@ void Player::deletePieceAt(std::vector<int> position) {
         }
     }
 }
+
+void Player::deletePieces() {
+    for (int i = 0 ; i < pieces.size() ; i++) {
+        delete pieces[i];
+    }
+}
